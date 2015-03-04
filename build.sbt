@@ -10,5 +10,6 @@ libraryDependencies ++= Seq(
   javaJdbc,
   javaEbean,
   cache,
-  javaWs
+  javaWs,
+  "net.bramp.ffmpeg" % "ffmpeg" % "0.2"
 )

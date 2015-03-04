@@ -1,7 +1,13 @@
-@(message: String)
+@import play.api.libs.Codecs
 
-@main("Welcome to Play") {
+@(message: String, mediaFiles: java.util.Set[java.io.File])
 
-    @play20.welcome(message, style = "Java")
+@main("Welcome to media DB") {
+	<h1>@message</h1>
+	<ul>
+	@for(mediaFile <- mediaFiles){
+		<li>@Codecs.sha1(mediaFile.getName()) @mediaFile.getAbsolutePath()</li>
+	}
+	</ul>
 
 }
