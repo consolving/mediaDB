@@ -6,7 +6,7 @@
 	<h1>@message</h1>
 	<ul>
 	@for(mediaFile <- mediaFiles){
-		<li>@Codecs.sha1(mediaFile.getName()) @mediaFile.getAbsolutePath()</li>
+		<li>@Codecs.sha1(mediaFile.getName())<a href="@routes.Application.download(mediaFile.getName())">@mediaFile.getAbsolutePath()</a></li>
 	}
 	</ul>
 
