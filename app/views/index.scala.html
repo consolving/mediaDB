@@ -1,12 +1,10 @@
-@import play.api.libs.Codecs
-
-@(message: String, mediaFiles: java.util.Set[java.io.File])
+@(message: String, mediaFiles: java.util.List[models.MediaFile])
 
 @main("Welcome to media DB") {
 	<h1>@message</h1>
 	<ul>
 	@for(mediaFile <- mediaFiles){
-		<li>@Codecs.sha1(mediaFile.getName())<a href="@routes.Application.download(mediaFile.getName())">@mediaFile.getAbsolutePath()</a></li>
+		<li>[<a href="@routes.Application.download(mediaFile.checksum)">download</a>] <a href="@routes.Application.show(mediaFile.checksum)">@mediaFile.filename</a></li>
 	}
 	</ul>
 

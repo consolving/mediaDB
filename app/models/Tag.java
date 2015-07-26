@@ -4,8 +4,10 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.TreeSet;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -21,6 +23,9 @@ public class Tag extends Model implements Comparable<Tag> {
 	public Long id;
 	public String name;
 	
+    @ManyToMany(mappedBy = "tags", cascade=CascadeType.ALL )
+    private Set<MediaFile> mediaFiles;
+    
 	public static Finder<Long, Tag> Finder = new Finder<Long, Tag>(Long.class, Tag.class);
 
 	public static Set<Tag> findOrCreateTagsForText(String text) {

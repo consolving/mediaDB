@@ -11,5 +11,8 @@ libraryDependencies ++= Seq(
   javaEbean,
   cache,
   javaWs,
+  "mysql" % "mysql-connector-java" % "5.1.18",
+  "org.webjars" %% "webjars-play" % "2.4.0-1",
+  "org.webjars" % "bootstrap" % "3.3.4",
   "net.bramp.ffmpeg" % "ffmpeg" % "0.2"
 )

@@ -1,0 +1,30 @@
+@(mf: models.MediaFile)
+
+@main("File "+mf.filename) {
+    <div class="row"> 
+    	<dl>
+    		<dt>filename</dt>
+    		<dd>@mf.filename</dd>
+    		<dt>checksum</dt>
+    		<dd>@mf.checksum</dd>
+    	</dl>
+    </div>
+    <div class="row"> 
+		<div class="col-md-2">
+		<h1>Tags</h1>
+		<ul>
+		@for(tag <- mf.getTags()){
+			<li>@tag</li>
+		}
+		</ul>
+		</div>
+		<div class="col-md-8">
+			<h1>Properties</h1>
+			<table>
+			@for(property <- mf.getProperties()) {
+				<tr><th>@property.k</th><td>@property.v</td></tr>
+			}
+			</table>
+		</div>
+	</div>
+}

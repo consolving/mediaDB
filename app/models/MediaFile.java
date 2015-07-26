@@ -1,15 +1,16 @@
 package models;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
 
 import play.db.ebean.Model;
 
@@ -21,14 +22,13 @@ public class MediaFile extends Model {
 
 	public String checksum;
 	public String filename;
+	public String path;
 	
-	@ManyToMany
-	@OrderBy("name DESC")
-	public Set<Tag> tags;
+	@ManyToMany(cascade=CascadeType.ALL )
+	private Set<Tag> tags;
 
 	@OneToMany(mappedBy="mediaFile")
-	@OrderBy("k DESC")
-	public Set<Property> keyValues;
+	private Set<Property> properties;
 	
 	public static Finder<Long, MediaFile> Finder = new Finder<Long, MediaFile>(Long.class, MediaFile.class);
 
@@ -41,6 +41,14 @@ public class MediaFile extends Model {
         }
     }
 
+    public List<Tag> getTags() {
+    	return Tag.Finder.where().eq("mediaFiles.id", this.id).orderBy("name ASC").findList();
+    }
+    
+    public List<Property> getProperties() {
+    	return Property.Finder.where().eq("mediaFile.id", this.id).orderBy("k ASC").findList();
+    } 
+    
     public Map<String, Set> getTagsMap() {
         Map<String, Set> tagsMap = new HashMap<String, Set>();
         Set<String> tagsValue = new TreeSet<String>();

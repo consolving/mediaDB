@@ -28,7 +28,7 @@ public class ImportJob implements Runnable {
 	public static void schedule() {
 		ImportJob job = new ImportJob();
 		Akka.system().scheduler().schedule(Duration.create(200, TimeUnit.MILLISECONDS),
-				Duration.create(10, TimeUnit.MINUTES), // run job every 10
+				Duration.create(1, TimeUnit.MINUTES), // run job every 1
 														// minutes
 				job, Akka.system().dispatcher());
 	}
@@ -59,6 +59,7 @@ public class ImportJob implements Runnable {
 					mf = MediaFileHelper.probeFile(mf, f);
 					mf.save();
 					Logger.debug("created " + f.getAbsolutePath() + " Checksum " + checksum);
+					count--;
 				} else {
 					Logger.debug(f.getAbsolutePath() + " already found! Checksum " + checksum);
 				}
@@ -66,7 +67,6 @@ public class ImportJob implements Runnable {
 					MediaFileHelper.addTags(mf, f.getName());
 					mf.save();
 				}
-				count--;
 			}
 		}
 	}

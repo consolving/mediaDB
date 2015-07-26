@@ -7,6 +7,7 @@ create table media_file (
   id                        bigint not null,
   checksum                  varchar(255),
   filename                  varchar(255),
+  path                      varchar(255),
   constraint pk_media_file primary key (id))
 ;
 
