@@ -6,7 +6,8 @@
 GET     /                           controllers.Application.index()
 GET     /media/files/:checksum      controllers.Application.show(checksum)
 GET     /media/downloads/:checksum  controllers.Application.download(checksum)
-
+POST	/jobs/:jobname				controllers.Jobs.toggleJobActive(jobname)
+POST	/jobs						controllers.Jobs.toggleJobsActive()
 
 # Map static resources from the /public folder to the /assets URL path
 GET  	/assets/*file  				controllers.Assets.versioned(path="/public", file: Asset)

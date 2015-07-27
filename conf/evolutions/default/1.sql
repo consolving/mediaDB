@@ -3,6 +3,14 @@
 
 # --- !Ups
 
+create table configuration (
+  id                        bigint auto_increment not null,
+  k                         varchar(255),
+  v                         TEXT,
+  hostname                  varchar(255),
+  constraint pk_configuration primary key (id))
+;
+
 create table media_file (
   id                        bigint auto_increment not null,
   checksum                  varchar(255),
@@ -43,6 +51,8 @@ alter table media_file_tag add constraint fk_media_file_tag_tag_02 foreign key (
 # --- !Downs
 
 SET REFERENTIAL_INTEGRITY FALSE;
+
+drop table if exists configuration;
 
 drop table if exists media_file;
 

@@ -1,14 +1,16 @@
 package jobs;
 
 import java.io.File;
-import java.io.FilenameFilter;
+import java.io.FileFilter;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.io.FileUtils;
 
 import com.typesafe.config.ConfigFactory;
-import java.nio.file.Files;
+
+import controllers.Jobs;
 import helpers.MediaFileHelper;
 import helpers.OpensslHelper;
 import models.MediaFile;
@@ -20,12 +22,11 @@ public class ImportJob implements Runnable {
 
 	private final static String ROOT_DIR = ConfigFactory.load().getString("media.root.dir");
 
-	private final static FilenameFilter FILE_NAME_FILTER = new FilenameFilter() {
+	private final static FileFilter FILE_NAME_FILTER = new FileFilter() {
 		@Override
-		public boolean accept(File arg0, String name) {
-			return !arg0.isDirectory() && !name.startsWith(".");
+		public boolean accept(File pathname) {
+			return !pathname.isDirectory() && !pathname.getName().startsWith(".");
 		}
-
 	};
 
 	public static void schedule() {
@@ -38,7 +39,13 @@ public class ImportJob implements Runnable {
 
 	@Override
 	public void run() {
-		importNext();
+		if(Jobs.isJobActive("ImportJob")) {
+			Logger.info("Running ImportJob.");
+			Jobs.setLastRun("ImportJob");
+			importNext();
+		} else {
+			Logger.info("ImportJob not active. Skipping.");
+		}
 	}
 
 	private void importNext() {
@@ -64,6 +71,7 @@ public class ImportJob implements Runnable {
 					mf = MediaFileHelper.probeFile(mf, f);
 					mf.save();
 					Logger.info("created " + f.getAbsolutePath() + " Checksum " + checksum);
+					mf = MediaFile.Finder.where().eq("checksum", checksum).findUnique();
 					handleFile(f, new File(storageFolder + File.separator + checksum));
 					count--;
 				} else {
@@ -75,8 +83,8 @@ public class ImportJob implements Runnable {
 						Logger.error("Problem operating on filesystem, deleting " + f.getAbsolutePath());
 					}
 				}
-				if (f != null && mf != null) {
-					MediaFileHelper.addTags(mf, f.getName());				
+				if (f != null && mf != null && f.getName().equals(mf.checksum)) {
+					MediaFileHelper.addTags(mf, f.getName());										
 					mf.save();
 				}
 			}
