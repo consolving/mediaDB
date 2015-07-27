@@ -4,7 +4,7 @@
 	<h1>@message</h1>
 	<ul>
 	@for(mediaFile <- mediaFiles){
-		<li>[<a href="@routes.Application.download(mediaFile.checksum)">download</a>] <a href="@routes.Application.show(mediaFile.checksum)">@mediaFile.filename</a></li>
+		<li>[<a target="_download" href="@routes.Application.download(mediaFile.checksum)">download</a>] <a href="@routes.Application.show(mediaFile.checksum)">@mediaFile.filename</a></li>
 	}
 	</ul>
 

@@ -8,6 +8,8 @@ import java.util.TreeSet;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
@@ -18,17 +20,18 @@ import play.db.ebean.Model;
 public class MediaFile extends Model {
 
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public Long id;
 
 	public String checksum;
 	public String filename;
-	public String path;
+	public String mimeType;
 	
 	@ManyToMany(cascade=CascadeType.ALL )
 	private Set<Tag> tags;
 
 	@OneToMany(mappedBy="mediaFile")
-	private Set<Property> properties;
+	private List<Property> properties;
 	
 	public static Finder<Long, MediaFile> Finder = new Finder<Long, MediaFile>(Long.class, MediaFile.class);
 

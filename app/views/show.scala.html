@@ -3,10 +3,14 @@
 @main("File "+mf.filename) {
     <div class="row"> 
     	<dl>
-    		<dt>filename</dt>
+    		<dt>Filename</dt>
     		<dd>@mf.filename</dd>
-    		<dt>checksum</dt>
+    		<dt>SHA-256</dt>
     		<dd>@mf.checksum</dd>
+    		<dt>Mime-Type</dt>
+    		<dd>@mf.mimeType</dd>
+    		<dt>Download</dt>
+    		<dd><a target="_download" href="@routes.Application.download(mf.checksum)">@mf.filename</a></dd>    		
     	</dl>
     </div>
     <div class="row"> 

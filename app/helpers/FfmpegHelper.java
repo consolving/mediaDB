@@ -21,7 +21,6 @@ public class FfmpegHelper {
 			return SystemHelper.runCommand(cmd);
 		}
 		return null;
-
 	}
 
 }

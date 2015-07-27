@@ -39,10 +39,12 @@ public class Application extends Controller {
 	
 	public static Result download(String checksum) {
 		MediaFile mf = MediaFile.Finder.where().eq("checksum", checksum).findUnique();
-		File media = mf != null ? new File(ROOT_DIR + File.separator + "upload" + File.separator + mf.filename) : null;
+		File media = mf != null ? new File(ROOT_DIR + File.separator + "storage" + File.separator + mf.checksum) : null;
 		if (media == null || !media.exists()) {
 			return notFound();
 		}
+		response().setContentType(mf.mimeType);
+		response().setHeader("Content-Disposition", "inline; filename=\""+ mf.filename+"\"");
 		return ok(media);
 	}
 

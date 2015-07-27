@@ -4,15 +4,15 @@
 # --- !Ups
 
 create table media_file (
-  id                        bigint not null,
+  id                        bigint auto_increment not null,
   checksum                  varchar(255),
   filename                  varchar(255),
-  path                      varchar(255),
+  mime_type                 varchar(255),
   constraint pk_media_file primary key (id))
 ;
 
 create table property (
-  id                        bigint not null,
+  id                        bigint auto_increment not null,
   k                         varchar(255),
   v                         TEXT,
   media_file_id             bigint,
@@ -20,7 +20,7 @@ create table property (
 ;
 
 create table tag (
-  id                        bigint not null,
+  id                        bigint auto_increment not null,
   name                      varchar(255),
   constraint pk_tag primary key (id))
 ;
@@ -31,12 +31,6 @@ create table media_file_tag (
   tag_id                         bigint not null,
   constraint pk_media_file_tag primary key (media_file_id, tag_id))
 ;
-create sequence media_file_seq;
-
-create sequence property_seq;
-
-create sequence tag_seq;
-
 alter table property add constraint fk_property_mediaFile_1 foreign key (media_file_id) references media_file (id) on delete restrict on update restrict;
 create index ix_property_mediaFile_1 on property (media_file_id);
 
@@ -59,10 +53,4 @@ drop table if exists property;
 drop table if exists tag;
 
 SET REFERENTIAL_INTEGRITY TRUE;
-
-drop sequence if exists media_file_seq;
-
-drop sequence if exists property_seq;
-
-drop sequence if exists tag_seq;
 
