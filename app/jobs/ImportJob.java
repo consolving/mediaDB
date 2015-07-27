@@ -23,7 +23,7 @@ public class ImportJob implements Runnable {
 	private final static FilenameFilter FILE_NAME_FILTER = new FilenameFilter() {
 		@Override
 		public boolean accept(File arg0, String name) {
-			return !name.startsWith(".");
+			return !arg0.isDirectory() && !name.startsWith(".");
 		}
 
 	};
