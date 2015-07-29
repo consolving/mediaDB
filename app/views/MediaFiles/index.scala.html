@@ -1,0 +1,14 @@
+@(mediaFiles: java.util.List[models.MediaFile])
+
+@main("Welcome to media DB") {
+    <div class="row center">
+		<h1><small>@mediaFiles.size()</small> Media Files</h1>
+	</div>
+    <div class="row">
+	<ul>
+	@for(mediaFile <- mediaFiles){
+		<li>[<a target="_download" href="@routes.MediaFiles.download(mediaFile.checksum)">download</a>] <a href="@routes.MediaFiles.show(mediaFile.checksum)">@mediaFile.filename</a></li>
+	}
+	</ul>
+	</div>
+}

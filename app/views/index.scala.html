@@ -1,11 +1,49 @@
-@(message: String, mediaFiles: java.util.List[models.MediaFile])
+@import controllers.Jobs
+@import views.addons._
+
+@(mediaFileCount: Integer, tagCount: Integer, propertyCount: Integer)
 
 @main("Welcome to media DB") {
-	<h1>@message</h1>
-	<ul>
-	@for(mediaFile <- mediaFiles){
-		<li>[<a target="_download" href="@routes.Application.download(mediaFile.checksum)">download</a>] <a href="@routes.Application.show(mediaFile.checksum)">@mediaFile.filename</a></li>
-	}
-	</ul>
-
+    <div class="row center">
+    	<h2>Welcome to media DB</h2>
+    </div>
+    <div class="row"> 
+		<div class="col-md-4 center">
+			<h2>
+				<small>@mediaFileCount</small><br />
+				Media Files
+			</h2>
+		</div>
+		<div class="col-md-4 center">
+			<h2>
+				<small>@tagCount</small><br />
+				Tags		
+			</h2>
+		</div>
+		<div class="col-md-4 center">
+			<h2>
+				<small>@propertyCount</small><br />
+				Properties		
+			</h2>
+		</div>				
+    </div>
+   	<div class="row"> 
+		<div class="col-md-4">
+			<h2>Jobs</h2>
+			<table class="table table-striped">
+				<tr>
+					<th>Name</th>
+					<th>Status</th>
+					<th>last Run</th>
+				</tr>
+			@for(job <- Jobs.JOBS) {
+				<tr>
+					<td>@job</td>
+					<td>@if(Jobs.isJobActive(job)){active}else{inactive}</td>
+					<td>@Jobs.getLastRun(job).since()</td>
+				</tr>
+			}
+			</table>
+		</div>   
+    </div>
 }
