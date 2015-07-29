@@ -21,7 +21,6 @@ import scala.concurrent.duration.Duration;
 public class ImportJob implements Runnable {
 
 	private final static String ROOT_DIR = ConfigFactory.load().getString("media.root.dir");
-
 	private final static FileFilter FILE_NAME_FILTER = new FileFilter() {
 		@Override
 		public boolean accept(File pathname) {
@@ -32,7 +31,7 @@ public class ImportJob implements Runnable {
 	public static void schedule() {
 		ImportJob job = new ImportJob();
 		Akka.system().scheduler().schedule(Duration.create(200, TimeUnit.MILLISECONDS),
-				Duration.create(10, TimeUnit.MINUTES), // run job every 10
+				Duration.create(getValue("job.importjob.runEvery", 10), TimeUnit.MINUTES), // run job every 10
 														// minutes
 				job, Akka.system().dispatcher());
 	}
@@ -49,7 +48,7 @@ public class ImportJob implements Runnable {
 	}
 
 	private void importNext() {
-		int count = 10;
+		int count = getValue("job.importjob.numerOfImports", 25);
 		String checksum;
 		File mediaFolder = new File(ROOT_DIR + File.separator + "upload");
 		String storageFolder = ROOT_DIR + File.separator + "storage";
@@ -112,5 +111,17 @@ public class ImportJob implements Runnable {
 				Logger.error("Problem operating on filesystem, moving " + from.getAbsolutePath() + " to " + to.getAbsolutePath());
 			}
 		}
+	}
+	
+	private static int getValue(String key, int defaultValue) {
+		int value = defaultValue;
+		if(ConfigFactory.load().hasPath(key)){
+			try {
+				value = Integer.parseInt(ConfigFactory.load().getString(key));
+			} catch(NumberFormatException ex) {
+				Logger.warn(ex.getLocalizedMessage(), ex);
+			}
+		}
+		return value;
 	}
 }
