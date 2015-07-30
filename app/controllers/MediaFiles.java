@@ -2,6 +2,7 @@ package controllers;
 
 import java.io.File;
 import java.io.FileFilter;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
@@ -53,17 +54,24 @@ public class MediaFiles extends Application {
 	public static Result folderStats() {
 		File rootFolder = new File(ROOT_DIR);
 		ObjectNode out = Json.newObject();
-		ArrayNode dirs = out.arrayNode();
+		ArrayNode dirSizes = out.arrayNode();
+		ArrayNode dirCounts = out.arrayNode();
 		if(rootFolder.exists()) {
+			long sum = FileUtils.sizeOfDirectory(rootFolder);
 			for(File folder : rootFolder.listFiles(FOLDER_FILTER)){
 				ObjectNode dir = Json.newObject();
-				dir.put("name", folder.getName());
-				dir.put("size", FileUtils.sizeOfDirectory(folder));
-				dir.put("count", folder.listFiles().length-1);
-				dirs.add(dir);
+				dir.put("label", folder.getName());
+				dir.put("value", 100*FileUtils.sizeOfDirectory(folder)/sum);
+				dirSizes.add(dir);
+				
+				dir = Json.newObject();
+				dir.put("label", folder.getName());			
+				dir.put("value", folder.listFiles().length-1);
+				dirCounts.add(dir);
 			}
 		}
-		out.put("dirs", dirs);
+		out.put("dirsSizes", dirSizes);
+		out.put("dirsCounts", dirCounts);		
 		return ok(out);
 	}
 }
