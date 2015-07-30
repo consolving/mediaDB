@@ -21,7 +21,7 @@ import scala.concurrent.duration.Duration;
 public class ImportJob implements Runnable {
 
 	private final static String ROOT_DIR = ConfigFactory.load().getString("media.root.dir");
-	private final static FileFilter FILE_NAME_FILTER = new FileFilter() {
+	private final static FileFilter FILE_FILTER = new FileFilter() {
 		@Override
 		public boolean accept(File pathname) {
 			return !pathname.isDirectory() && !pathname.getName().startsWith(".");
@@ -31,8 +31,7 @@ public class ImportJob implements Runnable {
 	public static void schedule() {
 		ImportJob job = new ImportJob();
 		Akka.system().scheduler().schedule(Duration.create(200, TimeUnit.MILLISECONDS),
-				Duration.create(getValue("job.importjob.runEvery", 10), TimeUnit.MINUTES), // run job every 10
-														// minutes
+				Duration.create(getValue("job.importjob.runEvery", 10), TimeUnit.MINUTES), // run job every 10 minutes
 				job, Akka.system().dispatcher());
 	}
 
@@ -53,7 +52,7 @@ public class ImportJob implements Runnable {
 		File mediaFolder = new File(ROOT_DIR + File.separator + "upload");
 		String storageFolder = ROOT_DIR + File.separator + "storage";
 		if (mediaFolder.exists()) {
-			for (File f : mediaFolder.listFiles(FILE_NAME_FILTER)) {
+			for (File f : mediaFolder.listFiles(FILE_FILTER)) {
 				if (count < 0) {
 					return;
 				}
@@ -75,12 +74,7 @@ public class ImportJob implements Runnable {
 					count--;
 				} else {
 					Logger.info(f.getAbsolutePath() + " already found! Checksum " + checksum);
-					try {
-						FileUtils.forceDelete(f);
-						Logger.info("deleting " + f.getAbsolutePath());
-					} catch (IOException ioe) {
-						Logger.error("Problem operating on filesystem, deleting " + f.getAbsolutePath());
-					}
+					handleFile(f, new File(storageFolder + File.separator + checksum));
 				}
 				if (f != null && mf != null && f.getName().equals(mf.checksum)) {
 					MediaFileHelper.addTags(mf, f.getName());										
