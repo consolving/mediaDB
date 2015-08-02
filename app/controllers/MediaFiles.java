@@ -11,6 +11,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.typesafe.config.ConfigFactory;
 
+import helpers.MediaFileHelper;
 import models.MediaFile;
 import play.libs.Json;
 import play.mvc.Result;
@@ -57,16 +58,19 @@ public class MediaFiles extends Application {
 		ArrayNode dirSizes = out.arrayNode();
 		ArrayNode dirCounts = out.arrayNode();
 		if(rootFolder.exists()) {
-			long sum = FileUtils.sizeOfDirectory(rootFolder);
+			long sum = MediaFileHelper.getSize(rootFolder);
+			long part = 0L;
 			for(File folder : rootFolder.listFiles(FOLDER_FILTER)){
+				part = MediaFileHelper.getSize(folder);
 				ObjectNode dir = Json.newObject();
-				dir.put("label", folder.getName());
-				dir.put("value", 100*FileUtils.sizeOfDirectory(folder)/sum);
+				dir.put("label", folder.getName()+"\n"+MediaFileHelper.humanReadableByteCount(part, true));
+				dir.put("value", 100*part/sum);
 				dirSizes.add(dir);
 				
+				part = folder.listFiles().length-1;
 				dir = Json.newObject();
-				dir.put("label", folder.getName());			
-				dir.put("value", folder.listFiles().length-1);
+				dir.put("label", folder.getName()+"\n"+part);			
+				dir.put("value", part);
 				dirCounts.add(dir);
 			}
 		}
