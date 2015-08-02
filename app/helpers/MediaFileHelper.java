@@ -18,7 +18,9 @@ public class MediaFileHelper {
 	private final static boolean HAS_FILE_BIN = new File(FILE_BIN).exists();
 	private final static String DU_BIN = ConfigFactory.load().getString("system.du.bin");
 	private final static boolean HAS_DU_BIN = new File(DU_BIN).exists();
-	
+	private final static String MV_BIN = ConfigFactory.load().getString("system.mv.bin");
+	private final static boolean HAS_MV_BIN = new File(MV_BIN).exists();
+
 	private MediaFileHelper() {
 	}
 
@@ -64,6 +66,14 @@ public class MediaFileHelper {
 			}
 		}
 		return null;		
+	}
+	
+	public static void moveFile(File from, File to) {
+		if (HAS_MV_BIN && from.exists()) {
+			String cmd = MV_BIN + " \""+ from.getAbsolutePath() + "\" \""+ to.getAbsolutePath() + "\"";
+			Logger.debug("running: "+cmd);
+			Logger.info(SystemHelper.runCommand(cmd));			
+		}
 	}
 	
 	public static String humanReadableByteCount(long bytes, boolean si) {

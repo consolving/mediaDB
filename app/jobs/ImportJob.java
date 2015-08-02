@@ -98,12 +98,7 @@ public class ImportJob implements Runnable {
 
 	private void handleFile(File from, File to) {
 		if (from.exists()) {
-			try {
-				FileUtils.moveFile(from, to);
-				Logger.info("moving " + from.getAbsolutePath() + " to " + to.getAbsolutePath());
-			} catch (IOException ioe) {
-				Logger.error("Problem operating on filesystem, moving " + from.getAbsolutePath() + " to " + to.getAbsolutePath());
-			}
+			Logger.info("moving " + from.getAbsolutePath() + " to " + to.getAbsolutePath());
 		}
 	}
 	
