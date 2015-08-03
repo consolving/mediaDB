@@ -63,7 +63,7 @@ public class MediaFiles extends Application {
 			for(File folder : rootFolder.listFiles(FOLDER_FILTER)){
 				part = MediaFileHelper.getSize(folder);
 				ObjectNode dir = Json.newObject();
-				dir.put("label", folder.getName()+"\n"+MediaFileHelper.humanReadableByteCount(part, true));
+				dir.put("label", folder.getName()+"\n"+MediaFileHelper.humanReadableByteCount(part*1000, true));
 				dir.put("value", 100*part/sum);
 				dirSizes.add(dir);
 				
