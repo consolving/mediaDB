@@ -46,44 +46,41 @@ public class MediaFileHelper {
 
 	public static String getFileMimeType(File file) {
 		if (HAS_FILE_BIN && file.exists()) {
-			String cmd = FILE_BIN + " --mime-type \""+ file.getAbsolutePath() + "\"";
-			Logger.debug("running: "+cmd);
+			String cmd = FILE_BIN + " --mime-type \"" + file.getAbsolutePath() + "\"";
+			Logger.debug("running: " + cmd);
 			String parts[] = SystemHelper.runCommand(cmd).split(":");
-			return parts.length > 1 ? parts[parts.length-1].trim() : null;
+			return parts.length > 1 ? parts[parts.length - 1].trim() : null;
+		} else {
+			Logger.warn(FILE_BIN + " not found!");
 		}
 		return null;
 	}
-	
-	public static Long getSize(File file){
+
+	public static Long getSize(File file) {
 		if (HAS_DU_BIN && file.exists()) {
-			String cmd = DU_BIN + " -s \""+ file.getAbsolutePath() + "\"";
-			Logger.debug("running: "+cmd);
+			String cmd = DU_BIN + " -s \"" + file.getAbsolutePath() + "\"";
+			Logger.debug("running: " + cmd);
 			String parts[] = SystemHelper.runCommand(cmd).split("\t");
 			try {
 				return Long.parseLong(parts[0]);
-			} catch(NumberFormatException ex) {
+			} catch (NumberFormatException ex) {
 				Logger.error(ex.getLocalizedMessage(), ex);
 			}
+		} else {
+			Logger.warn(DU_BIN + " not found!");
 		}
-		return null;		
+		return null;
 	}
-	
-	public static void moveFile(File from, File to) {
-		if (HAS_MV_BIN && from.exists()) {
-			String cmd = MV_BIN + " \""+ from.getAbsolutePath() + "\" \""+ to.getAbsolutePath() + "\"";
-			Logger.debug("running: "+cmd);
-			Logger.info(SystemHelper.runCommand(cmd));			
-		}
-	}
-	
+
 	public static String humanReadableByteCount(long bytes, boolean si) {
-	    int unit = si ? 1000 : 1024;
-	    if (bytes < unit) return bytes + " B";
-	    int exp = (int) (Math.log(bytes) / Math.log(unit));
-	    String pre = (si ? "kMGTPE" : "KMGTPE").charAt(exp-1) + (si ? "" : "i");
-	    return String.format("%.1f %sB", bytes / Math.pow(unit, exp), pre);
+		int unit = si ? 1000 : 1024;
+		if (bytes < unit)
+			return bytes + " B";
+		int exp = (int) (Math.log(bytes) / Math.log(unit));
+		String pre = (si ? "kMGTPE" : "KMGTPE").charAt(exp - 1) + (si ? "" : "i");
+		return String.format("%.1f %sB", bytes / Math.pow(unit, exp), pre);
 	}
-	
+
 	public static MediaFile addTags(MediaFile mediaFile, String value) {
 		if (value != null && !value.trim().isEmpty()) {
 			mediaFile.setTags(Tag.findOrCreateTagsForText(value));
@@ -92,12 +89,12 @@ public class MediaFileHelper {
 	}
 
 	private static MediaFile addProperty(MediaFile mediaFile, String key, String value) {
-		if(key != null && value != null && mediaFile != null) {
+		if (key != null && value != null && mediaFile != null) {
 			Property.getOrCreate(mediaFile, key, value);
 		}
 		return mediaFile;
 	}
-	
+
 	private static MediaFile addProperties(MediaFile mediaFile, JsonNode out) {
 		if (out == null || mediaFile == null) {
 			return mediaFile;

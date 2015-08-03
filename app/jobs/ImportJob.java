@@ -97,8 +97,17 @@ public class ImportJob implements Runnable {
 	}
 
 	private void handleFile(File from, File to) {
-		if (from.exists()) {
-			Logger.info("moving " + from.getAbsolutePath() + " to " + to.getAbsolutePath());
+		if(!to.exists()) {
+			try {	
+				FileUtils.moveFile(from, to);
+				Logger.info("moving " + from.getAbsolutePath() + " to " + to.getAbsolutePath());
+				
+			} catch (IOException ex) {
+				Logger.warn(ex.getLocalizedMessage(), ex);
+			}
+		} else {
+			FileUtils.deleteQuietly(from);
+			Logger.info("deleting" + from.getAbsolutePath() + " already a copy present!");	
 		}
 	}
 	
