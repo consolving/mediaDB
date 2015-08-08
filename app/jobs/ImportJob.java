@@ -4,21 +4,22 @@ import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.io.FileUtils;
 
 import com.typesafe.config.ConfigFactory;
 
-import controllers.Jobs;
 import helpers.MediaFileHelper;
 import helpers.OpensslHelper;
 import models.MediaFile;
 import play.Logger;
-import play.libs.Akka;
-import scala.concurrent.duration.Duration;
+import services.JobService;
 
-public class ImportJob implements Runnable {
+public class ImportJob extends AbstractJob {
+
+	public ImportJob() {
+		super("ImportJob");
+	}
 
 	private final static String ROOT_DIR = ConfigFactory.load().getString("media.root.dir");
 	private final static FileFilter FILE_FILTER = new FileFilter() {
@@ -28,21 +29,15 @@ public class ImportJob implements Runnable {
 		}
 	};
 
-	public static void schedule() {
-		ImportJob job = new ImportJob();
-		Akka.system().scheduler().schedule(Duration.create(200, TimeUnit.MILLISECONDS),
-				Duration.create(getValue("job.importjob.runEvery", 10), TimeUnit.MINUTES), // run job every 10 minutes
-				job, Akka.system().dispatcher());
-	}
-
 	@Override
 	public void run() {
-		if(Jobs.isJobActive("ImportJob")) {
+		if(JobService.isJobActive("ImportJob")) {
 			Logger.info("Running ImportJob.");
-			Jobs.setLastRun("ImportJob");
+			JobService.setLastRun("ImportJob");
 			importNext();
-		} else {
-			Logger.info("ImportJob not active. Skipping.");
+		} else if(jobHandler != null){
+			Logger.info("ImportJob not active. Stopping.");			
+			jobHandler.stop();
 		}
 	}
 
@@ -109,17 +104,5 @@ public class ImportJob implements Runnable {
 			FileUtils.deleteQuietly(from);
 			Logger.info("deleting" + from.getAbsolutePath() + " already a copy present!");	
 		}
-	}
-	
-	private static int getValue(String key, int defaultValue) {
-		int value = defaultValue;
-		if(ConfigFactory.load().hasPath(key)){
-			try {
-				value = Integer.parseInt(ConfigFactory.load().getString(key));
-			} catch(NumberFormatException ex) {
-				Logger.warn(ex.getLocalizedMessage(), ex);
-			}
-		}
-		return value;
 	}
 }

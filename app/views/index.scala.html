@@ -1,4 +1,4 @@
-@import controllers.Jobs
+@import services.JobService
 @import views.addons._
 
 @(mediaFileCount: Integer, tagCount: Integer, propertyCount: Integer)
@@ -166,17 +166,19 @@
 		</div>			
 		<div class="col-md-12 center">
 			<h2>Jobs</h2>
-			<table class="table table-striped">
+			<table class="table table-condensed">
 				<tr>
 					<th>Name</th>
 					<th>Status</th>
+					<th>Runs every</th>
 					<th>last Run</th>
 				</tr>
-			@for(job <- Jobs.JOBS) {
+			@for(job <- JobService.getJobNames()) {
 				<tr>
 					<td>@job</td>
-					<td>@if(Jobs.isJobActive(job)){active}else{inactive}</td>
-					<td>@Jobs.getLastRun(job).since()</td>
+					<td>@JobService.getStatus(job)</td>
+					<td>@JobService.getJob(job).getRunEvery() minutes</td>
+					<td>@JobService.getLastRun(job).since()</td>
 				</tr>
 			}
 			</table>
