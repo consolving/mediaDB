@@ -7,9 +7,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import helpers.JobHandler;
 import jobs.AbstractJob;
 import jobs.ImportJob;
-import jobs.JobHandler;
 import jobs.NopJob;
 import models.Configuration;
 import play.Logger;

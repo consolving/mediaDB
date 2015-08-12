@@ -2,6 +2,7 @@ package jobs;
 
 import com.typesafe.config.ConfigFactory;
 
+import helpers.JobHandler;
 import play.Logger;
 
 public abstract class AbstractJob  implements Runnable {

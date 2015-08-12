@@ -5,8 +5,8 @@ import java.util.List;
 import com.typesafe.config.ConfigFactory;
 
 import fileauth.FileAuthScanJob;
+import helpers.JobHandler;
 import jobs.ImportJob;
-import jobs.JobHandler;
 import play.Application;
 import play.GlobalSettings;
 import play.Logger;

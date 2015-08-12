@@ -1,8 +1,9 @@
-package jobs;
+package helpers;
 
 import java.util.concurrent.TimeUnit;
 
 import akka.actor.Cancellable;
+import jobs.AbstractJob;
 import models.Configuration;
 import play.libs.Akka;
 import scala.concurrent.duration.Duration;
