@@ -11,6 +11,7 @@ import com.typesafe.config.ConfigFactory;
 import fileauth.actions.BasicAuth;
 import helpers.MediaFileHelper;
 import models.MediaFile;
+import play.cache.Cache;
 import play.libs.Json;
 import play.mvc.Result;
 import views.html.MediaFiles.index;
@@ -52,29 +53,34 @@ public class MediaFiles extends Application {
 	}
 	
 	public static Result folderStats() {
-		File rootFolder = new File(ROOT_DIR);
-		ObjectNode out = Json.newObject();
-		ArrayNode dirSizes = out.arrayNode();
-		ArrayNode dirCounts = out.arrayNode();
-		if(rootFolder.exists()) {
-			long sum = MediaFileHelper.getSize(rootFolder);
-			long part = 0L;
-			for(File folder : rootFolder.listFiles(FOLDER_FILTER)){
-				part = MediaFileHelper.getSize(folder);
-				ObjectNode dir = Json.newObject();
-				dir.put("label", folder.getName()+"\n"+MediaFileHelper.humanReadableByteCount(part*1000, true));
-				dir.put("value", 100*part/sum);
-				dirSizes.add(dir);
-				
-				part = folder.listFiles().length-1;
-				dir = Json.newObject();
-				dir.put("label", folder.getName()+"\n"+part);			
-				dir.put("value", part);
-				dirCounts.add(dir);
+		
+		ObjectNode out = (ObjectNode) Cache.get("folderStats");
+		if(out == null) {
+			out = Json.newObject();
+			File rootFolder = new File(ROOT_DIR);
+			ArrayNode dirSizes = out.arrayNode();
+			ArrayNode dirCounts = out.arrayNode();
+			if(rootFolder.exists()) {
+				long sum = MediaFileHelper.getSize(rootFolder);
+				long part = 0L;
+				for(File folder : rootFolder.listFiles(FOLDER_FILTER)){
+					part = MediaFileHelper.getSize(folder);
+					ObjectNode dir = Json.newObject();
+					dir.put("label", folder.getName()+"\n"+MediaFileHelper.humanReadableByteCount(part*1000, true));
+					dir.put("value", 100*part/sum);
+					dirSizes.add(dir);
+					
+					part = folder.listFiles().length-1;
+					dir = Json.newObject();
+					dir.put("label", folder.getName()+"\n"+part);			
+					dir.put("value", part);
+					dirCounts.add(dir);
+				}
 			}
+			out.put("dirsSizes", dirSizes);
+			out.put("dirsCounts", dirCounts);	
+			Cache.set("folderStats", out, 60);
 		}
-		out.put("dirsSizes", dirSizes);
-		out.put("dirsCounts", dirCounts);		
 		return ok(out);
 	}
 }
