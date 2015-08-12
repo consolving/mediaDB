@@ -1,9 +1,8 @@
 package controllers;
 
-import java.util.List;
-
 import com.typesafe.config.ConfigFactory;
 
+import fileauth.actions.BasicAuth;
 import models.MediaFile;
 import models.Property;
 import models.Tag;
@@ -13,6 +12,7 @@ import play.mvc.Http.Request;
 import play.mvc.Result;
 import views.html.index;
 
+@BasicAuth
 public class Application extends Controller {
 
 	protected final static String ROOT_DIR = ConfigFactory.load().getString("media.root.dir");

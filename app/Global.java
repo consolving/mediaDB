@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.typesafe.config.ConfigFactory;
 
+import fileauth.FileAuthScanJob;
 import jobs.ImportJob;
 import jobs.JobHandler;
 import play.Application;
@@ -14,6 +15,7 @@ import services.JobService;
 public class Global extends GlobalSettings {
 	private List<JobHandler> jobHandlers = new ArrayList<JobHandler>();
 	public void onStart(Application app) {
+		FileAuthScanJob.schedule();
 		outputTools();
 		JobService.addJob(new ImportJob());
 	}
@@ -22,6 +24,7 @@ public class Global extends GlobalSettings {
 		for(JobHandler handler : jobHandlers) {
 			handler.stop();
 		}
+		FileAuthScanJob.cancel();
 	}
 	
 	private void outputTools() {

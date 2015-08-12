@@ -2,15 +2,13 @@ package controllers;
 
 import java.io.File;
 import java.io.FileFilter;
-import java.util.Collections;
 import java.util.List;
-
-import org.apache.commons.io.FileUtils;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.typesafe.config.ConfigFactory;
 
+import fileauth.actions.BasicAuth;
 import helpers.MediaFileHelper;
 import models.MediaFile;
 import play.libs.Json;
@@ -18,6 +16,7 @@ import play.mvc.Result;
 import views.html.MediaFiles.index;
 import views.html.MediaFiles.show;
 
+@BasicAuth
 public class MediaFiles extends Application {
 	
 	private final static String ROOT_DIR = ConfigFactory.load().getString("media.root.dir");

@@ -16,3 +16,6 @@ dist
 activator-launch-*
 activator
 data
+/bin/
+conf/htgroups
+conf/htusers
