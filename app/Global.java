@@ -7,6 +7,7 @@ import com.typesafe.config.ConfigFactory;
 import fileauth.FileAuthScanJob;
 import helpers.JobHandler;
 import jobs.CheckJob;
+import jobs.FolderSizesJob;
 import jobs.ImportJob;
 import play.Application;
 import play.GlobalSettings;
@@ -20,6 +21,7 @@ public class Global extends GlobalSettings {
 		JobService.addJob(new FileAuthScanJob());
 		JobService.addJob(new ImportJob());
 		JobService.addJob(new CheckJob());	
+		JobService.addJob(new FolderSizesJob());	
 	}
 
 	public void onStop(Application app) {
