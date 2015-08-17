@@ -21,6 +21,7 @@ public class ImportJob extends AbstractJob {
 	final Logger.ALogger logger = Logger.of(this.getClass());
 	public ImportJob() {
 		super("ImportJob");
+		this.cancellable = true;
 	}
 
 	private final static String ROOT_DIR = ConfigFactory.load().getString("media.root.dir");

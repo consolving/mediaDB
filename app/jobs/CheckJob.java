@@ -20,6 +20,7 @@ public class CheckJob extends AbstractJob {
 
 	public CheckJob() {
 		super("CheckJob");
+		this.cancellable = true;
 	}
 
 	@Override
