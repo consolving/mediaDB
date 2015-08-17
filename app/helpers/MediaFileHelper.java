@@ -84,7 +84,7 @@ public class MediaFileHelper {
 			Logger.debug("running: " + cmd);
 			String parts[] = SystemHelper.runCommand(cmd).split("\t");
 			try {
-				return Long.parseLong(parts[0]);
+				return !parts[0].isEmpty() ? Long.parseLong(parts[0]) : null;
 			} catch (NumberFormatException ex) {
 				Logger.error(ex.getLocalizedMessage(), ex);
 			}

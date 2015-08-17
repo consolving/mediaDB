@@ -61,10 +61,11 @@ public class MediaFiles extends Application {
 			ArrayNode dirSizes = out.arrayNode();
 			ArrayNode dirCounts = out.arrayNode();
 			if(rootFolder.exists()) {
-				long sum = MediaFileHelper.getSize(rootFolder);
-				long part = 0L;
+				Long sum = MediaFileHelper.getSize(rootFolder);
+				Long part = 0L;
 				for(File folder : rootFolder.listFiles(FOLDER_FILTER)){
 					part = MediaFileHelper.getSize(folder);
+					if(part != null && sum != null) {
 					ObjectNode dir = Json.newObject();
 					dir.put("label", folder.getName()+" "+MediaFileHelper.humanReadableByteCount(part*1000, true));
 					dir.put("value", 100*part/sum);
@@ -75,6 +76,7 @@ public class MediaFiles extends Application {
 					dir.put("label", folder.getName()+" "+part);			
 					dir.put("value", part);
 					dirCounts.add(dir);
+					}
 				}
 			}
 			out.put("dirsSizes", dirSizes);
