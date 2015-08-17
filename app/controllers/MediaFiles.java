@@ -70,7 +70,7 @@ public class MediaFiles extends Application {
 					dir.put("value", 100*part/sum);
 					dirSizes.add(dir);
 					
-					part = folder.listFiles().length-1;
+					part = MediaFileHelper.getSize(folder);
 					dir = Json.newObject();
 					dir.put("label", folder.getName()+"\n"+part);			
 					dir.put("value", part);
