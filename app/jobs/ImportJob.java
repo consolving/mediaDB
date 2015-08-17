@@ -31,14 +31,12 @@ public class ImportJob extends AbstractJob {
 
 	@Override
 	public void run() {
-		if(JobService.isJobActive("ImportJob")) {
-			Logger.info("Running ImportJob.");
-			JobService.setLastRun("ImportJob");
+		if(JobService.isJobActive(getName())) {
+			JobService.setLastRun(getName());
 			importNext();
-		} else if(jobHandler != null){
-			Logger.info("ImportJob not active. Stopping.");			
+		} else if(jobHandler != null){		
 			jobHandler.stop();
-		}
+		}	
 	}
 
 	private void importNext() {

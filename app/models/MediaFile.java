@@ -1,5 +1,6 @@
 package models;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +27,9 @@ public class MediaFile extends Model {
 	public String checksum;
 	public String filename;
 	public String mimeType;
+	
+	public Date lastCheck;
+	public Date created;
 	
 	@ManyToMany(cascade=CascadeType.ALL )
 	private Set<Tag> tags;
@@ -60,5 +64,14 @@ public class MediaFile extends Model {
         }
         tagsMap.put("tags", tagsValue);
         return tagsMap;
+    }
+    
+    public void checked() {
+    	this.lastCheck = new Date();
+    	save();
+    }
+    
+    public String toString() {
+    	return filename+ "("+checksum+")";
     }
 }

@@ -1,10 +1,13 @@
 package helpers;
 
 import java.io.File;
+import java.nio.file.attribute.FileTime;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.NavigableMap;
 import java.util.TreeMap;
+import java.util.concurrent.TimeUnit;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.typesafe.config.ConfigFactory;
@@ -95,7 +98,7 @@ public class MediaFileHelper {
 			Logger.debug("running: " + cmd);
 			String part = SystemHelper.runCommand(cmd).trim();
 			try {
-				return Long.parseLong(part)-1;
+				return !part.equals("0") ? Long.parseLong(part)-1 : Long.parseLong(part);
 			} catch (NumberFormatException ex) {
 				Logger.error(ex.getLocalizedMessage(), ex);
 			}			
@@ -132,7 +135,15 @@ public class MediaFileHelper {
 		}
 		return mediaFile;
 	}
-
+	
+	public static Date fileTimeToDate(FileTime fileTime) {
+		long milliseconds = fileTime.to(TimeUnit.MILLISECONDS);
+        if((milliseconds > Long.MIN_VALUE) && (milliseconds < Long.MAX_VALUE)) {
+            return new Date(fileTime.to(TimeUnit.MILLISECONDS));
+        }
+        return null;
+	}
+	
 	private static MediaFile addProperty(MediaFile mediaFile, String key, String value) {
 		if (key != null && value != null && mediaFile != null) {
 			Property.getOrCreate(mediaFile, key, value);

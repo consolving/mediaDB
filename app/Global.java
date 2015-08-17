@@ -6,6 +6,7 @@ import com.typesafe.config.ConfigFactory;
 
 import fileauth.FileAuthScanJob;
 import helpers.JobHandler;
+import jobs.CheckJob;
 import jobs.ImportJob;
 import play.Application;
 import play.GlobalSettings;
@@ -18,6 +19,7 @@ public class Global extends GlobalSettings {
 		FileAuthScanJob.schedule();
 		outputTools();
 		JobService.addJob(new ImportJob());
+		JobService.addJob(new CheckJob());
 	}
 
 	public void onStop(Application app) {

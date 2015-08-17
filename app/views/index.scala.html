@@ -145,7 +145,6 @@
 		    	y1 = da.attr("y");
 		    	text.each(function (d, j) {
 			        b = this;
-			        console.log("a vs b: "+a.id+ " vs "+b.id);
 			        // a & b are the same element and don't collide.
 			        if (a.id == b.id) return;
 			        db = d3.select(b);
@@ -223,6 +222,7 @@
 					<th>Status</th>
 					<th>Runs every</th>
 					<th>last Run</th>
+					<th>next Run</th>					
 				</tr>
 			@for(job <- JobService.getJobNames()) {
 				<tr>
@@ -230,6 +230,7 @@
 					<td>@JobService.getStatus(job)</td>
 					<td>@JobService.getJob(job).getRunEvery() minutes</td>
 					<td>@JobService.getLastRun(job).since()</td>
+					<td>@JobService.getNextRun(job).since()</td>
 				</tr>
 			}
 			</table>

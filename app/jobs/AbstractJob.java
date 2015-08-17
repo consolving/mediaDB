@@ -3,6 +3,7 @@ package jobs;
 import com.typesafe.config.ConfigFactory;
 
 import helpers.JobHandler;
+import models.Configuration;
 import play.Logger;
 
 public abstract class AbstractJob  implements Runnable {
@@ -18,6 +19,7 @@ public abstract class AbstractJob  implements Runnable {
 	}
 
 	public int getRunEvery() {
+		Configuration.set("job."+getName()+".runEvery", String.valueOf(getValue("job."+getName()+".runEvery", 10)));
 		return getValue("job."+getName()+".runEvery", 10);
 	}
 	

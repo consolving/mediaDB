@@ -16,6 +16,8 @@ create table media_file (
   checksum                  varchar(255),
   filename                  varchar(255),
   mime_type                 varchar(255),
+  last_check                timestamp,
+  created                   timestamp,
   constraint pk_media_file primary key (id))
 ;
 

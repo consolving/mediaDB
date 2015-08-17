@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import org.joda.time.DateTime;
+
 import helpers.JobHandler;
 import jobs.AbstractJob;
 import jobs.ImportJob;
@@ -39,7 +41,7 @@ public class JobService {
 		}
 	};
 	public static void addJob(AbstractJob job) {
-		JobHandler handler = new JobHandler(new ImportJob());
+		JobHandler handler = new JobHandler(job);
 		handler.schedule();
 		jobHandlers.put(job.getName(), handler);
 	}
@@ -78,6 +80,7 @@ public class JobService {
 	}
 
 	public static void setLastRun(String jobname) {
+		Logger.info("Running "+jobname);
 		String key = "job." + jobname + ".last";
 		Configuration.set(key, JOBS_DATE.format(new Date()));
 		setStatus(jobname, Status.RUNNING);
@@ -91,6 +94,20 @@ public class JobService {
 			Logger.error(ex.getLocalizedMessage(), ex);
 			return new Date();
 		}
+	}
+	
+	public static Date getNextRun(String jobname) {
+		String key1 = "job." + jobname + ".last";
+		String key2 = "job." + jobname + ".runEvery";
+		try {
+			Date last = Configuration.get(key1) != null ? JOBS_DATE.parse(Configuration.get(key1)) : new Date();
+			Integer every = Integer.parseInt(Configuration.get(key2) != null ? Configuration.get(key2): "5");
+			DateTime dt = new DateTime(last);
+			return dt.plusMinutes(every).toDate();
+		} catch(NumberFormatException | ParseException ex) {
+			Logger.error(ex.getLocalizedMessage(), ex);
+			return new Date();
+		}		
 	}
 	
 	public static void toggleJobActive(String jobname) {

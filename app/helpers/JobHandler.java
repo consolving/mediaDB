@@ -5,6 +5,7 @@ import java.util.concurrent.TimeUnit;
 import akka.actor.Cancellable;
 import jobs.AbstractJob;
 import models.Configuration;
+import play.Logger;
 import play.libs.Akka;
 import scala.concurrent.duration.Duration;
 import services.JobService;
@@ -30,11 +31,13 @@ public class JobHandler {
 			Configuration.set("job." + job.getName() + ".active", "true");
 			Configuration.set("jobs.stats", null);	
 			JobService.setStatus(job.getName(), JobService.Status.STARTED);
+			job.run();
 		}
 	}
 
 	public void stop() {
 		if(jobCancellable != null) {
+			Logger.info(job.getName()+" not active. Stopping.");	
 			Configuration.set("job." + job.getName() + ".active", "false");
 			Configuration.set("jobs.stats", null);	
 			jobCancellable.cancel();

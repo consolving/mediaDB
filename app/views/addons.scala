@@ -16,7 +16,21 @@ package object addons {
       val period: Period = new Period(new DateTime(col), now);
       var r: String = "";
 
-      if (period.getYears() > 0) {
+      if(period.getYears() < 0) {
+          r = " in " + -period.getYears() + " year" + addS(period.getYears()); 
+      } else if (period.getWeeks() < 0) {
+        r = " in " + -period.getWeeks() + " week" + addS(period.getWeeks()); 
+      } else if (period.getMonths() < 0) {
+        r = " in " + -period.getMonths() + " month" + addS(period.getMonths()); 
+      } else if (period.getDays() < 0) {
+        r = " in " + -period.getDays() + " day" + addS(period.getDays()); 
+      } else if (period.getHours() < 0) {
+        r = " in " + -period.getHours() + " hour" + addS(period.getHours()); 
+      } else if (period.getMinutes() < 0) {
+        r = " in " + -period.getMinutes() + " minute" + addS(period.getMinutes()); 
+      } else if(period.getSeconds() < 0) {
+        r = " in " + -period.getSeconds() + " second" + addS(period.getSeconds()); 
+      } else if (period.getYears() > 0) {
         r = period.getYears() + " year" + addS(period.getYears()) + " ago";
       } else if (period.getWeeks() > 0) {
         r = period.getWeeks() + " week" + addS(period.getWeeks()) + " ago";
