@@ -14,7 +14,7 @@ import play.Logger;
 import services.JobService;
 
 public class CheckJob extends AbstractJob {
-
+	final Logger.ALogger logger = Logger.of(this.getClass());
 	private final static String ROOT_DIR = ConfigFactory.load().getString("media.root.dir");
 	private final static String STORAGE_FILE_TEMPLATE = ROOT_DIR + File.separator + "storage" + File.separator + "%file%";
 
@@ -43,10 +43,10 @@ public class CheckJob extends AbstractJob {
 					mediaFile.created = MediaFileHelper.fileTimeToDate(attr.creationTime());
 					mediaFile.checked();
 				} catch (IOException ex) {
-					Logger.warn(ex.getLocalizedMessage(), ex);
+					logger.warn(ex.getLocalizedMessage(), ex);
 				}
 			} else {
-				Logger.info(mediaFile.toString() + ": file not found!");
+				logger.info(mediaFile.toString() + ": file not found!");
 				mediaFile.deleteManyToManyAssociations("tags");
 				for(models.Property prop : mediaFile.getProperties()) {
 					prop.delete();

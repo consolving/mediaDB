@@ -18,7 +18,7 @@ import play.Logger;
 import services.JobService;
 
 public class ImportJob extends AbstractJob {
-
+	final Logger.ALogger logger = Logger.of(this.getClass());
 	public ImportJob() {
 		super("ImportJob");
 	}
@@ -54,7 +54,7 @@ public class ImportJob extends AbstractJob {
 				files.add(f);
 			}
 			count--;
-			Logger.debug(f.getAbsolutePath()+"!="+MEDIA_FOLDER.getAbsolutePath()+": "+ MediaFileHelper.getCount(f));
+			logger.debug(f.getAbsolutePath()+"!="+MEDIA_FOLDER.getAbsolutePath()+": "+ MediaFileHelper.getCount(f));
 			if(MediaFileHelper.getCount(f) == 0 && !f.getAbsolutePath().equals(MEDIA_FOLDER.getAbsolutePath())) {
 				MediaFileHelper.delete(f.getAbsolutePath().endsWith("/") ? f.getAbsolutePath().substring(0, f.getAbsolutePath().length()-1) : f.getAbsolutePath());
 			}
@@ -70,7 +70,7 @@ public class ImportJob extends AbstractJob {
 				checksum = OpensslHelper.getSha256Checksum(f);
 				MediaFile mf = MediaFile.Finder.where().eq("checksum", checksum).findUnique();
 				if (checksum == null) {
-					Logger.error("cannot create checksum for " + f.getAbsolutePath());
+					logger.error("cannot create checksum for " + f.getAbsolutePath());
 				} else if (mf == null) {
 					mf = new MediaFile();
 					mf.checksum = checksum;
@@ -79,11 +79,11 @@ public class ImportJob extends AbstractJob {
 					mf.save();
 					mf = MediaFileHelper.probeFile(mf, f);
 					mf.save();
-					Logger.info("created " + f.getAbsolutePath() + " Checksum " + checksum);
+					logger.info("created " + f.getAbsolutePath() + " Checksum " + checksum);
 					mf = MediaFile.Finder.where().eq("checksum", checksum).findUnique();
 					handleFile(f, new File(STORAGE_FOLDER + File.separator + checksum));
 				} else {
-					Logger.info(f.getAbsolutePath() + " already found! Checksum " + checksum);
+					logger.info(f.getAbsolutePath() + " already found! Checksum " + checksum);
 					handleFile(f, new File(STORAGE_FOLDER + File.separator + checksum));
 				}
 				if (f != null && mf != null && f.getName().equals(mf.checksum)) {
@@ -100,7 +100,7 @@ public class ImportJob extends AbstractJob {
 			try {
 				mf.mimeType = Files.probeContentType(f.toPath());
 			} catch (IOException e) {
-				Logger.error("Problem operating on filesystem, finding MimeType of " + f.getAbsolutePath());
+				logger.error("Problem operating on filesystem, finding MimeType of " + f.getAbsolutePath());
 			}						
 		}
 		return mf;
@@ -110,14 +110,14 @@ public class ImportJob extends AbstractJob {
 		if(!to.exists()) {
 			try {	
 				FileUtils.moveFile(from, to);
-				Logger.info("moving " + from.getAbsolutePath() + " to " + to.getAbsolutePath());
+				logger.info("moving " + from.getAbsolutePath() + " to " + to.getAbsolutePath());
 				
 			} catch (IOException ex) {
-				Logger.warn(ex.getLocalizedMessage(), ex);
+				logger.warn(ex.getLocalizedMessage(), ex);
 			}
 		} else {
 			FileUtils.deleteQuietly(from);
-			Logger.info("deleting" + from.getAbsolutePath() + " already a copy present!");	
+			logger.info("deleting" + from.getAbsolutePath() + " already a copy present!");	
 		}
 	}
 }

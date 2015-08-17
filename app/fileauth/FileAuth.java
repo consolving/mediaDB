@@ -29,7 +29,7 @@ import play.cache.Cache;
  * @author Philipp Haußleiter
  */
 public class FileAuth {
-
+	final static Logger.ALogger LOGGER = Logger.of(FileAuth.class);
 	/* Cache Key for User/PasswordHash Map */
 	public final static String AUTH_FILE_USERS_CACHE_KEY = "AUTH_FILE_USERS";
 	/* Cache Key for Group/Users Map */
@@ -126,7 +126,7 @@ public class FileAuth {
 		Map<String, String> users = getUsers();
 		String encryptedPass = users.get(user);
 		if (encryptedPass == null) {
-			Logger.warn("encryptedPass is NULL for user " + user);
+			LOGGER.warn("encryptedPass is NULL for user " + user);
 			return false;
 		}
 		if (encryptedPass.startsWith("$")
@@ -137,7 +137,7 @@ public class FileAuth {
 				&& UnixCrypt.matches(encryptedPass, password)) {
 			return true;
 		}
-		Logger.warn("could not validate user " + user);
+		LOGGER.warn("could not validate user " + user);
 		return false;
 	}
 
@@ -152,7 +152,7 @@ public class FileAuth {
 		Map<String, String> users = new HashMap<String, String>();
 		File file = new File(fileName);
 		if (file == null || !file.exists() || !file.isFile()) {
-			Logger.warn(fileName + " is not a valid Auth-File!");
+			LOGGER.warn(fileName + " is not a valid Auth-File!");
 		}
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(file));
@@ -170,12 +170,12 @@ public class FileAuth {
 			br.close();
 			Cache.set(AUTH_FILE_USERS_CACHE_KEY, users, CACHE_TIMEOUT);
 		} catch (FileNotFoundException ex) {
-			Logger.error(ex.getLocalizedMessage(), ex);
+			LOGGER.error(ex.getLocalizedMessage(), ex);
 		} catch (IOException ex) {
-			Logger.error(ex.getLocalizedMessage(), ex);
+			LOGGER.error(ex.getLocalizedMessage(), ex);
 		}
 		sb.append(" found " + users.size() + " mappings");
-		Logger.info(sb.toString());
+		LOGGER.info(sb.toString());
 		return users;
 	}
 
@@ -190,7 +190,7 @@ public class FileAuth {
 		Map<String, Set<String>> groups = new HashMap<String, Set<String>>();
 		File file = new File(fileName);
 		if (!file.exists() || !file.isFile()) {
-			Logger.warn(fileName + " is not a valid Auth-File!");
+			LOGGER.warn(fileName + " is not a valid Auth-File!");
 		}
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(file));
@@ -219,19 +219,19 @@ public class FileAuth {
 			br.close();
 			Cache.set(AUTH_FILE_GROUPS_CACHE_KEY, groups, CACHE_TIMEOUT);
 		} catch (FileNotFoundException ex) {
-			Logger.error(ex.getLocalizedMessage(), ex);
+			LOGGER.error(ex.getLocalizedMessage(), ex);
 		} catch (IOException ex) {
-			Logger.error(ex.getLocalizedMessage(), ex);
+			LOGGER.error(ex.getLocalizedMessage(), ex);
 		}
 		sb.append(" found " + groups.size() + " mappings");
-		Logger.info(sb.toString());
+		LOGGER.info(sb.toString());
 		return groups;
 	}
 
 	private static boolean isEnabled() {
 		if (!ConfigFactory.load().hasPath("authfile.users.path")
 				|| !ConfigFactory.load().hasPath("authfile.groups.path")) {
-			Logger.info("FileAuth not enabled. authfile.users.path or authfile.groups.path not set!");
+			LOGGER.info("FileAuth not enabled. authfile.users.path or authfile.groups.path not set!");
 			return false;
 		}
 		return true;
@@ -241,7 +241,7 @@ public class FileAuth {
 		if (ConfigFactory.load().hasPath(key)) {
 			return ConfigFactory.load().getString(key);
 		} else {
-			Logger.info("@" + System.currentTimeMillis() + " Config " + key
+			LOGGER.info("@" + System.currentTimeMillis() + " Config " + key
 					+ " not found, using default: '" + defaultValue + "'");
 			return defaultValue;
 		}
