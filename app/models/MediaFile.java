@@ -15,6 +15,9 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
+import com.avaje.ebean.Ebean;
+import com.avaje.ebean.SqlUpdate;
+
 import play.db.ebean.Model;
 
 @Entity
@@ -67,8 +70,11 @@ public class MediaFile extends Model {
     }
     
     public void checked() {
-    	this.lastCheck = new Date();
-    	save();
+    	SqlUpdate update = Ebean. createSqlUpdate("UPDATE media_file SET last_check=:lastCheck, created=:created WHERE checksum=:checksum")
+		.setParameter("lastCheck", new Date())
+		.setParameter("created", this.created)
+		.setParameter("checksum", this.checksum);
+		update.execute();
     }
     
     public String toString() {
