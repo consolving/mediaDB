@@ -37,7 +37,11 @@
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">Jobs (@JobService.getJobsStats() running)<span class="caret"></span></a>
                             <ul class="dropdown-menu" role="menu">
                             @for(job <- JobService.getJobNames()) {
-                            	<li><form action="@routes.Jobs.toggleJobActive(job)" method="POST"><button style="width:100%" class="btn @if(JobService.isJobActive(job)){btn-danger">disable}else{btn-success">enable} @job</button></form></li>
+                            	@if(JobService.isCancellable(job)) {
+                            		<li><form action="@routes.Jobs.toggleJobActive(job)" method="POST"><button style="width:100%" class="btn @if(JobService.isJobActive(job)){btn-danger">disable}else{btn-success">enable} @job</button></form></li>
+                            	} else {
+                            		<li><button style="width:100%" class="btn btn-default disabled">@job</button></li>
+                            	}
                             }
                             <li class="divider"></li>
                             <li><form action="@routes.Jobs.toggleJobsActive()" method="POST"><button style="width:100%" class="btn @if(JobService.isJobsActive()){btn-danger">disable}else{btn-success">enable} all</button></form></li>

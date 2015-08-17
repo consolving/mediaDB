@@ -148,8 +148,7 @@ public class FileAuth {
 	 */
 	public static Map<String, String> scanUsers() {
 		String fileName = AUTH_FILE_USERS_PATH;
-		StringBuilder sb = new StringBuilder("@" + System.currentTimeMillis()
-				+ " Scanning Users in " + fileName + "... ");
+		StringBuilder sb = new StringBuilder("Scanning Users in " + fileName + "... ");
 		Map<String, String> users = new HashMap<String, String>();
 		File file = new File(fileName);
 		if (file == null || !file.exists() || !file.isFile()) {
@@ -187,8 +186,7 @@ public class FileAuth {
 	 */
 	public static Map<String, Set<String>> scanGroups() {
 		String fileName = AUTH_FILE_GROUPS_PATH;
-		StringBuilder sb = new StringBuilder("@" + System.currentTimeMillis()
-				+ " Scanning Groups in " + fileName + "... ");
+		StringBuilder sb = new StringBuilder("Scanning Groups in " + fileName + "... ");
 		Map<String, Set<String>> groups = new HashMap<String, Set<String>>();
 		File file = new File(fileName);
 		if (!file.exists() || !file.isFile()) {

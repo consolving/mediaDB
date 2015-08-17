@@ -11,7 +11,6 @@ import org.joda.time.DateTime;
 
 import helpers.JobHandler;
 import jobs.AbstractJob;
-import jobs.ImportJob;
 import jobs.NopJob;
 import models.Configuration;
 import play.Logger;
@@ -51,6 +50,13 @@ public class JobService {
 			return jobHandlers.get(jobname);
 		}
 		return NOP_HANDLER;
+	}
+	
+	public static boolean isCancellable(String jobname) {
+		if(jobHandlers.containsKey(jobname)){
+			return jobHandlers.get(jobname).isCancellable();
+		}
+		return false;
 	}
 	
 	public static boolean isJobActive(String jobname) {
@@ -113,6 +119,9 @@ public class JobService {
 	public static void toggleJobActive(String jobname) {
 		String key1 = "job." + jobname + ".active";
 		String key2 = "jobs.active";
+		if(!isCancellable(jobname)) {
+			return;
+		}
 		if (JobService.isJobActive(jobname)) {
 			Configuration.set(key1, "false");
 			JobService.setStatus(jobname, JobService.Status.STOPPING);
@@ -127,15 +136,19 @@ public class JobService {
 	public static void toggleJobsActive() {
 		if (JobService.isJobsActive()) {
 			for (String job : JobService.getJobNames()) {
-				Configuration.set("job." + job + ".active", "false");
-				Configuration.set("jobs.active", "false");
-				JobService.setStatus(job, JobService.Status.STOPPING);
+				if(isCancellable(job)) {
+					Configuration.set("job." + job + ".active", "false");
+					Configuration.set("jobs.active", "false");
+					JobService.setStatus(job, JobService.Status.STOPPING);					
+				}	
 			}
 		} else {
 			for (String job : JobService.getJobNames()) {
-				Configuration.set("job." + job + ".active", "true");
-				Configuration.set("jobs.active", "true");
-				JobService.setStatus(job, JobService.Status.STARTED);
+				if(isCancellable(job)) {
+					Configuration.set("job." + job + ".active", "true");
+					Configuration.set("jobs.active", "true");
+					JobService.setStatus(job, JobService.Status.STARTED);
+				}
 			}
 		}
 		Configuration.set("jobs.stats", null);		
@@ -149,7 +162,7 @@ public class JobService {
 		return getHandler(jobname).getJob();
 	}
 	
-	public static void setStatus(String jobname, Status status) {
+	public static void setStatus(String jobname, Status status) {	
 		String key = "job." + jobname + ".status";
 		Configuration.set(key, status.toString());		
 	}

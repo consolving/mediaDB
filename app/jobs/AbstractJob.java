@@ -9,7 +9,7 @@ import play.Logger;
 public abstract class AbstractJob  implements Runnable {
 	private String name;
 	protected JobHandler jobHandler = null;
-	
+	protected boolean cancellable = true;
 	public AbstractJob(String name) {
 		this.name = name;
 	}
@@ -25,6 +25,10 @@ public abstract class AbstractJob  implements Runnable {
 	
 	public void setJobHandler(JobHandler jobHandler) {
 		this.jobHandler = jobHandler;
+	}
+	
+	public boolean isCancellable() {
+		return this.cancellable;
 	}
 	
 	protected static int getValue(String key, int defaultValue) {

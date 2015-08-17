@@ -48,4 +48,8 @@ public class JobHandler {
 	public AbstractJob getJob() {
 		return job;
 	}
+	
+	public boolean isCancellable() {
+		return job.isCancellable();
+	}
 }

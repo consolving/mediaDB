@@ -16,17 +16,16 @@ import services.JobService;
 public class Global extends GlobalSettings {
 	private List<JobHandler> jobHandlers = new ArrayList<JobHandler>();
 	public void onStart(Application app) {
-		FileAuthScanJob.schedule();
 		outputTools();
+		JobService.addJob(new FileAuthScanJob());
 		JobService.addJob(new ImportJob());
-		JobService.addJob(new CheckJob());
+		JobService.addJob(new CheckJob());	
 	}
 
 	public void onStop(Application app) {
 		for(JobHandler handler : jobHandlers) {
 			handler.stop();
 		}
-		FileAuthScanJob.cancel();
 	}
 	
 	private void outputTools() {
