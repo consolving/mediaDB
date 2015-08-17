@@ -72,7 +72,7 @@ public class MediaFiles extends Application {
 					
 					part = MediaFileHelper.getCount(folder);
 					dir = Json.newObject();
-					dir.put("label", folder.getName()+" "+MediaFileHelper.humanReadableCount(part));			
+					dir.put("label", folder.getName()+" "+part);			
 					dir.put("value", part);
 					dirCounts.add(dir);
 				}
