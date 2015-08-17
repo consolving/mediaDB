@@ -70,9 +70,9 @@ public class MediaFiles extends Application {
 					dir.put("value", 100*part/sum);
 					dirSizes.add(dir);
 					
-					part = MediaFileHelper.getSize(folder);
+					part = MediaFileHelper.getCount(folder);
 					dir = Json.newObject();
-					dir.put("label", folder.getName()+"\n"+part);			
+					dir.put("label", folder.getName()+"\n"+MediaFileHelper.humanReadableCount(part));			
 					dir.put("value", part);
 					dirCounts.add(dir);
 				}

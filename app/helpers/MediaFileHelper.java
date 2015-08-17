@@ -3,6 +3,8 @@ package helpers;
 import java.io.File;
 import java.util.Iterator;
 import java.util.Map.Entry;
+import java.util.NavigableMap;
+import java.util.TreeMap;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.typesafe.config.ConfigFactory;
@@ -14,13 +16,28 @@ import play.Logger;
 import play.libs.Json;
 
 public class MediaFileHelper {
+	
+	private static final NavigableMap<Long, String> suffixes = new TreeMap<> ();
+	static {
+	  suffixes.put(1_000L, "k");
+	  suffixes.put(1_000_000L, "M");
+	  suffixes.put(1_000_000_000L, "G");
+	  suffixes.put(1_000_000_000_000L, "T");
+	  suffixes.put(1_000_000_000_000_000L, "P");
+	  suffixes.put(1_000_000_000_000_000_000L, "E");
+	}
+	
 	private final static String FILE_BIN = ConfigFactory.load().getString("system.file.bin");
 	private final static boolean HAS_FILE_BIN = new File(FILE_BIN).exists();
 	private final static String DU_BIN = ConfigFactory.load().getString("system.du.bin");
 	private final static boolean HAS_DU_BIN = new File(DU_BIN).exists();
 	private final static String MV_BIN = ConfigFactory.load().getString("system.mv.bin");
 	private final static boolean HAS_MV_BIN = new File(MV_BIN).exists();
-
+	private final static String LS_BIN = ConfigFactory.load().getString("system.ls.bin");
+	private final static boolean HAS_LS_BIN = new File(LS_BIN).exists();
+	private final static String WC_BIN = ConfigFactory.load().getString("system.wc.bin");
+	private final static boolean HAS_WC_BIN = new File(WC_BIN).exists();
+	
 	private MediaFileHelper() {
 	}
 
@@ -72,6 +89,34 @@ public class MediaFileHelper {
 		return null;
 	}
 
+	public static Long getCount(File file) {
+		if (HAS_WC_BIN && HAS_LS_BIN && file.exists()) {
+			String cmd = LS_BIN+" -l \"" + file.getAbsolutePath() + "/\" | "+WC_BIN+" -l";
+			Logger.debug("running: " + cmd);
+			String part = SystemHelper.runCommand(cmd).trim();
+			try {
+				return Long.parseLong(part)-1;
+			} catch (NumberFormatException ex) {
+				Logger.error(ex.getLocalizedMessage(), ex);
+			}			
+		}
+		return null;
+	}
+	
+	public static String humanReadableCount(long value) {
+	  if (value == Long.MIN_VALUE) return humanReadableCount(Long.MIN_VALUE + 1);
+	  if (value < 0) return "-" + humanReadableCount(-value);
+	  if (value < 1000) return Long.toString(value); //deal with easy case
+
+	  Entry<Long, String> e = suffixes.floorEntry(value);
+	  Long divideBy = e.getKey();
+	  String suffix = e.getValue();
+
+	  long truncated = value / (divideBy / 10); //the number part of the output times 10
+	  boolean hasDecimal = truncated < 100 && (truncated / 10d) != (truncated / 10);
+	  return hasDecimal ? (truncated / 10d) + suffix : (truncated / 10) + suffix;		
+	}
+	
 	public static String humanReadableByteCount(long bytes, boolean si) {
 		int unit = si ? 1000 : 1024;
 		if (bytes < unit)
