@@ -50,7 +50,7 @@ public class FolderSizesJob extends AbstractJob {
 					if (part != null && sum != null) {
 						ObjectNode dir = Json.newObject();
 						dir.put("label", folder.getName() + " " + MediaFileHelper.humanReadableByteCount(part * 1000, true));
-						dir.put("value", 100 * part / sum);
+						dir.put("value", (sum==0 ? 0 : 100 * part / sum));
 						dirSizes.add(dir);
 
 						part = MediaFileHelper.getCount(folder);
@@ -63,7 +63,7 @@ public class FolderSizesJob extends AbstractJob {
 			}
 			out.put("dirsSizes", dirSizes);
 			out.put("dirsCounts", dirCounts);
-			Cache.set("folderStats", out, 120);
+			Cache.set("folderStats", out, 360);
 		}
 	}
 }
