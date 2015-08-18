@@ -5,10 +5,15 @@
 		<h1><small>@mediaFiles.size()</small> Media Files</h1>
 	</div>
     <div class="row">
-	<ul>
+    <table class="table table-striped">
 	@for(mediaFile <- mediaFiles){
-		<li>[<a target="_download" href="@routes.MediaFiles.download(mediaFile.checksum)">download</a>] <a href="@routes.MediaFiles.show(mediaFile.checksum)">@mediaFile.filename</a></li>
+		<tr>
+			<td><a href="@routes.MediaFiles.show(mediaFile.checksum)">@mediaFile.filename</a></td>
+			<td>@mediaFile.filesize</td>
+			<td>@if(mediaFile.created != null){@mediaFile.created.format("dd.MM.yyyy HH:mm:ss")}</td>
+			<td>[<a target="_download" href="@routes.MediaFiles.download(mediaFile.checksum)">download</a>]</td> 
+		</tr>
 	}
-	</ul>
+	</table>
 	</div>
 }
