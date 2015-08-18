@@ -15,6 +15,7 @@ create table media_file (
   id                        bigint auto_increment not null,
   checksum                  varchar(255),
   filename                  varchar(255),
+  filesize                  bigint,
   mime_type                 varchar(255),
   last_check                timestamp,
   created                   timestamp,
