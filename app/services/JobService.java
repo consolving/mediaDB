@@ -1,18 +1,22 @@
 package services;
 
+import helpers.JobHandler;
+import helpers.Util;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
-import org.joda.time.DateTime;
-
-import helpers.JobHandler;
 import jobs.AbstractJob;
 import jobs.NopJob;
 import models.Configuration;
+
+import org.joda.time.DateTime;
+
 import play.Logger;
 
 public class JobService {
@@ -23,7 +27,6 @@ public class JobService {
 	private final static AbstractJob NOP_JOB = new NopJob();
 	private final static JobHandler NOP_HANDLER = new JobHandler(NOP_JOB);
 	private static Map<String, JobHandler> jobHandlers = new HashMap<>();
-	
 	public static enum Status {
 		STARTED("started"),
 		RUNNING("running"), 
@@ -154,8 +157,9 @@ public class JobService {
 		Configuration.set("jobs.stats", null);		
 	}
 	
-	public static Set<String> getJobNames() {
-		return jobHandlers.keySet();
+	public static List<String> getJobNames() {
+		Collection<String> unsorted = jobHandlers.keySet();
+		return Util.asSortedList(unsorted);
 	}
 	
 	public static AbstractJob getJob(String jobname) {
