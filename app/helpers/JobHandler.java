@@ -25,7 +25,7 @@ public class JobHandler {
 
 	public void schedule() {
 		if(job != null && job.getName() != null) {
-			jobCancellable = Akka.system().scheduler().schedule(Duration.create(200, TimeUnit.MILLISECONDS),
+			jobCancellable = Akka.system().scheduler().schedule(Duration.create(30, TimeUnit.SECONDS),
 					Duration.create(job.getRunEvery(), TimeUnit.MINUTES), 
 					job, Akka.system().dispatcher());
 			Configuration.set("job." + job.getName() + ".active", "true");
