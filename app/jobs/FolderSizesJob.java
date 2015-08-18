@@ -63,7 +63,7 @@ public class FolderSizesJob extends AbstractJob {
 			}
 			out.put("dirsSizes", dirSizes);
 			out.put("dirsCounts", dirCounts);
-			Cache.set("folderStats", out, 360);
+			Cache.set("folderStats", out, 3600);
 		}
 	}
 }
