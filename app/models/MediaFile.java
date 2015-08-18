@@ -29,6 +29,7 @@ public class MediaFile extends Model {
 
 	public String checksum;
 	public String filename;
+	public Long filesize;
 	public String mimeType;
 	
 	public Date lastCheck;
@@ -59,8 +60,8 @@ public class MediaFile extends Model {
     	return Property.Finder.where().eq("mediaFile.id", this.id).orderBy("k ASC").findList();
     } 
     
-    public Map<String, Set> getTagsMap() {
-        Map<String, Set> tagsMap = new HashMap<String, Set>();
+    public Map<String, Set<String>> getTagsMap() {
+        Map<String, Set<String>> tagsMap = new HashMap<String, Set<String>>();
         Set<String> tagsValue = new TreeSet<String>();
         for (Tag t : tags) {
             tagsValue.add(t.name);
@@ -70,9 +71,10 @@ public class MediaFile extends Model {
     }
     
     public void checked() {
-    	SqlUpdate update = Ebean. createSqlUpdate("UPDATE media_file SET last_check=:lastCheck, created=:created WHERE checksum=:checksum")
+    	SqlUpdate update = Ebean. createSqlUpdate("UPDATE media_file SET last_check=:lastCheck, filesize=:filesize, created=:created WHERE checksum=:checksum")
 		.setParameter("lastCheck", new Date())
 		.setParameter("created", this.created)
+		.setParameter("filesize", this.filesize)
 		.setParameter("checksum", this.checksum);
 		update.execute();
     }

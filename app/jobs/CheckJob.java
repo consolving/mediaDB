@@ -40,6 +40,7 @@ public class CheckJob extends AbstractJob {
 			file = new File(STORAGE_FILE_TEMPLATE.replace("%file%", mediaFile.checksum));
 			if(file.exists()) {
 				try {
+					mediaFile.filesize = MediaFileHelper.getSize(file);
 					BasicFileAttributes attr = Files.readAttributes(file.toPath(), BasicFileAttributes.class);
 					mediaFile.created = MediaFileHelper.fileTimeToDate(attr.creationTime());
 					mediaFile.checked();
