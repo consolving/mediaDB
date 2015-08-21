@@ -80,7 +80,12 @@ public class MediaFileHelper {
 
 	public static Long getSize(File file) {
 		if (HAS_DU_BIN && file.exists()) {
-			String cmd = DU_BIN + " -s \"" + file.getAbsolutePath() + "\"";
+			String cmd;
+			if(file.isFile() && file.getAbsolutePath().endsWith("/")) {
+				cmd = DU_BIN + " -s \"" + file.getAbsolutePath().substring(0, file.getAbsolutePath().length()-1) + "\"";	
+			} else {
+				cmd = DU_BIN + " -s \"" + file.getAbsolutePath() + "\"";
+			}
 			Logger.debug("running: " + cmd);
 			String parts[] = SystemHelper.runCommand(cmd).split("\t");
 			try {
@@ -95,7 +100,7 @@ public class MediaFileHelper {
 	}
 
 	public static Long getCount(File file) {
-		if (HAS_WC_BIN && HAS_LS_BIN && file.exists()) {
+		if (HAS_WC_BIN && HAS_LS_BIN && file.exists() && !file.isFile()) {
 			String cmd = LS_BIN+" -l \"" + file.getAbsolutePath() + "/\" | "+WC_BIN+" -l";
 			Logger.debug("running: " + cmd);
 			String part = SystemHelper.runCommand(cmd).trim();
