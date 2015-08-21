@@ -31,7 +31,6 @@ public class JobHandler {
 			Configuration.set("job." + job.getName() + ".active", "true");
 			Configuration.set("jobs.stats", null);	
 			JobService.setStatus(job.getName(), JobService.Status.STARTED);
-			job.run();
 		}
 	}
 
