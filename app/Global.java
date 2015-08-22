@@ -15,9 +15,11 @@ import play.Logger;
 import services.JobService;
 
 public class Global extends GlobalSettings {
+	private final static String ROOT_DIR = ConfigFactory.load().getString("media.root.dir");
 	private List<JobHandler> jobHandlers = new ArrayList<JobHandler>();
 	public void onStart(Application app) {
 		outputTools();
+		checkFolders();
 		JobService.addJob(new FileAuthScanJob());
 		JobService.addJob(new ImportJob());
 		JobService.addJob(new CheckJob());	
@@ -43,6 +45,21 @@ public class Global extends GlobalSettings {
 				Logger.info(key+" => "+ConfigFactory.load().getString(key)+" exists!");
 			} else {
 				Logger.warn(key+" => "+ConfigFactory.load().getString(key)+" missing!");
+			}
+		}
+	}
+	
+	private void checkFolders() {
+		String[] folders = {
+				ROOT_DIR+File.separator + "upload",
+				ROOT_DIR+File.separator + "storage",
+				ROOT_DIR+File.separator + "tmp",
+				ROOT_DIR+File.separator + "thumbnails"
+		};
+		for(String folder : folders){
+			if(!new File(folder).exists()) {
+				Logger.info("creating " + folder);
+				new File(folder).mkdirs();
 			}
 		}
 	}

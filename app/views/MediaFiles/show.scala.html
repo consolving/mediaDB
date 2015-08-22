@@ -2,6 +2,12 @@
 
 @main("File "+mf.filename) {
     <div class="row"> 
+    	<div class="col-md-4">
+    		@if(mf.getThumbnail() != null) {
+	    		<img class="img-thumbnail" style="max-height: 200px" src="@routes.MediaFiles.thumbnail(mf.checksum, 0)"/>
+	    	}
+    	</div>
+    	<div class="col-md-8">
     	<dl>
     		<dt>Filename</dt>
     		<dd>@mf.filename</dd>
@@ -12,6 +18,7 @@
     		<dt>Download</dt>
     		<dd><a target="_download" href="@routes.MediaFiles.download(mf.checksum)">@mf.filename</a></dd>    		
     	</dl>
+    	</div>
     </div>
     <div class="row"> 
 		<div class="col-md-2">

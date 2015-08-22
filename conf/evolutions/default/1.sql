@@ -36,6 +36,13 @@ create table tag (
   constraint pk_tag primary key (id))
 ;
 
+create table thumbnail (
+  id                        bigint auto_increment not null,
+  filename                  varchar(255),
+  media_file_id             bigint,
+  constraint pk_thumbnail primary key (id))
+;
+
 
 create table media_file_tag (
   media_file_id                  bigint not null,
@@ -44,6 +51,8 @@ create table media_file_tag (
 ;
 alter table property add constraint fk_property_mediaFile_1 foreign key (media_file_id) references media_file (id) on delete restrict on update restrict;
 create index ix_property_mediaFile_1 on property (media_file_id);
+alter table thumbnail add constraint fk_thumbnail_mediaFile_2 foreign key (media_file_id) references media_file (id) on delete restrict on update restrict;
+create index ix_thumbnail_mediaFile_2 on thumbnail (media_file_id);
 
 
 
@@ -64,6 +73,8 @@ drop table if exists media_file_tag;
 drop table if exists property;
 
 drop table if exists tag;
+
+drop table if exists thumbnail;
 
 SET REFERENTIAL_INTEGRITY TRUE;
 

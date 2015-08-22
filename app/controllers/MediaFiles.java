@@ -32,6 +32,15 @@ public class MediaFiles extends Application {
 		return notFound();
 	}
 
+	public static Result thumbnail(String checksum, Integer index) {
+		MediaFile mf = MediaFile.Finder.where().eq("checksum", checksum).findUnique();
+		File media = mf != null && mf.getThumbnail() != null ? new File(mf.getThumbnail()) : null;
+		if (media == null || !media.exists()) {
+			return notFound();
+		}
+		return ok(media);
+	}
+	
 	public static Result download(String checksum) {
 		MediaFile mf = MediaFile.Finder.where().eq("checksum", checksum).findUnique();
 		File media = mf != null ? new File(ROOT_DIR + File.separator + "storage" + File.separator + mf.checksum) : null;

@@ -9,6 +9,7 @@ import java.util.List;
 import com.typesafe.config.ConfigFactory;
 
 import helpers.MediaFileHelper;
+import helpers.ThumbnailsHelper;
 import models.MediaFile;
 import play.Logger;
 import services.JobService;
@@ -43,6 +44,7 @@ public class CheckJob extends AbstractJob {
 					mediaFile.filesize = MediaFileHelper.getSize(file);
 					BasicFileAttributes attr = Files.readAttributes(file.toPath(), BasicFileAttributes.class);
 					mediaFile.created = MediaFileHelper.fileTimeToDate(attr.creationTime());
+					ThumbnailsHelper.createThumbnail(mediaFile, "800x600");
 					mediaFile.checked();
 				} catch (IOException ex) {
 					logger.warn(ex.getLocalizedMessage(), ex);

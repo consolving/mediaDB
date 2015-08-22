@@ -14,6 +14,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 
 import com.avaje.ebean.Ebean;
 import com.avaje.ebean.SqlUpdate;
@@ -29,6 +30,7 @@ public class MediaFile extends Model {
 
 	public String checksum;
 	public String filename;
+	
 	public Long filesize;
 	public String mimeType;
 	
@@ -39,7 +41,12 @@ public class MediaFile extends Model {
 	private Set<Tag> tags;
 
 	@OneToMany(mappedBy="mediaFile")
+	@OrderBy("k DESC")
 	private List<Property> properties;
+
+	@OneToMany(mappedBy="mediaFile")
+	@OrderBy("filename DESC")
+	private List<Thumbnail> thumbnails;
 	
 	public static Finder<Long, MediaFile> Finder = new Finder<Long, MediaFile>(Long.class, MediaFile.class);
 
@@ -59,6 +66,10 @@ public class MediaFile extends Model {
     public List<Property> getProperties() {
     	return Property.Finder.where().eq("mediaFile.id", this.id).orderBy("k ASC").findList();
     } 
+    
+    public String getThumbnail() {
+    	return thumbnails.size() > 0 ? thumbnails.get(0).filename : null;
+    }
     
     public Map<String, Set<String>> getTagsMap() {
         Map<String, Set<String>> tagsMap = new HashMap<String, Set<String>>();
