@@ -42,14 +42,16 @@ public class ThumbnailsHelper {
 	public static File createImageThumbnail(MediaFile mediaFile, String size) {
 		checkDir(THUMBNAILS_DIR + File.separator + mediaFile.checksum);
 		File thumb = new File(THUMBNAILS_DIR + File.separator + mediaFile.checksum + File.separator + "thumb_0_"+size+".png");
-		try {
-			BufferedImage img = ImageIO.read(new File(STORAGE_FOLDER + File.separator + mediaFile.checksum));
-			Size s = getSize(size);
-			BufferedImage scaled = scale(img, s.w, s.h);
-			ImageIO.write(scaled, "png", thumb);
-			Thumbnail.getOrCreate(mediaFile, thumb.getAbsolutePath());
-		} catch (IOException ex) {
-			Logger.warn(ex.getLocalizedMessage(), ex);
+		if(!thumb.exists()) {
+			try {
+				BufferedImage img = ImageIO.read(new File(STORAGE_FOLDER + File.separator + mediaFile.checksum));
+				Size s = getSize(size);
+				BufferedImage scaled = scale(img, s.w, s.h);
+				ImageIO.write(scaled, "png", thumb);
+				Thumbnail.getOrCreate(mediaFile, thumb.getAbsolutePath());
+			} catch (IOException ex) {
+				Logger.warn(ex.getLocalizedMessage(), ex);
+			}
 		}
 		return thumb;
 	}
