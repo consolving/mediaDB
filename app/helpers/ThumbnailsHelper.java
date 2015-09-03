@@ -43,14 +43,21 @@ public class ThumbnailsHelper {
 		checkDir(THUMBNAILS_DIR + File.separator + mediaFile.checksum);
 		File thumb = new File(THUMBNAILS_DIR + File.separator + mediaFile.checksum + File.separator + "thumb_0_"+size+".png");
 		if(!thumb.exists()) {
-			try {
-				BufferedImage img = ImageIO.read(new File(STORAGE_FOLDER + File.separator + mediaFile.checksum));
-				Size s = getSize(size);
-				BufferedImage scaled = scale(img, s.w, s.h);
-				ImageIO.write(scaled, "png", thumb);
-				Thumbnail.getOrCreate(mediaFile, thumb.getAbsolutePath());
-			} catch (IOException ex) {
-				Logger.warn(ex.getLocalizedMessage(), ex);
+			File file = new File(STORAGE_FOLDER + File.separator + mediaFile.checksum);
+			if(file.exists()) {
+				try {
+					BufferedImage img = ImageIO.read(file);
+					Size s = getSize(size);
+					BufferedImage scaled = scale(img, s.w, s.h);
+					ImageIO.write(scaled, "png", thumb);
+					Thumbnail.getOrCreate(mediaFile, thumb.getAbsolutePath());
+				} catch (IOException ex) {
+					Logger.warn(ex.getLocalizedMessage(), ex);
+				} catch(java.lang.ArrayIndexOutOfBoundsException ex ) {
+					Logger.warn(ex.getLocalizedMessage(), ex);					
+				}
+			} else {
+				Logger.warn(file.getAbsolutePath()+ " does not exists!");
 			}
 		}
 		return thumb;
