@@ -52,6 +52,7 @@ public class Global extends GlobalSettings {
 	private void checkFolders() {
 		String[] folders = {
 				ROOT_DIR+File.separator + "upload",
+				ROOT_DIR+File.separator + "trash",
 				ROOT_DIR+File.separator + "storage",
 				ROOT_DIR+File.separator + "tmp",
 				ROOT_DIR+File.separator + "thumbnails"
