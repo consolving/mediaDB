@@ -1,10 +1,14 @@
+@import helpers.MediaFileHelper
+
 @(mf: models.MediaFile)
 
 @main("File "+mf.filename) {
     <div class="row"> 
     	<div class="col-md-4">
     		@if(mf.getThumbnail() != null) {
+    		<a href="@routes.MediaFiles.thumbnail(mf.checksum, 0)" target="_thumb_@mf.checksum" >
 	    		<img class="img-thumbnail" style="max-height: 200px" src="@routes.MediaFiles.thumbnail(mf.checksum, 0)"/>
+	    	</a>
 	    	}
     	</div>
     	<div class="col-md-8">
@@ -15,6 +19,10 @@
     		<dd>@mf.checksum</dd>
     		<dt>Mime-Type</dt>
     		<dd>@mf.mimeType</dd>
+    		@if(mf.filesize != null) {
+    		<dt>Filesize</dt>
+    		<dd>@MediaFileHelper.humanReadableByteCount(mf.filesize*1024, true)</dd>
+    		}
     		<dt>Download</dt>
     		<dd><a target="_download" href="@routes.MediaFiles.download(mf.checksum)">@mf.filename</a></dd>    		
     	</dl>
