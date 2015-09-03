@@ -34,7 +34,7 @@ public class ThumbnailsHelper {
 			return createImageThumbnail(mediaFile, size);
 		}
 		if (mediaFile.mimeType.startsWith("video")) {
-			return createVideoThumbnail(mediaFile, 5, size);
+			return createVideoThumbnail(mediaFile, 1, size);
 		}
 		return null;
 	}
@@ -56,9 +56,18 @@ public class ThumbnailsHelper {
 		return thumb;
 	}
 
-	public static File createVideoThumbnail(MediaFile mediaFile, int i, String size) {
+	public static File createVideoThumbnail(MediaFile mediaFile, int frame, String size) {
 		checkDir(THUMBNAILS_DIR + File.separator + mediaFile.checksum);
-		return null;
+		File thumb = new File(THUMBNAILS_DIR + File.separator + mediaFile.checksum + File.separator + "thumb_0_"+size+".png");
+		if(!thumb.exists()) {
+			File file = new File(STORAGE_FOLDER + File.separator + mediaFile.checksum);
+			Size s = getSize(size);
+			thumb = FfmpegHelper.createScreenshot(file, thumb, s.w, frame);
+			if(thumb != null) {
+				Thumbnail.getOrCreate(mediaFile, thumb.getAbsolutePath());
+			}
+		}
+		return thumb;
 	}
 
 	private static void checkDir(String path) {
@@ -100,8 +109,6 @@ public class ThumbnailsHelper {
 		}
 		return s;
 	}
-	
-
 }
 
 class Size {
