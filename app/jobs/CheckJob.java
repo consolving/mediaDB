@@ -11,6 +11,7 @@ import com.typesafe.config.ConfigFactory;
 import helpers.MediaFileHelper;
 import helpers.ThumbnailsHelper;
 import models.MediaFile;
+import models.Property;
 import play.Logger;
 import services.JobService;
 
@@ -41,7 +42,8 @@ public class CheckJob extends AbstractJob {
 			file = new File(STORAGE_FILE_TEMPLATE.replace("%file%", mediaFile.checksum));
 			if(file.exists()) {
 				try {
-					mediaFile.filesize = MediaFileHelper.getSize(file);
+					Property p = mediaFile.getProperty("size");
+					mediaFile.filesize = p != null ? p.getLongValue() : MediaFileHelper.getSize(file);
 					BasicFileAttributes attr = Files.readAttributes(file.toPath(), BasicFileAttributes.class);
 					mediaFile.created = MediaFileHelper.fileTimeToDate(attr.creationTime());
 					ThumbnailsHelper.createThumbnail(mediaFile, "800x600");

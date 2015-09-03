@@ -21,7 +21,7 @@
     		<dd>@mf.mimeType</dd>
     		@if(mf.filesize != null) {
     		<dt>Filesize</dt>
-    		<dd>@MediaFileHelper.humanReadableByteCount(mf.filesize*1024, true)</dd>
+    		<dd>@MediaFileHelper.humanReadableByteCount(mf.filesize, true)</dd>
     		}
     		<dt>Download</dt>
     		<dd><a target="_download" href="@routes.MediaFiles.download(mf.checksum)">@mf.filename</a></dd>    		

@@ -35,6 +35,24 @@ public class Property extends Model implements Comparable<Property> {
 		this.v = v.trim();
 	}
 	
+	public Long getLongValue() {
+		try {
+			return Long.parseLong(v);
+		}catch(NumberFormatException ex) {
+			Logger.error(ex.getLocalizedMessage(), ex);
+		}
+		return null;
+	}
+
+	public Integer getIntegerValue() {
+		try {
+			return Integer.parseInt(v);
+		}catch(NumberFormatException ex) {
+			Logger.error(ex.getLocalizedMessage(), ex);
+		}
+		return null;
+	}
+	
 	@Override
 	public String toString() {
 		return this.k + " => " + this.v;
