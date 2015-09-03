@@ -1,6 +1,7 @@
 package models;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -10,6 +11,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.OrderBy;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -26,8 +28,9 @@ public class Tag extends Model implements Comparable<Tag> {
 	public Long id;
 	public String name;
 	
+	@OrderBy("filename DESC")
     @ManyToMany(mappedBy = "tags", cascade=CascadeType.ALL )
-    private Set<MediaFile> mediaFiles;
+    public List<MediaFile> mediaFiles;
     
 	public static Finder<Long, Tag> Finder = new Finder<Long, Tag>(Long.class, Tag.class);
 

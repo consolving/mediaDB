@@ -1,0 +1,31 @@
+@(tagName: String, mediaFiles: java.util.List[models.MediaFile])
+
+@main("Tag "+tagName) {
+    <div class="row center">
+		<h1><small>@mediaFiles.size()</small> Media Files for Tag @tagName</h1>
+	</div>
+    <div class="row">
+    <table class="table table-striped">
+    	<tr>
+    		<th>Name</th>
+    		<th>Thumbnail</th>
+    		<th>Size</th>
+    		<th>Created</th>
+    		<th></th>
+    	</tr>
+	@for(mediaFile <- mediaFiles) {
+		<tr id="mf-@mediaFile.id">
+			<td><a href="@routes.MediaFiles.show(mediaFile.checksum)">@mediaFile.filename</a></td>
+			<td>
+    		@if(mediaFile.getThumbnail() != null) {
+	    		<img class="img-thumbnail" style="max-height: 200px" src="@routes.MediaFiles.thumbnail(mediaFile.checksum, 0)"/>
+	    	}			
+			</td>
+			<td>@mediaFile.filesize</td>
+			<td>@if(mediaFile.created != null){@mediaFile.created.format("dd.MM.yyyy HH:mm:ss")}</td>
+			<td>[<a target="_download" href="@routes.MediaFiles.download(mediaFile.checksum)">download</a>]</td> 
+		</tr>
+	}
+	</table>
+	</div>
+}

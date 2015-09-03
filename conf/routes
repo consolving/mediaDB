@@ -9,6 +9,8 @@ GET     /media/files/:checksum      		controllers.MediaFiles.show(checksum)
 GET     /media/stats/folders        		controllers.MediaFiles.folderStats()
 GET     /media/thumbnails/:checksum/:index  controllers.MediaFiles.thumbnail(checksum: String, index: Integer)
 GET     /media/downloads/:checksum  		controllers.MediaFiles.download(checksum)
+GET		/tags								controllers.Tags.index()
+GET		/tags/:tagName						controllers.Tags.show(tagName)
 POST	/jobs/:jobname						controllers.Jobs.toggleJobActive(jobname)
 POST	/jobs								controllers.Jobs.toggleJobsActive()
 
