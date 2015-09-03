@@ -16,7 +16,10 @@ public class Tags extends Application {
 	}
 	
 	public static Result show(String tagName) {
-		Tag tag = Tag.findOrCreateTagByName(tagName.trim());
+		if(tagName == null) {
+			return redirect(routes.Application.index());
+		}
+		Tag tag = Tag.findOrCreateTagByName(tagName.trim().toLowerCase());
 		List<MediaFile> mediaFiles = tag.getMediaFiles();
 		return ok(show.render(tagName, mediaFiles));
 	}
