@@ -17,7 +17,7 @@ public class Tags extends Application {
 	
 	public static Result show(String tagName) {
 		Tag tag = Tag.findOrCreateTagByName(tagName.trim());
-		List<MediaFile> mediaFiles = tag.mediaFiles;
+		List<MediaFile> mediaFiles = tag.getMediaFiles();
 		return ok(show.render(tagName, mediaFiles));
 	}
 	

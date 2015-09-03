@@ -28,9 +28,8 @@ public class Tag extends Model implements Comparable<Tag> {
 	public Long id;
 	public String name;
 	
-	@OrderBy("filename DESC")
     @ManyToMany(mappedBy = "tags", cascade=CascadeType.ALL )
-    public List<MediaFile> mediaFiles;
+    private List<MediaFile> mediaFiles;
     
 	public static Finder<Long, Tag> Finder = new Finder<Long, Tag>(Long.class, Tag.class);
 
@@ -78,6 +77,10 @@ public class Tag extends Model implements Comparable<Tag> {
 		return tag;
 	}
 
+	public List<MediaFile> getMediaFiles() {
+		return MediaFile.Finder.where().eq("tags.id", this.id).orderBy("filename DESC").findList();
+	}
+	
 	@Override
 	public String toString() {
 		return this.name;

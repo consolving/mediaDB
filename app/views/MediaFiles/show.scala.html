@@ -25,7 +25,7 @@
 		<h1>Tags</h1>
 		<ul>
 		@for(tag <- mf.getTags()){
-			<li>@tag</li>
+			<li><a href="@routes.Tags.show(tag.name)">@tag</a></li>
 		}
 		</ul>
 		</div>
