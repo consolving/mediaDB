@@ -38,6 +38,8 @@ public class MediaFiles extends Application {
 		if (media == null || !media.exists()) {
 			return notFound();
 		}
+		response().setContentType("image/png");
+		response().setHeader("Content-Disposition", "inline; filename=\"" + media.getName() + "\"");		
 		return ok(media);
 	}
 	
