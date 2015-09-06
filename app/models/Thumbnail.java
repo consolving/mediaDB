@@ -39,7 +39,11 @@ public class Thumbnail extends Model {
 		return t;
 	}
 	
+	public static Integer getSize() {
+		return Finder.findRowCount();
+	}
+	
 	public static List<Thumbnail> getLast(int number) {
-		return Thumbnail.Finder.setMaxRows(number).findList();
+		return Finder.setMaxRows(number).orderBy("id DESC").findList();
 	}
 }

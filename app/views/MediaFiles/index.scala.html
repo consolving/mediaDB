@@ -14,7 +14,7 @@
 				<img style="max-height: 160px; max-width: 300px" src="@routes.MediaFiles.thumbnail(mediaFile.checksum, 0)"/>
 			}
 			<br />
-			<span>@if(mediaFile.filesize != null) { @MediaFileHelper.humanReadableByteCount(mediaFile.filesize, true) } | @mediaFile.filename</span>
+			<div>@if(mediaFile.filesize != null) { @MediaFileHelper.humanReadableByteCount(mediaFile.filesize, true) } | @mediaFile.filename</div>
 			</a>
 		</div>
 		}

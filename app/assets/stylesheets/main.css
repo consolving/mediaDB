@@ -29,21 +29,21 @@ polyline{
 }
 
 div.thumbnail {
-	max-height: 130px;
-	min-height: 130px;
+	max-height: 150px;
+	min-height: 150px;
 	text-align: center;
 	position: relative;
 }
 
 div.thumbcell {
-	max-height: 200px;
-	min-height: 200px;
+	max-height: 220px;
+	min-height: 220px;
 	text-align: center;
 	position: relative;
 }
 
-.thumbcell span, .thumbnail span {
+.thumbcell div, .thumbnail div {
 	position: absolute;
 	bottom: 0px;
-	left: 0px;
+	text-align: center;
 }
