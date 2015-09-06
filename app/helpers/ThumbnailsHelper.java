@@ -16,6 +16,7 @@ import com.typesafe.config.ConfigFactory;
 import models.MediaFile;
 import models.Thumbnail;
 import play.Logger;
+import play.cache.Cache;
 
 public class ThumbnailsHelper {
 	private final static String ROOT_DIR = ConfigFactory.load().getString("media.root.dir");
@@ -77,6 +78,15 @@ public class ThumbnailsHelper {
 		return thumb;
 	}
 
+	public static String getETag(File thumbnail) {
+		Object eTag = Cache.get(thumbnail.getName());
+		if(eTag == null) {
+			eTag = OpensslHelper.getMd5Checksum(thumbnail);
+			Cache.set(thumbnail.getName(), eTag, 60*60);
+		}
+		return (String) eTag;
+	}
+	
 	private static void checkDir(String path) {
 		if (!new File(path).exists()) {
 			new File(path).mkdirs();

@@ -46,6 +46,8 @@ public class MediaFiles extends Application {
 			return notFound();
 		}
 		response().setContentType("image/png");
+		response().setHeader(CACHE_CONTROL, "max-age=3600");
+		response().setHeader(ETAG, ThumbnailsHelper.getETag(media));		
 		response().setHeader("Content-Disposition", "inline; filename=\"" + media.getName() + "\"");		
 		return ok(media);
 	}
