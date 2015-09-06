@@ -1,0 +1,39 @@
+#!/bin/sh
+
+# REQUIRE: DAEMON mysql
+# BEFORE:  LOGIN
+# KEYWORD: shutdown
+
+. /etc/rc.subr
+
+name="mediaDB"
+#rcvar="${name}_enable"
+start_cmd="${name}_start"
+stop_cmd="${name}_stop"
+start_precmd="${name}_prestart"
+
+export DISPLAY=:0
+
+mediaDB_start()
+{
+    /root/mediadb-1.0-SNAPSHOT/bin/mediadb -Dconfig.file=/root/conf/application.conf -Dhttp.port=80 > /dev/null 2>&1 &
+}
+
+mediaDB_stop()
+{
+    if [ -f /root/mediadb-1.0-SNAPSHOT/RUNNING_PID  ]; then
+        PID=`cat /root/mediadb-1.0-SNAPSHOT/RUNNING_PID`
+        kill $PID
+        echo "stopped ${PID}"
+        rm /root/mediadb-1.0-SNAPSHOT/RUNNING_PID
+    fi
+}
+
+mediaDB_prestart()
+{
+    if [ -f /root/mediadb-1.0-SNAPSHOT/RUNNING_PID  ]; then
+        rm /root/mediadb-1.0-SNAPSHOT/RUNNING_PID
+    fi
+}
+load_rc_config $name
+run_rc_command "$1"
