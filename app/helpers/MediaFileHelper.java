@@ -1,6 +1,7 @@
 package helpers;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.nio.file.attribute.FileTime;
 import java.util.Date;
 import java.util.Iterator;
@@ -10,16 +11,25 @@ import java.util.TreeMap;
 import java.util.concurrent.TimeUnit;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.typesafe.config.ConfigFactory;
 
 import models.Property;
 import models.MediaFile;
 import models.Tag;
 import play.Logger;
+import play.cache.Cache;
 import play.libs.Json;
 
 public class MediaFileHelper {
-	
+	private final static String ROOT_DIR = ConfigFactory.load().getString("media.root.dir");
+	private final static FileFilter FOLDER_FILTER = new FileFilter() {
+		@Override
+		public boolean accept(File pathname) {
+			return pathname.isDirectory() && !pathname.getName().startsWith(".");
+		}
+	};
 	private static final NavigableMap<Long, String> suffixes = new TreeMap<> ();
 	static {
 	  suffixes.put(1_000L, "k");
@@ -135,21 +145,29 @@ public class MediaFileHelper {
 		}
 		return false;
 	}
-	
-	public static String humanReadableCount(long value) {
-	  if (value == Long.MIN_VALUE) return humanReadableCount(Long.MIN_VALUE + 1);
-	  if (value < 0) return "-" + humanReadableCount(-value);
-	  if (value < 1000) return Long.toString(value); //deal with easy case
 
-	  Entry<Long, String> e = suffixes.floorEntry(value);
-	  Long divideBy = e.getKey();
-	  String suffix = e.getValue();
+	public static String humanReadableCount(Long value) {
+		if (value == null) 
+			return humanReadableCount(0L);
+		if (value == Long.MIN_VALUE)
+			return humanReadableCount(Long.MIN_VALUE + 1);
+		if (value < 0)
+			return "-" + humanReadableCount(-value);
+		if (value < 1000)
+			return Long.toString(value); // deal with easy case
 
-	  long truncated = value / (divideBy / 10); //the number part of the output times 10
-	  boolean hasDecimal = truncated < 100 && (truncated / 10d) != (truncated / 10);
-	  return hasDecimal ? (truncated / 10d) + suffix : (truncated / 10) + suffix;		
+		Entry<Long, String> e = suffixes.floorEntry(value);
+		Long divideBy = e.getKey();
+		String suffix = e.getValue();
+
+		long truncated = value / (divideBy / 10); // the number part of the
+													// output times 10
+		boolean hasDecimal = truncated < 100
+				&& (truncated / 10d) != (truncated / 10);
+		return hasDecimal ? (truncated / 10d) + suffix : (truncated / 10)
+				+ suffix;
 	}
-	
+
 	public static String humanReadableByteCount(long bytes, boolean si) {
 		int unit = si ? 1000 : 1024;
 		if (bytes < unit)
@@ -172,6 +190,35 @@ public class MediaFileHelper {
             return new Date(fileTime.to(TimeUnit.MILLISECONDS));
         }
         return null;
+	}
+	
+	public static ObjectNode getFolderSizes() {
+		ObjectNode out = Json.newObject();
+		File rootFolder = new File(ROOT_DIR);
+		ArrayNode dirSizes = out.arrayNode();
+		ArrayNode dirCounts = out.arrayNode();
+		if (rootFolder.exists()) {
+			Long sum = MediaFileHelper.getSize(rootFolder);
+			Long part = 0L;
+			for (File folder : rootFolder.listFiles(FOLDER_FILTER)) {
+				part = MediaFileHelper.getSize(folder);
+				if (part != null && sum != null) {
+					ObjectNode dir = Json.newObject();
+					dir.put("label", folder.getName() + " " + MediaFileHelper.humanReadableByteCount(part * 1000, true));
+					dir.put("value", (sum==0 ? 0 : 100 * part / sum));
+					dirSizes.add(dir);
+
+					part = MediaFileHelper.getCount(folder);
+					dir = Json.newObject();
+					dir.put("label", folder.getName() + " " + part);
+					dir.put("value", part);
+					dirCounts.add(dir);
+				}
+			}
+		}
+		out.put("dirsSizes", dirSizes);
+		out.put("dirsCounts", dirCounts);
+		return out;
 	}
 	
 	private static MediaFile addProperty(MediaFile mediaFile, String key, String value) {

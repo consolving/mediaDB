@@ -32,10 +32,18 @@ div.thumbnail {
 	max-height: 130px;
 	min-height: 130px;
 	text-align: center;
+	position: relative;
 }
 
 div.thumbcell {
 	max-height: 200px;
 	min-height: 200px;
 	text-align: center;
+	position: relative;
+}
+
+.thumbcell span, .thumbnail span {
+	position: absolute;
+	bottom: 0px;
+	left: 0px;
 }

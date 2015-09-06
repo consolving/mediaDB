@@ -1,18 +1,21 @@
 package controllers;
 
+import helpers.MediaFileHelper;
+import helpers.ThumbnailsHelper;
+
 import java.io.File;
 import java.util.List;
+
+import models.MediaFile;
+import play.cache.Cache;
+import play.mvc.Result;
+import views.html.MediaFiles.index;
+import views.html.MediaFiles.show;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.typesafe.config.ConfigFactory;
 
 import fileauth.actions.BasicAuth;
-import models.MediaFile;
-import play.cache.Cache;
-import play.libs.Json;
-import play.mvc.Result;
-import views.html.MediaFiles.index;
-import views.html.MediaFiles.show;
 
 @BasicAuth
 public class MediaFiles extends Application {
@@ -20,8 +23,9 @@ public class MediaFiles extends Application {
 	private final static String ROOT_DIR = ConfigFactory.load().getString("media.root.dir");
 
 	public static Result index() {
-		List<MediaFile> mediaFiles = MediaFile.Finder.setMaxRows(1024).order("filename ASC").findList();
-		return ok(index.render(mediaFiles));
+		List<MediaFile> mediaFiles = MediaFile.Finder.setMaxRows(32).order("filename ASC").findList();
+		Integer mediaFilesCount = MediaFile.Finder.getMaxRows();
+		return ok(index.render(mediaFiles, mediaFilesCount));
 	}
 
 	public static Result show(String checksum) {
@@ -35,6 +39,9 @@ public class MediaFiles extends Application {
 	public static Result thumbnail(String checksum, Integer index) {
 		MediaFile mf = MediaFile.Finder.where().eq("checksum", checksum).findUnique();
 		File media = mf != null && mf.getThumbnail() != null ? new File(mf.getThumbnail()) : null;
+		if(media == null) {
+			media = ThumbnailsHelper.createThumbnail(mf, "800x600");
+		}
 		if (media == null || !media.exists()) {
 			return notFound();
 		}
@@ -59,7 +66,8 @@ public class MediaFiles extends Application {
 
 		ObjectNode out = (ObjectNode) Cache.get("folderStats");
 		if (out == null) {
-			out = Json.newObject();
+			out = MediaFileHelper.getFolderSizes();
+			Cache.set("folderStats", out, 3600);
 		}
 		return ok(out);
 	}
