@@ -29,8 +29,13 @@ public class Application extends Controller {
 	protected static void debugRequest(Request req) {
 		StringBuilder sb = new StringBuilder("\n"+req.toString());
 		sb.append("\n");
-		for(String key : req.headers().keySet()) {
-			sb.append("\t").append(key).append(" = ").append(req.getHeader(key)).append("\n");
+		for(String key : req.headers().keySet()) {	
+			sb.append("\t").append(key).append(" = ");
+			if(key.equals("Authorization")) {
+				sb.append("*************").append("\n");				
+			} else {
+				sb.append(req.getHeader(key)).append("\n");
+			}
 		}
 		sb.append("\n");
 		Logger.debug(sb.toString());
