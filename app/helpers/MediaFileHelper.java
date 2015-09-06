@@ -225,6 +225,10 @@ public class MediaFileHelper {
 		return out;
 	}
 	
+	public static String shortName(String name, int length) {
+		return name != null ? name.length() > length ? name.substring(0, length) + "…" : name : name;
+	}
+	
 	private static MediaFile addProperty(MediaFile mediaFile, String key, String value) {
 		if (key != null && value != null && mediaFile != null) {
 			Property.getOrCreate(mediaFile, key, value);

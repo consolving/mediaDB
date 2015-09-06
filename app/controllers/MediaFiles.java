@@ -24,7 +24,7 @@ public class MediaFiles extends Application {
 
 	public static Result index() {
 		List<MediaFile> mediaFiles = MediaFile.Finder.setMaxRows(32).order("filename ASC").findList();
-		Integer mediaFilesCount = MediaFile.Finder.getMaxRows();
+		Integer mediaFilesCount = MediaFile.Finder.findRowCount();
 		return ok(index.render(mediaFiles, mediaFilesCount));
 	}
 

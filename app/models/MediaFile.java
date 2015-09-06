@@ -97,4 +97,12 @@ public class MediaFile extends Model {
     public String toString() {
     	return filename+ "("+checksum+")";
     }
+	
+    public static Integer getSize() {
+		return Finder.findRowCount();
+	}
+	
+	public static List<MediaFile> getLast(int number) {
+		return Finder.setMaxRows(number).orderBy("id DESC").findList();
+	}    
 }

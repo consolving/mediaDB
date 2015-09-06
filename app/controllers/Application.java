@@ -6,6 +6,7 @@ import fileauth.actions.BasicAuth;
 import models.MediaFile;
 import models.Property;
 import models.Tag;
+import models.Thumbnail;
 import play.Logger;
 import play.mvc.Controller;
 import play.mvc.Http.Request;
@@ -21,7 +22,8 @@ public class Application extends Controller {
 		int mediaFileCount = MediaFile.Finder.findRowCount();
 		int tagCount = Tag.Finder.findRowCount();
 		int propertyCount = Property.Finder.findRowCount();
-		return ok(index.render(mediaFileCount, tagCount, propertyCount));
+		int thumbnailsCount = Thumbnail.Finder.findRowCount();
+		return ok(index.render(mediaFileCount, thumbnailsCount, tagCount, propertyCount));
 	}
 	
 	protected static void debugRequest(Request req) {

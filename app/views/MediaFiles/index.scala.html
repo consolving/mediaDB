@@ -6,17 +6,23 @@
     <div class="row center">
 		<h1><small>@mediaFilesCount</small> Media Files</h1>
 	</div>
-	<div class="row">
-		@for(mediaFile <- mediaFiles) {
-		<div class="col-md-3 thumbcell">
-			<a href="@routes.MediaFiles.show(mediaFile.checksum)">
-			@if(mediaFile.getThumbnail() != null) {
-				<img style="max-height: 160px; max-width: 300px" src="@routes.MediaFiles.thumbnail(mediaFile.checksum, 0)"/>
+@if(MediaFile.getSize() > 0) {
+		<div class="row">
+			<div class="col-md-12 center">
+				<h2>last Imports</h2>
+			</div>
+			@for(mediaFile <- MediaFile.getLast(1024)) {
+			<div class="col-md-2 thumbnail">
+				<a href="@routes.MediaFiles.show(mediaFile.checksum)">
+				@if(mediaFile.getThumbnail() != null) {
+					<img style="max-height: 120px; max-width: 300px" src="@routes.MediaFiles.thumbnail(mediaFile.checksum, 0)"/>
+				} else {
+					N/A
+				}
+				</a>
+				<div>@if(mediaFile.filesize != null){@MediaFileHelper.humanReadableByteCount(mediaFile.filesize, true) | }@MediaFileHelper.shortName(mediaFile.filename, 12)</div>
+			</div>
 			}
-			<br />
-			<div>@if(mediaFile.filesize != null) { @MediaFileHelper.humanReadableByteCount(mediaFile.filesize, true) } | @mediaFile.filename</div>
-			</a>
 		</div>
-		}
-	</div>
+	}	
 }
