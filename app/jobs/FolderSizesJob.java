@@ -23,9 +23,6 @@ public class FolderSizesJob extends AbstractJob {
 	}
 
 	private void collectFolderSizes() {
-		ObjectNode out = (ObjectNode) Cache.get("folderStats");
-		if (out == null) {
-			Cache.set("folderStats", MediaFileHelper.getFolderSizes(), 3600);
-		}
+		Cache.set("folderStats", MediaFileHelper.getFolderSizes(), 3600);
 	}
 }
