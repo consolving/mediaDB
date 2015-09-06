@@ -199,20 +199,24 @@ public class MediaFileHelper {
 		ArrayNode dirCounts = out.arrayNode();
 		if (rootFolder.exists()) {
 			Long sum = MediaFileHelper.getSize(rootFolder);
-			Long part = 0L;
+			Long size = 0L;
+			Long count = 0L;
+			ObjectNode dir;
 			for (File folder : rootFolder.listFiles(FOLDER_FILTER)) {
-				part = MediaFileHelper.getSize(folder);
-				if (part != null && sum != null) {
-					ObjectNode dir = Json.newObject();
-					dir.put("label", folder.getName() + " " + MediaFileHelper.humanReadableByteCount(part * 1000, true));
-					dir.put("value", (sum==0 ? 0 : 100 * part / sum));
-					dirSizes.add(dir);
-
-					part = MediaFileHelper.getCount(folder);
+				size = MediaFileHelper.getSize(folder);
+				if (size != null && sum != null) {
+					count = MediaFileHelper.getCount(folder);
 					dir = Json.newObject();
-					dir.put("label", folder.getName() + " " + part);
-					dir.put("value", part);
-					dirCounts.add(dir);
+					dir.put("label", folder.getName() + " " + count);
+					dir.put("value", count);
+					if(count > 0) {
+						dirCounts.add(dir);
+											
+						dir = Json.newObject();
+						dir.put("label", folder.getName() + " " + MediaFileHelper.humanReadableByteCount(size * 1000, true));
+						dir.put("value", (sum==0 ? 0 : 100 * size / sum));
+						dirSizes.add(dir);
+					}
 				}
 			}
 		}
