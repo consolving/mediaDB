@@ -1,5 +1,7 @@
 package models;
 
+import java.util.List;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -7,6 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
 import play.db.ebean.Model;
+
 
 @Entity
 public class Thumbnail extends Model {
@@ -34,5 +37,9 @@ public class Thumbnail extends Model {
 			t.save();
 		}
 		return t;
+	}
+	
+	public static List<Thumbnail> getLast(int number) {
+		return Thumbnail.Finder.setMaxRows(number).findList();
 	}
 }

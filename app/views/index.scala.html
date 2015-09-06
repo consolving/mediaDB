@@ -1,5 +1,7 @@
 @import services.JobService
+@import helpers.MediaFileHelper
 @import views.addons._
+@import models.Thumbnail
 
 @(mediaFileCount: Integer, tagCount: Integer, propertyCount: Integer)
 
@@ -213,6 +215,18 @@
 				@propertyCount
 			</h2>
 		</div>			
+	</div>
+	<div class="row">
+		@for(thumbnail <- Thumbnail.getLast(16)) {
+		<div class="col-md-3 thumbnail">
+			<a href="@routes.MediaFiles.show(thumbnail.mediaFile.checksum)">
+			<img style="max-height: 105px; max-width: 300px" src="@routes.MediaFiles.thumbnail(thumbnail.mediaFile.checksum, 0)"/>
+			</a><br />
+			@MediaFileHelper.humanReadableByteCount(thumbnail.mediaFile.filesize, true) | @thumbnail.mediaFile.filename
+		</div>
+		}
+	</div>
+	<div class="row"> 
 		<div class="col-md-12 center">
 			<h2>Jobs</h2>
 			<table class="table table-condensed">

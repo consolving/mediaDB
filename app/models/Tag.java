@@ -1,5 +1,7 @@
 package models;
 
+import helpers.StopList;
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -11,11 +13,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
-import javax.persistence.OrderBy;
 
 import org.apache.commons.lang3.StringUtils;
 
-import helpers.StopList;
 import play.Logger;
 import play.cache.Cache;
 import play.db.ebean.Model;

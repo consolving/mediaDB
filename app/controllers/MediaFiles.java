@@ -20,7 +20,7 @@ public class MediaFiles extends Application {
 	private final static String ROOT_DIR = ConfigFactory.load().getString("media.root.dir");
 
 	public static Result index() {
-		List<MediaFile> mediaFiles = MediaFile.Finder.order("filename ASC").findList();
+		List<MediaFile> mediaFiles = MediaFile.Finder.setMaxRows(1024).order("filename ASC").findList();
 		return ok(index.render(mediaFiles));
 	}
 
