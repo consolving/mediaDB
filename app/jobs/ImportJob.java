@@ -49,10 +49,12 @@ public class ImportJob extends AbstractJob {
 			if (count < 0) {
 				return files;
 			}
-			if(f.isDirectory()) {
+			if(f.isDirectory() && f.listFiles(FILE_FILTER).length == 0) {
+				FileUtils.deleteQuietly(f);
+			} else if(f.isDirectory()) {
 				files = scanFolder(f, files, count);
 			} else {
-				files.add(f);
+				files.add(f);				
 			}
 			count--;
 			logger.debug(f.getAbsolutePath()+"!="+MEDIA_FOLDER.getAbsolutePath()+": "+ MediaFileHelper.getCount(f));
