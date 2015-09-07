@@ -4,46 +4,54 @@
 
 @main("File "+mf.filename) {
     <div class="row"> 
-    	<div class="col-md-4">
-    		@if(mf.getThumbnail() != null) {
-    		<a href="@routes.MediaFiles.thumbnail(mf.checksum, 0)" target="_thumb_@mf.checksum" >
-	    		<img class="img-thumbnail" style="max-height: 200px" src="@routes.MediaFiles.thumbnail(mf.checksum, 0)"/>
-	    	</a>
-	    	}
-    	</div>
-    	<div class="col-md-8">
-    	<dl>
-    		<dt>Filename</dt>
-    		<dd>@mf.filename</dd>
-    		<dt>SHA-256</dt>
-    		<dd>@mf.checksum</dd>
-    		<dt>Mime-Type</dt>
-    		<dd>@mf.mimeType</dd>
-    		@if(mf.filesize != null) {
-    		<dt>Filesize</dt>
-    		<dd>@MediaFileHelper.humanReadableByteCount(mf.filesize, true)</dd>
-    		}
-    		<dt>Download</dt>
-    		<dd><a target="_download" href="@routes.MediaFiles.download(mf.checksum)">@mf.filename</a></dd>    		
-    	</dl>
-    	</div>
-    </div>
-    <div class="row"> 
-		<div class="col-md-2">
-		<h1>Tags</h1>
-		<ul>
-		@for(tag <- mf.getTags()){
-			<li><a href="@routes.Tags.show(tag.name)">@tag</a></li>
-		}
-		</ul>
-		</div>
-		<div class="col-md-8">
-			<h1>Properties</h1>
-			<table>
-			@for(property <- mf.getProperties()) {
-				<tr><th>@property.k</th><td>@property.v</td></tr>
+    	<div class="col-md-2">
+    		<h1>Tags</h1>
+			@for(tag <- mf.getTags()){
+				<a href="@routes.Tags.show(tag.name)"><span class="badge">@tag</span></a>
 			}
-			</table>
-		</div>
-	</div>
+    	</div>
+    	<div class="col-md-10">
+    		<div class="row">
+		    	<div class="col-md-4">
+					<a href="@routes.MediaFiles.thumbnail(mf.checksum, 0)" target="_thumb_@mf.checksum" >
+			    		<img class="img-thumbnail" style="max-height: 200px" src="@routes.MediaFiles.thumbnail(mf.checksum, 0)"/>
+			    	</a>
+		    	</div>
+		    	<div class="col-md-8">
+			    	<dl>
+			    		<dt>Filename</dt>
+			    		<dd>@mf.filename</dd>
+			    		<dt>SHA-256</dt>
+			    		<dd>@mf.checksum</dd>
+			    		@if(mf.created != null) {
+			    		<dt>created</dt>
+			    		<dd>@mf.created</dd>
+			    		}
+			    		<dt>Mime-Type</dt>
+			    		<dd>@mf.mimeType</dd>
+			    		@if(mf.lastCheck != null) {
+			    		<dt>last checked</dt>
+			    		<dd>@mf.lastCheck</dd>
+			    		}
+			    		@if(mf.filesize != null) {
+			     		<dt>Filesize</dt>
+			    		<dd>@MediaFileHelper.humanReadableByteCount(mf.filesize, true)</dd>   		
+			    		}
+			    		<dt>Download</dt>
+			    		<dd><a target="_download" href="@routes.MediaFiles.download(mf.checksum)">@mf.filename</a></dd>    		
+			    	</dl>
+		    	</div>    		
+    		</div>
+    	</div>    
+    </div>
+    <div class="row">
+    	<div class="col-md-12">
+    		<h1>Properties</h1>
+			<dl class="dl-horizontal">
+			@for(property <- mf.getProperties()) {
+				<dt>@property.k</dt><dd>@property.v</dd>
+			}
+			</dl>
+    	</div>    
+    </div>
 }
