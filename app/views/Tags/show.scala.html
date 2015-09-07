@@ -23,7 +23,7 @@
 	    		<img class="img-thumbnail" style="max-height: 200px" src="@routes.MediaFiles.thumbnail(mediaFile.checksum, 0)"/>
 	    	}			
 			</td>
-			<td>@mediaFile.filesize (@MediaFileHelper.humanReadableByteCount(mediaFile.filesize, true))</td>
+			<td>@if(mediaFile.filesize != null){@mediaFile.filesize (@MediaFileHelper.humanReadableByteCount(mediaFile.filesize, true))}</td>
 			<td>@if(mediaFile.created != null){@mediaFile.created.format("dd.MM.yyyy HH:mm:ss")}</td>
 			<td>[<a target="_download" href="@routes.MediaFiles.download(mediaFile.checksum)">download</a>]</td> 
 		</tr>

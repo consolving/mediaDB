@@ -186,7 +186,19 @@
 }
 
 @main("Welcome to media DB", scripts) {
-
+    <div class="row center">
+    	<h2>Administration Dashboard</h2>
+    </div>
+	<div class="row">
+		<div class="col-md-6 center">
+			<h2>File Size</h2>
+			<div class="front-graph" id="folder-sizes"></div>
+		</div>
+		<div class="col-md-6 center">
+			<h2>File Counts</h2>
+			<div class="front-graph" id="folder-counts"></div>
+		</div>		
+	</div>
     <div class="row"> 
 		<div class="col-md-3 center">
 			<h2>
@@ -212,17 +224,7 @@
 				@propertyCount
 			</h2>
 		</div>			
-	</div>
-	<div class="row">
-		<div class="col-md-6 center">
-			<h2>File Size</h2>
-			<div class="front-graph" id="folder-sizes"></div>
-		</div>
-		<div class="col-md-6 center">
-			<h2>File Counts</h2>
-			<div class="front-graph" id="folder-counts"></div>
-		</div>		
-	</div>
+	</div>	
 	<div class="row"> 
 		<div class="col-md-12 center">
 			<h2>Jobs</h2>
