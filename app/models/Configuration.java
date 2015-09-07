@@ -38,13 +38,15 @@ public class Configuration extends Model {
 		String v = value != null ? value.trim() : null;
 		if(c != null) {
 			c.v = v;
+			c.update();
 		} else {
 			c = new Configuration();
 			c.hostname = hostname.trim();
 			c.k = key.trim();
 			c.v = v;
+			c.save();
 		}
-		c.save();
+		
 		Cache.set(key, v);	
 	}
 	
