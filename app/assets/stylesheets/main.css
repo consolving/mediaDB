@@ -34,6 +34,7 @@ div.thumbnail {
 	text-align: center;
 	position: relative;
 	overflow:hidden;
+	margin-top: 30px;
 }
 
 div.thumbcell {
@@ -41,6 +42,18 @@ div.thumbcell {
 	min-height: 200px;
 	text-align: center;
 	position: relative;
+	margin-top: 30px;
+}
+
+.thumbnail img {
+	max-height: 120px;
+	max-width: 120px;
+}
+
+
+.thumbcell img {
+	max-height: 150px;
+	max-width: 275px;
 }
 
 .thumbcell div, .thumbnail div {
