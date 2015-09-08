@@ -14,6 +14,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
 
 import com.avaje.ebean.Ebean;
@@ -36,6 +37,9 @@ public class MediaFile extends Model {
 	
 	public Date lastCheck;
 	public Date created;
+	
+	@OneToOne
+	public Thumbnail cover;
 	
 	@ManyToMany(cascade=CascadeType.ALL )
 	private Set<Tag> tags;
@@ -72,7 +76,7 @@ public class MediaFile extends Model {
     }
     
     public String getThumbnail() {
-    	return thumbnails.size() > 0 ? thumbnails.get(0).filename : null;
+    	return cover != null ? cover.filename : thumbnails.size() > 0 ? thumbnails.get(0).filename : null;
     }
     
     public Map<String, Set<String>> getTagsMap() {

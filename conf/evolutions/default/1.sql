@@ -19,6 +19,7 @@ create table media_file (
   mime_type                 varchar(255),
   last_check                timestamp,
   created                   timestamp,
+  cover_id                  bigint,
   constraint pk_media_file primary key (id))
 ;
 
@@ -49,10 +50,12 @@ create table media_file_tag (
   tag_id                         bigint not null,
   constraint pk_media_file_tag primary key (media_file_id, tag_id))
 ;
-alter table property add constraint fk_property_mediaFile_1 foreign key (media_file_id) references media_file (id) on delete restrict on update restrict;
-create index ix_property_mediaFile_1 on property (media_file_id);
-alter table thumbnail add constraint fk_thumbnail_mediaFile_2 foreign key (media_file_id) references media_file (id) on delete restrict on update restrict;
-create index ix_thumbnail_mediaFile_2 on thumbnail (media_file_id);
+alter table media_file add constraint fk_media_file_cover_1 foreign key (cover_id) references thumbnail (id) on delete restrict on update restrict;
+create index ix_media_file_cover_1 on media_file (cover_id);
+alter table property add constraint fk_property_mediaFile_2 foreign key (media_file_id) references media_file (id) on delete restrict on update restrict;
+create index ix_property_mediaFile_2 on property (media_file_id);
+alter table thumbnail add constraint fk_thumbnail_mediaFile_3 foreign key (media_file_id) references media_file (id) on delete restrict on update restrict;
+create index ix_thumbnail_mediaFile_3 on thumbnail (media_file_id);
 
 
 

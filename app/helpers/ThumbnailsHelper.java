@@ -52,6 +52,10 @@ public class ThumbnailsHelper {
 					BufferedImage scaled = scale(img, s.w, s.h);
 					ImageIO.write(scaled, "png", thumb);
 					Thumbnail.getOrCreate(mediaFile, thumb.getAbsolutePath());
+					if(mediaFile.cover == null) {
+						mediaFile.cover = Thumbnail.getOrCreate(mediaFile, thumb.getAbsolutePath());
+						mediaFile.update();
+					}					
 				} catch (IOException ex) {
 					Logger.warn(ex.getLocalizedMessage(), ex);
 				} catch(java.lang.ArrayIndexOutOfBoundsException ex ) {
@@ -73,6 +77,10 @@ public class ThumbnailsHelper {
 			thumb = FfmpegHelper.createScreenshot(file, thumb, s.w, frame);
 			if(thumb != null) {
 				Thumbnail.getOrCreate(mediaFile, thumb.getAbsolutePath());
+				if(mediaFile.cover == null) {
+					mediaFile.cover = Thumbnail.getOrCreate(mediaFile, thumb.getAbsolutePath());
+					mediaFile.update();
+				}
 			}
 		}
 		return thumb;

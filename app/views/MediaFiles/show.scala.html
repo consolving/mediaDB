@@ -13,6 +13,11 @@
     	<div class="col-md-10">
     		<div class="row">
 		    	<div class="col-md-4">
+			    	@if(mf.cover != null) {
+			    	<dl>
+			    		<dt>Cover</dt>
+			    	</dl>			    		
+			    	}		    	
 					<a href="@routes.MediaFiles.thumbnail(mf.checksum, 0)" target="_thumb_@mf.checksum" >
 			    		<img class="img-thumbnail" style="max-height: 200px" src="@routes.MediaFiles.thumbnail(mf.checksum, 0)"/>
 			    	</a>
