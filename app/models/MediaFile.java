@@ -106,6 +106,9 @@ public class MediaFile extends Model {
 		return Finder.findRowCount();
 	}
 	
+    public static List<MediaFile> nextChecks(int number) {
+    	return Finder.setMaxRows(number).order("lastCheck ASC").findList();
+    }
 	public static List<MediaFile> getLast(int number, int page) {
 		return Finder.orderBy("id DESC").findPagingList(number).getPage(page).getList();
 	}    

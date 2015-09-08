@@ -37,7 +37,7 @@ public class CheckJob extends AbstractJob {
 	
 	private void checkNext() {
 		File file;
-		List<MediaFile> files = MediaFile.Finder.setMaxRows(20).order("lastCheck ASC").findList();
+		List<MediaFile> files = MediaFile.nextChecks(20);
 		for (MediaFile mediaFile : files) {
 			file = new File(STORAGE_FILE_TEMPLATE.replace("%file%", mediaFile.checksum));
 			if(file.exists()) {
