@@ -29,7 +29,8 @@
                 </div>
                 <div id="navbar" class="collapse navbar-collapse">
                     <ul class="nav navbar-nav">
-                        <li class="@activeLink("/clients")"><a href="@routes.MediaFiles.index()">Files</a></li>
+                        <li class="@activeLink("/files/filter/image")"><a href="@routes.MediaFiles.index("image")">Images</a></li>
+                        <li class="@activeLink("/files/filter/video")"><a href="@routes.MediaFiles.index("video")">Videos</a></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
                         <li class="@activeLink("/admin")"><a href="@controllers.admin.routes.Dashboard.index()">Administration</a></li>                    

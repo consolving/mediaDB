@@ -11,7 +11,7 @@
 		<div class="col-md-3 thumbcell">
 			<a title="@mediaFile.filename" href="@routes.MediaFiles.show(mediaFile.checksum)">
 			@if(mediaFile.getThumbnail() != null) {
-				<img style="max-height: 150px" src="@routes.MediaFiles.thumbnail(mediaFile.checksum, 0)"/>
+				<img src="@routes.MediaFiles.thumbnail(mediaFile.checksum, 0)"/>
 			} else {
 				N/A
 			}

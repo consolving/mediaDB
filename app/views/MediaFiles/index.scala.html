@@ -11,11 +11,11 @@
 			<div class="col-md-12 center">
 				<h2>last Imports</h2>
 			</div>
-			@for(mediaFile <- MediaFile.getLast(512)) {
+			@for(mediaFile <- mediaFiles) {
 			<div class="col-md-2 thumbnail">
 				<a title="@mediaFile.filename" href="@routes.MediaFiles.show(mediaFile.checksum)">
 				@if(mediaFile.getThumbnail() != null) {
-					<img style="max-height: 120px; max-width: 300px" src="@routes.MediaFiles.thumbnail(mediaFile.checksum, 0)"/>
+					<img src="@routes.MediaFiles.thumbnail(mediaFile.checksum, 0)"/>
 				} else {
 					N/A
 				}

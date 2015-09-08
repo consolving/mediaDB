@@ -106,7 +106,11 @@ public class MediaFile extends Model {
 		return Finder.findRowCount();
 	}
 	
-	public static List<MediaFile> getLast(int number) {
-		return Finder.setMaxRows(number).orderBy("id DESC").findList();
+	public static List<MediaFile> getLast(int number, int page) {
+		return Finder.orderBy("id DESC").findPagingList(number).getPage(page).getList();
 	}    
+	
+	public static List<MediaFile> getMimeType(int number, int page, String mimeType) {
+		return Finder.orderBy("id DESC").where().startsWith("mimeType", mimeType.trim()).findPagingList(number).getPage(page).getList();
+	}
 }

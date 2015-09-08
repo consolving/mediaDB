@@ -22,12 +22,13 @@ public class MediaFiles extends Application {
 
 	private final static String ROOT_DIR = ConfigFactory.load().getString("media.root.dir");
 
-	public static Result index() {
-		List<MediaFile> mediaFiles = MediaFile.Finder.setMaxRows(32).order("filename ASC").findList();
-		Integer mediaFilesCount = MediaFile.Finder.findRowCount();
-		return ok(index.render(mediaFiles, mediaFilesCount));
-	}
 
+	public static Result index(String type) {
+		List<MediaFile> mediaFiles = MediaFile.getMimeType(512, 0, type);
+		Integer mediaFilesCount = MediaFile.Finder.findRowCount();
+		return ok(index.render(mediaFiles, mediaFilesCount));		
+	}
+	
 	public static Result show(String checksum) {
 		MediaFile mf = MediaFile.Finder.where().eq("checksum", checksum).findUnique();
 		if (mf != null) {
@@ -65,7 +66,6 @@ public class MediaFiles extends Application {
 	}
 
 	public static Result folderStats() {
-
 		ObjectNode out = (ObjectNode) Cache.get("folderStats");
 		if (out == null) {
 			out = MediaFileHelper.getFolderSizes();
