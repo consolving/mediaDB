@@ -5,6 +5,8 @@ import java.io.InputStreamReader;
 
 import com.typesafe.config.ConfigFactory;
 
+import play.Logger;
+
 public class SystemHelper {
 	private final static String SYSTEM_bash_BIN = ConfigFactory.load().getString("system.bash.bin");
 
@@ -19,6 +21,9 @@ public class SystemHelper {
 			Process p = pb.start();
 			BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
 			while ((line = input.readLine()) != null) {
+				if(line != null && line.toLowerCase().trim().contains("error")) {
+					Logger.error(line.trim());
+				}
 				sb.append(line.trim()).append("\n");
 			}
 			input.close();
