@@ -10,7 +10,7 @@
 				<a href="@routes.Tags.show(tag.name)"><span class="badge">@tag</span></a>
 			}
     	</div>
-    	<div class="col-md-10">
+    	<div class="col-md-9">
     		<div class="row">
 		    	<div class="col-md-4">
 			    	@if(mf.cover != null) {
@@ -48,6 +48,11 @@
 		    	</div>    		
     		</div>
     	</div>    
+    	<div class="col-md-1">
+    	    @helper.form(action = routes.MediaFiles.delete(mf.checksum)) {
+    	    	<button type="submit" class="btn btn-danger">Delete</button>
+    	    }
+    	</div>
     </div>
     <div class="row">
     	<div class="col-md-12">

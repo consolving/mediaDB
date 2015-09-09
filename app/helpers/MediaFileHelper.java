@@ -10,6 +10,8 @@ import java.util.NavigableMap;
 import java.util.TreeMap;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.io.FileUtils;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -24,6 +26,7 @@ import play.libs.Json;
 
 public class MediaFileHelper {
 	private final static String ROOT_DIR = ConfigFactory.load().getString("media.root.dir");
+	private final static String STORAGE_FOLDER = ROOT_DIR + File.separator + "storage";
 	private final static FileFilter FOLDER_FILTER = new FileFilter() {
 		@Override
 		public boolean accept(File pathname) {
@@ -227,6 +230,13 @@ public class MediaFileHelper {
 	
 	public static String shortName(String name, int length) {
 		return name != null ? name.length() > length ? name.substring(0, length) + "…" : name : name;
+	}
+	
+	public static void deleteFile(MediaFile mediaFile) {
+		File file = new File(STORAGE_FOLDER+File.separator+mediaFile.checksum);
+		if(file.exists()) {
+			FileUtils.deleteQuietly(file);	
+		}		
 	}
 	
 	private static MediaFile addProperty(MediaFile mediaFile, String key, String value) {

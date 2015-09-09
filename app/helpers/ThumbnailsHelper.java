@@ -11,6 +11,8 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import org.apache.commons.io.FileUtils;
+
 import com.typesafe.config.ConfigFactory;
 
 import models.MediaFile;
@@ -93,6 +95,24 @@ public class ThumbnailsHelper {
 			Cache.set(thumbnail.getName(), eTag, 60*60);
 		}
 		return (String) eTag;
+	}
+	
+	public static void deleteThumbnails(MediaFile mediaFile) {
+		File tn;
+		Logger.info("deleting all Thumbnails of "+mediaFile.toString());
+		mediaFile.cover = null;
+		mediaFile.update();
+		for(models.Thumbnail thumb : mediaFile.getThumbnails()) {
+			tn = new File(thumb.filename);
+			if(tn.exists()) {
+				FileUtils.deleteQuietly(tn);	
+			}
+			thumb.delete();
+		}	
+		tn = new File(STORAGE_FOLDER + File.separator + mediaFile.checksum);
+		if(tn.exists()) {
+			FileUtils.deleteQuietly(tn);	
+		}	
 	}
 	
 	private static void checkDir(String path) {

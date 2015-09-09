@@ -56,7 +56,8 @@ public class CheckJob extends AbstractJob {
 				mediaFile.deleteManyToManyAssociations("tags");
 				for(models.Property prop : mediaFile.getProperties()) {
 					prop.delete();
-				}
+				}		
+				ThumbnailsHelper.deleteThumbnails(mediaFile);
 				mediaFile.delete();
 			}
 		}		

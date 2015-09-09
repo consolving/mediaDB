@@ -25,7 +25,7 @@ public class MediaFiles extends Application {
 
 	public static Result index(String type) {
 		List<MediaFile> mediaFiles = MediaFile.getMimeType(512, 0, type);
-		Integer mediaFilesCount = MediaFile.Finder.findRowCount();
+		Integer mediaFilesCount = MediaFile.Finder.where().startsWith("mimeType", type).findRowCount();
 		return ok(index.render(mediaFiles, mediaFilesCount));		
 	}
 	
@@ -37,6 +37,22 @@ public class MediaFiles extends Application {
 		return notFound();
 	}
 
+	public static Result delete(String checksum) {
+		MediaFile mf = MediaFile.Finder.where().eq("checksum", checksum).findUnique();
+		if(mf == null) {
+			return redirect(routes.Application.index());
+		}
+		String type = mf.mimeType;
+		mf.deleteManyToManyAssociations("tags");
+		for(models.Property prop : mf.getProperties()) {
+			prop.delete();
+		}		
+		ThumbnailsHelper.deleteThumbnails(mf);
+		MediaFileHelper.deleteFile(mf);
+		mf.delete();
+		return redirect(routes.MediaFiles.index(type));
+	}
+	
 	public static Result thumbnail(String checksum, Integer index) {
 		MediaFile mf = MediaFile.Finder.where().eq("checksum", checksum).findUnique();
 		File media = mf != null && mf.getThumbnail() != null ? new File(mf.getThumbnail()) : null;

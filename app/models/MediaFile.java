@@ -79,6 +79,10 @@ public class MediaFile extends Model {
     	return cover != null ? cover.filename : thumbnails.size() > 0 ? thumbnails.get(0).filename : null;
     }
     
+    public List<Thumbnail> getThumbnails() {
+    	return thumbnails;
+    }
+    
     public Map<String, Set<String>> getTagsMap() {
         Map<String, Set<String>> tagsMap = new HashMap<String, Set<String>>();
         Set<String> tagsValue = new TreeSet<String>();
