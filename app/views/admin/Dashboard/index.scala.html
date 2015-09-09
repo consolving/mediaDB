@@ -229,48 +229,48 @@
 	<div class="row"> 
 		<div class="col-md-4">
 			<h2>last Imports</h2>
-			<table class="table table-striped">
+			<table class="table">
 				@for(mediaFile <- MediaFile.getLast(10, 0)) {
 					<tr>
-						<td>
+						<th>
 						@if(mediaFile.getThumbnail() != null) {
-							<img style="width: 50px" src="@routes.MediaFiles.thumbnail(mediaFile.checksum, 0)" />
+							<img style="max-width: 100px; height: 40px" src="@routes.MediaFiles.thumbnail(mediaFile.checksum, 0)" />
 						} else {
 							N/A
 						}						
-						</td>
-						<td><a title="@mediaFile.filename" href="@routes.MediaFiles.show(mediaFile.checksum)">@mediaFile.filename</a></td>
+						</th>
+						<td><a title="@mediaFile.filename" href="@routes.MediaFiles.show(mediaFile.checksum)">@MediaFileHelper.shortName(mediaFile.filename, 20)</a></td>
 					</tr>
 				}
 			</table>
 		</div>
 		<div class="col-md-4">
 			<h2>next Checks</h2>
-			<table class="table table-striped">
+			<table class="table">
 				@for(mediaFile <- MediaFile.nextChecks(10)) {
 					<tr>
-						<td>
+						<th>
 						@if(mediaFile.getThumbnail() != null) {
-							<img style="width: 50px" src="@routes.MediaFiles.thumbnail(mediaFile.checksum, 0)" />
+							<img style="max-width: 100px; height: 40px" src="@routes.MediaFiles.thumbnail(mediaFile.checksum, 0)" />
 						} else {
 							N/A
 						}						
-						</td>					
-						<td><a title="@mediaFile.filename" href="@routes.MediaFiles.show(mediaFile.checksum)">@mediaFile.filename</a></td>
+						</th>					
+						<td><a title="@mediaFile.filename" href="@routes.MediaFiles.show(mediaFile.checksum)">@MediaFileHelper.shortName(mediaFile.filename, 20)</a></td>
 					</tr>
 				}
 			</table>			
 		</div>
 		<div class="col-md-4">
 			<h2>last Thumbnails</h2>
-			<table class="table table-striped">
+			<table class="table">
 				@for(thumbnail <- Thumbnail.getLast(10)) {
 					@if(thumbnail.mediaFile != null) {
 					<tr>
-						<td>
-							<img style="width: 50px" src="@routes.MediaFiles.thumbnail(thumbnail.mediaFile.checksum, 0)" />					
-						</td>
-						<td><a title="@thumbnail.mediaFile.filename" href="@routes.MediaFiles.show(thumbnail.mediaFile.checksum)">@thumbnail.mediaFile.filename</a></td>
+						<th>
+							<img style="max-width: 100px; height: 40px" src="@routes.MediaFiles.thumbnail(thumbnail.mediaFile.checksum, 0)" />					
+						</th>
+						<td><a title="@thumbnail.mediaFile.filename" href="@routes.MediaFiles.show(thumbnail.mediaFile.checksum)">@MediaFileHelper.shortName(thumbnail.mediaFile.filename, 20)</a></td>
 					</tr>
 					}
 				}
