@@ -50,7 +50,6 @@ div.thumbcell {
 	max-width: 120px;
 }
 
-
 .thumbcell img {
 	max-height: 150px;
 	max-width: 275px;
@@ -61,4 +60,13 @@ div.thumbcell {
 	bottom: 5px;
 	text-align: center;
 	margin: 0px;
+}
+
+.mf-small-row {
+	min-height: 42px;
+}
+
+.mf-small-row th {
+	width: 102px;
+	text-align: right;	
 }

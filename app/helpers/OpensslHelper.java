@@ -18,6 +18,8 @@ public class OpensslHelper {
 			Logger.debug("running: "+cmd);
 			String[] parts =  SystemHelper.runCommand(cmd).split("=");
 			return parts.length > 1 ? parts[parts.length-1].trim() : null;
+		} else {
+			Logger.warn(file.getAbsolutePath() + " does not exists!");
 		}
 		return null;
 	}
@@ -28,6 +30,8 @@ public class OpensslHelper {
 			Logger.debug("running: "+cmd);
 			String[] parts =  SystemHelper.runCommand(cmd).split("=");
 			return parts.length > 1 ? parts[parts.length-1].trim() : null;
+		} else {
+			Logger.warn(file.getAbsolutePath() + " does not exists!");
 		}
 		return null;
 	}

@@ -75,8 +75,8 @@ public class MediaFile extends Model {
        	return Property.Finder.where().eq("mediaFile.id", this.id).eq("k", k.trim()).findUnique();      	
     }
     
-    public String getThumbnail() {
-    	return cover != null ? cover.filename : thumbnails.size() > 0 ? thumbnails.get(0).filename : null;
+    public Thumbnail getThumbnail() {
+    	return cover != null ? cover : thumbnails.size() > 0 ? thumbnails.get(0) : null;
     }
     
     public List<Thumbnail> getThumbnails() {

@@ -7,6 +7,7 @@ import java.io.File;
 import java.util.List;
 
 import models.MediaFile;
+import models.Thumbnail;
 import play.cache.Cache;
 import play.mvc.Result;
 import views.html.MediaFiles.index;
@@ -55,8 +56,9 @@ public class MediaFiles extends Application {
 	
 	public static Result thumbnail(String checksum, Integer index) {
 		MediaFile mf = MediaFile.Finder.where().eq("checksum", checksum).findUnique();
-		File media = mf != null && mf.getThumbnail() != null ? new File(mf.getThumbnail()) : null;
-		if(media == null) {
+		Thumbnail thumb = mf != null && mf.getThumbnail() != null ? mf.getThumbnail() : null;
+		File media = thumb != null ? new File(thumb.filename) : null;
+		if(media == null || thumb.checksum == null) {
 			media = ThumbnailsHelper.createThumbnail(mf, "800x600");
 		}
 		if (media == null || !media.exists()) {
@@ -64,7 +66,7 @@ public class MediaFiles extends Application {
 		}
 		response().setContentType("image/png");
 		response().setHeader(CACHE_CONTROL, "max-age=3600");
-		response().setHeader(ETAG, ThumbnailsHelper.getETag(media));		
+		response().setHeader(ETAG, thumb.checksum);		
 		response().setHeader("Content-Disposition", "inline; filename=\"" + media.getName() + "\"");		
 		return ok(media);
 	}

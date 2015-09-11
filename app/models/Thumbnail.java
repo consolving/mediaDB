@@ -1,5 +1,6 @@
 package models;
 
+import java.io.File;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -8,6 +9,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
+import helpers.ThumbnailsHelper;
+import play.Logger;
 import play.db.ebean.Model;
 
 
@@ -19,6 +22,7 @@ public class Thumbnail extends Model {
 	public Long id;
 	
 	public String filename;
+	public String checksum;
 	
 	@ManyToOne
 	public MediaFile mediaFile;
@@ -26,7 +30,7 @@ public class Thumbnail extends Model {
 	public Thumbnail(String filename) {
 		this.filename = filename.trim();
 	}
-
+	
 	public static Finder<Long, Thumbnail> Finder = new Finder<Long, Thumbnail>(Long.class, Thumbnail.class);
 
 	public static Thumbnail getOrCreate(MediaFile mediaFile, String filename) {
@@ -34,6 +38,7 @@ public class Thumbnail extends Model {
 		if(t == null) {
 			t = new Thumbnail(filename);
 			t.mediaFile = mediaFile;
+			t.checksum = ThumbnailsHelper.getETag(new File(filename));
 			t.save();
 		}
 		return t;
