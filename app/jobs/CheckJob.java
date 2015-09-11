@@ -9,6 +9,7 @@ import java.util.List;
 import com.typesafe.config.ConfigFactory;
 
 import helpers.MediaFileHelper;
+import helpers.SystemHelper;
 import helpers.ThumbnailsHelper;
 import models.MediaFile;
 import models.Property;
@@ -39,7 +40,7 @@ public class CheckJob extends AbstractJob {
 		File file;
 		List<MediaFile> files = MediaFile.nextChecks(20);
 		for (MediaFile mediaFile : files) {
-			file = new File(STORAGE_FILE_TEMPLATE.replace("%file%", mediaFile.checksum));
+			file = new File(STORAGE_FILE_TEMPLATE.replace("%file%", SystemHelper.getFoldersForName(mediaFile.checksum)));
 			if(file.exists()) {
 				try {
 					Property p = mediaFile.getProperty("size");

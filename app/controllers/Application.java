@@ -1,5 +1,7 @@
 package controllers;
 
+import java.io.File;
+
 import com.typesafe.config.ConfigFactory;
 
 import fileauth.actions.BasicAuth;
@@ -17,6 +19,8 @@ import views.html.index;
 public class Application extends Controller {
 
 	protected final static String ROOT_DIR = ConfigFactory.load().getString("media.root.dir");
+	protected final static String THUMBNAILS_DIR = ROOT_DIR + File.separator + "thumbnails";
+	protected final static String STORAGE_FOLDER = ROOT_DIR + File.separator + "storage";
 	
 	public static Result index() {
 		int mediaFileCount = MediaFile.Finder.findRowCount();

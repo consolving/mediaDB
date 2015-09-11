@@ -29,6 +29,7 @@ public class MediaFile extends Model {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public Long id;
 
+	public String filepath;
 	public String checksum;
 	public String filename;
 	

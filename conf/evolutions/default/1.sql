@@ -13,6 +13,7 @@ create table configuration (
 
 create table media_file (
   id                        bigint auto_increment not null,
+  filepath                  varchar(255),
   checksum                  varchar(255),
   filename                  varchar(255),
   filesize                  bigint,
@@ -39,7 +40,7 @@ create table tag (
 
 create table thumbnail (
   id                        bigint auto_increment not null,
-  filename                  varchar(255),
+  filepath                  varchar(255),
   checksum                  varchar(255),
   media_file_id             bigint,
   constraint pk_thumbnail primary key (id))

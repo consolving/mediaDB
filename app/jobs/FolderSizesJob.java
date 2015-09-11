@@ -2,6 +2,7 @@ package jobs;
 
 import helpers.MediaFileHelper;
 import play.cache.Cache;
+import play.libs.Json;
 import services.JobService;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -23,6 +24,8 @@ public class FolderSizesJob extends AbstractJob {
 	}
 
 	private void collectFolderSizes() {
-		Cache.set("folderStats", MediaFileHelper.getFolderSizes(), 3600);
+		ObjectNode out = MediaFileHelper.addFolderSizes(Json.newObject());
+		out = MediaFileHelper.addCounts(out);
+		Cache.set("folderStats", out, 3600);
 	}
 }

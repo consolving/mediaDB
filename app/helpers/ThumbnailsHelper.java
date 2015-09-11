@@ -18,8 +18,6 @@ import com.typesafe.config.ConfigFactory;
 import models.MediaFile;
 import models.Thumbnail;
 import play.Logger;
-import play.cache.Cache;
-import views.html.helper.checkbox;
 
 public class ThumbnailsHelper {
 	private final static String ROOT_DIR = ConfigFactory.load().getString("media.root.dir");
@@ -44,19 +42,21 @@ public class ThumbnailsHelper {
 	}
 
 	public static File createImageThumbnail(MediaFile mediaFile, String size) {
-		checkDir(THUMBNAILS_DIR + File.separator + mediaFile.checksum);
-		File thumb = new File(THUMBNAILS_DIR + File.separator + mediaFile.checksum + File.separator + "thumb_0_"+size+".png");
+		checkDir(THUMBNAILS_DIR + File.separator + SystemHelper.getFoldersForName(mediaFile.checksum));
+		String thumbPath = SystemHelper.getFolders(mediaFile.checksum) + File.separator + "thumb_0_"+size+".png";
+		File thumb = new File(THUMBNAILS_DIR + File.separator + thumbPath);
 		if(!thumb.exists()) {
-			File file = new File(STORAGE_FOLDER + File.separator + mediaFile.checksum);
+			File file = new File(STORAGE_FOLDER + File.separator + SystemHelper.getFoldersForName(mediaFile.checksum));
 			if(file.exists()) {
 				try {
 					BufferedImage img = ImageIO.read(file);
 					Size s = getSize(size);
 					BufferedImage scaled = scale(img, s.w, s.h);
 					ImageIO.write(scaled, "png", thumb);
-					Thumbnail.getOrCreate(mediaFile, thumb.getAbsolutePath());
+					String checksum = ThumbnailsHelper.getETag(thumb);
+					Thumbnail.getOrCreate(mediaFile, thumbPath, checksum);
 					if(mediaFile.cover == null) {
-						mediaFile.cover = Thumbnail.getOrCreate(mediaFile, thumb.getAbsolutePath());
+						mediaFile.cover = Thumbnail.getOrCreate(mediaFile, thumbPath, checksum);
 						mediaFile.update();
 					}					
 				} catch (IOException ex) {
@@ -72,16 +72,18 @@ public class ThumbnailsHelper {
 	}
 
 	public static File createVideoThumbnail(MediaFile mediaFile, int frame, String size) {
-		checkDir(THUMBNAILS_DIR + File.separator + mediaFile.checksum);
-		File thumb = new File(THUMBNAILS_DIR + File.separator + mediaFile.checksum + File.separator + "thumb_0_"+size+".png");
+		checkDir(THUMBNAILS_DIR + File.separator + SystemHelper.getFoldersForName(mediaFile.checksum));
+		String thumbPath = SystemHelper.getFolders(mediaFile.checksum) + File.separator + "thumb_0_"+size+".png";
+		File thumb = new File(THUMBNAILS_DIR + File.separator + thumbPath);
 		if(!thumb.exists()) {
-			File file = new File(STORAGE_FOLDER + File.separator + mediaFile.checksum);
+			File file = new File(STORAGE_FOLDER + File.separator + SystemHelper.getFoldersForName(mediaFile.checksum));
 			Size s = getSize(size);
 			thumb = FfmpegHelper.createScreenshot(file, thumb, s.w, frame);
 			if(thumb != null) {
-				Thumbnail.getOrCreate(mediaFile, thumb.getAbsolutePath());
+				String checksum = ThumbnailsHelper.getETag(thumb);
+				Thumbnail.getOrCreate(mediaFile, thumbPath, checksum);
 				if(mediaFile.cover == null) {
-					mediaFile.cover = Thumbnail.getOrCreate(mediaFile, thumb.getAbsolutePath());
+					mediaFile.cover = Thumbnail.getOrCreate(mediaFile, thumbPath, checksum);
 					mediaFile.update();
 				}
 			}
@@ -100,13 +102,13 @@ public class ThumbnailsHelper {
 		mediaFile.cover = null;
 		mediaFile.update();
 		for(models.Thumbnail thumb : mediaFile.getThumbnails()) {
-			tn = new File(thumb.filename);
+			tn = new File(thumb.filepath);
 			if(tn.exists()) {
 				FileUtils.deleteQuietly(tn);	
 			}
 			thumb.delete();
 		}	
-		tn = new File(STORAGE_FOLDER + File.separator + mediaFile.checksum);
+		tn = new File(STORAGE_FOLDER + File.separator + SystemHelper.getFoldersForName(mediaFile.checksum));
 		if(tn.exists()) {
 			FileUtils.deleteQuietly(tn);	
 		}	

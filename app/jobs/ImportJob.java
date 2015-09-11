@@ -13,6 +13,7 @@ import com.typesafe.config.ConfigFactory;
 
 import helpers.MediaFileHelper;
 import helpers.OpensslHelper;
+import helpers.SystemHelper;
 import models.MediaFile;
 import play.Logger;
 import services.JobService;
@@ -77,6 +78,7 @@ public class ImportJob extends AbstractJob {
 				} else if (mf == null) {
 					mf = new MediaFile();
 					mf.checksum = checksum;
+					mf.filepath = SystemHelper.getFoldersForName(checksum);
 					mf.filename = f.getName();
 					mf = addMimeType(f, mf);
 					mf.save();
@@ -84,10 +86,10 @@ public class ImportJob extends AbstractJob {
 					mf.save();
 					logger.info("created " + f.getAbsolutePath() + " Checksum " + checksum);
 					mf = MediaFile.Finder.where().eq("checksum", checksum).findUnique();
-					handleFile(f, new File(STORAGE_FOLDER + File.separator + checksum));
+					handleFile(f, new File(STORAGE_FOLDER + File.separator + SystemHelper.getFoldersForName(checksum)));
 				} else {
 					logger.info(f.getAbsolutePath() + " already found! Checksum " + checksum);
-					handleFile(f, new File(STORAGE_FOLDER + File.separator + checksum));
+					handleFile(f, new File(STORAGE_FOLDER + File.separator + SystemHelper.getFoldersForName(checksum)));
 				}
 				if (f != null && mf != null && f.getName().equals(mf.checksum)) {
 					MediaFileHelper.addTags(mf, f.getName());										

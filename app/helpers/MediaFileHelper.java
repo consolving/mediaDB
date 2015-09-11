@@ -20,6 +20,7 @@ import com.typesafe.config.ConfigFactory;
 import models.Property;
 import models.MediaFile;
 import models.Tag;
+import models.Thumbnail;
 import play.Logger;
 import play.cache.Cache;
 import play.libs.Json;
@@ -195,26 +196,32 @@ public class MediaFileHelper {
         return null;
 	}
 	
-	public static ObjectNode getFolderSizes() {
-		ObjectNode out = Json.newObject();
+	public static ObjectNode addCounts(ObjectNode out) {
+		ArrayNode counts = out.arrayNode();
+		ObjectNode dir;
+		dir= Json.newObject();
+		dir.put("label", "Media Files "+MediaFile.getSize());
+		dir.put("value",  MediaFile.getSize());
+		counts.add(dir);
+		dir = Json.newObject();
+		dir.put("label", "Thumbnails "+Thumbnail.getSize());
+		dir.put("value",  Thumbnail.getSize());
+		counts.add(dir);
+		out.put("dirsCounts", counts);
+		return out;
+	}
+	
+	public static ObjectNode addFolderSizes(ObjectNode out) {
 		File rootFolder = new File(ROOT_DIR);
 		ArrayNode dirSizes = out.arrayNode();
-		ArrayNode dirCounts = out.arrayNode();
 		if (rootFolder.exists()) {
 			Long sum = MediaFileHelper.getSize(rootFolder);
 			Long size = 0L;
-			Long count = 0L;
 			ObjectNode dir;
 			for (File folder : rootFolder.listFiles(FOLDER_FILTER)) {
 				size = MediaFileHelper.getSize(folder);
 				if (size != null && sum != null) {
-					count = MediaFileHelper.getCount(folder);
-					dir = Json.newObject();
-					dir.put("label", folder.getName() + " " + count);
-					dir.put("value", count);
-					if(count > 0) {
-						dirCounts.add(dir);
-											
+					if(MediaFileHelper.getCount(folder) > 0) {					
 						dir = Json.newObject();
 						dir.put("label", folder.getName() + " " + MediaFileHelper.humanReadableByteCount(size * 1000, true));
 						dir.put("value", (sum==0 ? 0 : 100 * size / sum));
@@ -224,7 +231,6 @@ public class MediaFileHelper {
 			}
 		}
 		out.put("dirsSizes", dirSizes);
-		out.put("dirsCounts", dirCounts);
 		return out;
 	}
 	
@@ -233,7 +239,7 @@ public class MediaFileHelper {
 	}
 	
 	public static void deleteFile(MediaFile mediaFile) {
-		File file = new File(STORAGE_FOLDER+File.separator+mediaFile.checksum);
+		File file = new File(STORAGE_FOLDER+File.separator+SystemHelper.getFolders(mediaFile.checksum));
 		if(file.exists()) {
 			FileUtils.deleteQuietly(file);	
 		}		
