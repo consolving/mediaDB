@@ -17,6 +17,7 @@ import services.JobService;
 public class Global extends GlobalSettings {
 	private final static String ROOT_DIR = ConfigFactory.load().getString("media.root.dir");
 	private List<JobHandler> jobHandlers = new ArrayList<JobHandler>();
+	
 	public void onStart(Application app) {
 		outputTools();
 		checkFolders();
@@ -24,12 +25,14 @@ public class Global extends GlobalSettings {
 		JobService.addJob(new ImportJob());
 		JobService.addJob(new CheckJob());	
 		JobService.addJob(new FolderSizesJob());	
+		Logger.info("#### APPLICATION STARTED ####");
 	}
 
 	public void onStop(Application app) {
 		for(JobHandler handler : jobHandlers) {
 			handler.stop();
 		}
+		Logger.info("#### APPLICATION STOPPED ####");
 	}
 	
 	private void outputTools() {
