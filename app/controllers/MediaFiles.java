@@ -99,6 +99,7 @@ public class MediaFiles extends Application {
 		if (out == null) {
 			out = MediaFileHelper.addFolderSizes(Json.newObject());
 			out = MediaFileHelper.addCounts(out);
+			out = MediaFileHelper.addTypeCounts(out);
 			Cache.set("folderStats", out, 3600);
 		}
 		return ok(out);

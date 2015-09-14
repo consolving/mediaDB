@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.nio.file.attribute.FileTime;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.NavigableMap;
 import java.util.TreeMap;
@@ -13,6 +14,8 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.io.FileUtils;
 
+import com.avaje.ebean.Ebean;
+import com.avaje.ebean.SqlRow;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -200,11 +203,11 @@ public class MediaFileHelper {
 		ArrayNode counts = out.arrayNode();
 		ObjectNode dir;
 		dir= Json.newObject();
-		dir.put("label", "Media Files "+MediaFile.getSize());
+		dir.put("label", "Media Files\n"+MediaFile.getSize());
 		dir.put("value",  MediaFile.getSize());
 		counts.add(dir);
 		dir = Json.newObject();
-		dir.put("label", "Thumbnails "+Thumbnail.getSize());
+		dir.put("label", "Thumbnails\n"+Thumbnail.getSize());
 		dir.put("value",  Thumbnail.getSize());
 		counts.add(dir);
 		out.put("dirsCounts", counts);
@@ -223,7 +226,7 @@ public class MediaFileHelper {
 				if (size != null && sum != null) {
 					if(MediaFileHelper.getCount(folder) > 0) {					
 						dir = Json.newObject();
-						dir.put("label", folder.getName() + " " + MediaFileHelper.humanReadableByteCount(size * 1000, true));
+						dir.put("label", folder.getName() + "\n" + MediaFileHelper.humanReadableByteCount(size * 1000, true));
 						dir.put("value", (sum==0 ? 0 : 100 * size / sum));
 						dirSizes.add(dir);
 					}
@@ -231,6 +234,21 @@ public class MediaFileHelper {
 			}
 		}
 		out.put("dirsSizes", dirSizes);
+		return out;
+	}
+	
+	public static ObjectNode addTypeCounts(ObjectNode out) {
+		String sql = "SELECT DISTINCT mime_type, count(*) as mime_type_count FROM media_file group by mime_type ORDER BY mime_type_count DESC;";
+		ArrayNode types = out.arrayNode();
+		ObjectNode type;
+		List<SqlRow> sqlRows = Ebean.createSqlQuery(sql).findList();
+		for(SqlRow row : sqlRows) {
+			type = Json.newObject();
+			type.put("label", row.getString("mime_type"));
+			type.put("value", row.getInteger("mime_type_count"));
+			types.add(type);
+		}
+		out.put("typeCounts", types);
 		return out;
 	}
 	

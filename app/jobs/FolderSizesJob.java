@@ -26,6 +26,7 @@ public class FolderSizesJob extends AbstractJob {
 	private void collectFolderSizes() {
 		ObjectNode out = MediaFileHelper.addFolderSizes(Json.newObject());
 		out = MediaFileHelper.addCounts(out);
-		Cache.set("folderStats", out, 3600);
+		out = MediaFileHelper.addTypeCounts(out);
+		Cache.set("folderStats", out, 60*5);
 	}
 }
