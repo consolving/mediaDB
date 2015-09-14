@@ -12,7 +12,6 @@
 		$.get('@routes.MediaFiles.folderStats()', function( data ) {
 			drawPie(data.dirsSizes, '#folder-sizes');
 			drawPie(data.dirsCounts, '#file-counts');
-			drawTable(data.typeCounts, '#type-counts');
 		});								
     </script>
 }
@@ -22,18 +21,14 @@
     	<h2>Administration Dashboard</h2>
     </div>
 	<div class="row">
-		<div class="col-md-4 center">
+		<div class="col-md-6 center">
 			<h2>File Size</h2>
 			<div class="front-graph" id="folder-sizes"></div>
 		</div>
-		<div class="col-md-4 center">
+		<div class="col-md-6 center">
 			<h2>File Counts</h2>
 			<div class="front-graph" id="file-counts"></div>
 		</div>		
-		<div class="col-md-4 center">
-			<h2>File Types</h2>
-			<div class="front-graph" id="type-counts"></div>
-		</div>	
 	</div>
     <div class="row"> 
 		<div class="col-md-3 center">

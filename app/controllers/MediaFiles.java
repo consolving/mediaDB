@@ -97,10 +97,8 @@ public class MediaFiles extends Application {
 	public static Result folderStats() {
 		ObjectNode out = (ObjectNode) Cache.get("folderStats");
 		if (out == null) {
-			out = MediaFileHelper.addFolderSizes(Json.newObject());
-			out = MediaFileHelper.addCounts(out);
-			out = MediaFileHelper.addTypeCounts(out);
-			Cache.set("folderStats", out, 3600);
+			Logger.warn("still calculation first Folder Stats");
+			return notFound();
 		}
 		return ok(out);
 	}
