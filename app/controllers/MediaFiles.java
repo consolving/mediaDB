@@ -7,10 +7,10 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import fileauth.actions.BasicAuth;
 import helpers.MediaFileHelper;
-import helpers.SystemHelper;
 import helpers.ThumbnailsHelper;
 import models.MediaFile;
 import models.Thumbnail;
+import play.Logger;
 import play.cache.Cache;
 import play.libs.Json;
 import play.mvc.Result;
@@ -53,13 +53,27 @@ public class MediaFiles extends Application {
 	public static Result thumbnail(String checksum, Integer index) {
 		MediaFile mf = MediaFile.Finder.where().eq("checksum", checksum).findUnique();
 		Thumbnail thumb = mf != null && mf.getThumbnail() != null ? mf.getThumbnail() : null;
-		File media = thumb != null ? new File(THUMBNAILS_DIR + File.separator + thumb.filepath) : null;
+		File media = thumb != null ? new File(THUMBNAILS_DIR + File.separator + thumb.filepath) : null;		
+		
+		if(media != null && !media.exists() && thumb.checksum != null) {
+			File oldThumb = new File(THUMBNAILS_DIR + File.separator + mf.checksum + "thumb_0_800x600.png");
+			ThumbnailsHelper.checkThumbnailLocation(mf, media, oldThumb);
+		}
+		
 		if(media == null || thumb.checksum == null) {
 			media = ThumbnailsHelper.createThumbnail(mf, "800x600");
 		}
-		if (media == null || !media.exists()) {
+
+		if (thumb == null) {
+			Logger.warn("thumb for " + checksum + " is null!");
 			return notFound();
 		}
+		
+		if (media == null || !media.exists()) {
+			Logger.warn("cannot find " + media.getAbsolutePath());
+			return notFound();
+		}
+		
 		response().setContentType("image/png");
 		response().setHeader(CACHE_CONTROL, "max-age=3600");
 		response().setHeader(ETAG, thumb.getChecksum(media));		
@@ -69,7 +83,8 @@ public class MediaFiles extends Application {
 	
 	public static Result download(String checksum) {
 		MediaFile mf = MediaFile.Finder.where().eq("checksum", checksum).findUnique();
-		File media = mf != null ? new File(ROOT_DIR + File.separator + "storage" + File.separator + SystemHelper.getFoldersForName(mf.checksum)) : null;
+		File media = mf != null ? new File(STORAGE_FOLDER + File.separator + mf.getLocation()) : null;
+		Logger.debug("download " + (media != null ? media.getAbsolutePath() : null));
 		if (media == null || !media.exists()) {
 			return notFound();
 		}

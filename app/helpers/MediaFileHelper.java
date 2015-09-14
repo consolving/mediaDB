@@ -2,6 +2,7 @@ package helpers;
 
 import java.io.File;
 import java.io.FileFilter;
+import java.io.IOException;
 import java.nio.file.attribute.FileTime;
 import java.util.Date;
 import java.util.Iterator;
@@ -17,12 +18,11 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.typesafe.config.ConfigFactory;
 
-import models.Property;
 import models.MediaFile;
+import models.Property;
 import models.Tag;
 import models.Thumbnail;
 import play.Logger;
-import play.cache.Cache;
 import play.libs.Json;
 
 public class MediaFileHelper {
@@ -244,6 +244,26 @@ public class MediaFileHelper {
 			FileUtils.deleteQuietly(file);	
 		}		
 	}
+
+	public static String checkMediaFileLocation(MediaFile mediaFile) {
+		String newFolder = SystemHelper.getFolders(mediaFile.checksum);
+		File file = new File(STORAGE_FOLDER + File.separator + newFolder + File.separator + mediaFile.checksum);
+		File oldFile = new File(STORAGE_FOLDER + File.separator + mediaFile.checksum);
+		if (oldFile.exists()) {
+			try {
+				Logger.info("moving " + oldFile.getAbsolutePath() + " to " + file.getAbsolutePath());
+				checkDir(newFolder);
+				mediaFile.filepath = SystemHelper.getFoldersForName(mediaFile.checksum);
+				FileUtils.moveFile(oldFile, file);
+				mediaFile.update();
+				Logger.info("deleting " + oldFile.getAbsolutePath());
+				FileUtils.deleteQuietly(oldFile);
+			} catch (IOException ex) {
+				Logger.warn(ex.getLocalizedMessage(), ex);
+			}
+		}
+		return mediaFile.filepath;
+	}
 	
 	private static MediaFile addProperty(MediaFile mediaFile, String key, String value) {
 		if (key != null && value != null && mediaFile != null) {
@@ -264,4 +284,10 @@ public class MediaFileHelper {
 		}
 		return mediaFile;
 	}
+	
+	private static void checkDir(String path) {
+		if (!new File(path).exists()) {
+			new File(path).mkdirs();
+		}
+	}	
 }

@@ -58,7 +58,6 @@ public class SystemHelper {
 			sb.append(File.separator);
 			sb.append(name);
 		}
-		Logger.debug("folder is "+sb.toString());
 		return sb.toString();
 	}
 }

@@ -20,6 +20,7 @@ import javax.persistence.OrderBy;
 import com.avaje.ebean.Ebean;
 import com.avaje.ebean.SqlUpdate;
 
+import helpers.MediaFileHelper;
 import play.db.ebean.Model;
 
 @Entity
@@ -107,6 +108,14 @@ public class MediaFile extends Model {
     	return filename+ "("+checksum+")";
     }
 	
+    public String getLocation() {
+    	if(this.filepath == null) {
+    		this.filepath = MediaFileHelper.checkMediaFileLocation(this);
+    		update();
+    	}
+    	return this.filepath;
+    }
+    
     public static Integer getSize() {
 		return Finder.findRowCount();
 	}

@@ -34,7 +34,7 @@ public class FfmpegHelper {
 	 */
 	public static File createScreenshot(File file, File thumb, int width, int frame) {
 		if(HAS_FFMPEG_BIN && file != null && file.exists()) {
-			String cmd = FFMPEG_BIN + " -ss "+frame+" -i \""+ file.getAbsolutePath() + "\" -vf \"scale='min(iw,"+width+")':-1\" -vframes 1 \""+ thumb.getAbsolutePath() + "\"";
+			String cmd = FFMPEG_BIN + " -y -ss "+frame+" -i \""+ file.getAbsolutePath() + "\" -vf \"scale='min(iw,"+width+")':-1\" -vframes 1 \""+ thumb.getAbsolutePath() + "\"";
 			Logger.debug("running: "+cmd);	
 			SystemHelper.runCommand(cmd);
 		}

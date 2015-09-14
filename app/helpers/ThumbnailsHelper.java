@@ -29,6 +29,7 @@ public class ThumbnailsHelper {
 	}
 
 	public static File createThumbnail(MediaFile mediaFile, String size) {
+		Logger.info("creating Thumbnail in " + size + " for " + mediaFile.filepath);
 		if (mediaFile == null || size == null || !size.contains("x")) {
 			return null;
 		}
@@ -43,11 +44,17 @@ public class ThumbnailsHelper {
 
 	public static File createImageThumbnail(MediaFile mediaFile, String size) {
 		checkDir(THUMBNAILS_DIR + File.separator + SystemHelper.getFoldersForName(mediaFile.checksum));
-		String thumbPath = SystemHelper.getFolders(mediaFile.checksum) + File.separator + "thumb_0_"+size+".png";
+		String thumbPath = SystemHelper.getFolders(mediaFile.checksum) + File.separator + "thumb_0_" + size + ".png";
+		File file = new File(STORAGE_FOLDER + File.separator + mediaFile.getLocation());
 		File thumb = new File(THUMBNAILS_DIR + File.separator + thumbPath);
-		if(!thumb.exists()) {
-			File file = new File(STORAGE_FOLDER + File.separator + SystemHelper.getFoldersForName(mediaFile.checksum));
-			if(file.exists()) {
+		Logger.info("creating " + thumb.getAbsolutePath() + " from " + file.getAbsolutePath());
+		if (!thumb.exists() || mediaFile.cover == null) {
+
+			File oldThumb = new File(THUMBNAILS_DIR + File.separator + mediaFile.checksum + "thumb_0_" + size + ".png");
+
+			if (file.exists() && oldThumb.exists()) {
+				checkThumbnailLocation(mediaFile, thumb, oldThumb);
+			} else if (file.exists()) {
 				try {
 					BufferedImage img = ImageIO.read(file);
 					Size s = getSize(size);
@@ -55,17 +62,18 @@ public class ThumbnailsHelper {
 					ImageIO.write(scaled, "png", thumb);
 					String checksum = ThumbnailsHelper.getETag(thumb);
 					Thumbnail.getOrCreate(mediaFile, thumbPath, checksum);
-					if(mediaFile.cover == null) {
+					if (mediaFile.cover == null) {
 						mediaFile.cover = Thumbnail.getOrCreate(mediaFile, thumbPath, checksum);
 						mediaFile.update();
-					}					
+					}
 				} catch (IOException ex) {
 					Logger.warn(ex.getLocalizedMessage(), ex);
-				} catch(java.lang.ArrayIndexOutOfBoundsException ex ) {
-					Logger.warn(ex.getLocalizedMessage(), ex);					
+				} catch (java.lang.ArrayIndexOutOfBoundsException ex) {
+					Logger.warn(ex.getLocalizedMessage(), ex);
 				}
+
 			} else {
-				Logger.warn(file.getAbsolutePath()+ " does not exists!");
+				Logger.warn(file.getAbsolutePath() + " does not exists!");
 			}
 		}
 		return thumb;
@@ -75,8 +83,8 @@ public class ThumbnailsHelper {
 		checkDir(THUMBNAILS_DIR + File.separator + SystemHelper.getFoldersForName(mediaFile.checksum));
 		String thumbPath = SystemHelper.getFolders(mediaFile.checksum) + File.separator + "thumb_0_"+size+".png";
 		File thumb = new File(THUMBNAILS_DIR + File.separator + thumbPath);
-		if(!thumb.exists()) {
-			File file = new File(STORAGE_FOLDER + File.separator + SystemHelper.getFoldersForName(mediaFile.checksum));
+		if(!thumb.exists() || mediaFile.cover == null) {
+			File file = new File(STORAGE_FOLDER + File.separator + mediaFile.getLocation());
 			Size s = getSize(size);
 			thumb = FfmpegHelper.createScreenshot(file, thumb, s.w, frame);
 			if(thumb != null) {
@@ -90,10 +98,29 @@ public class ThumbnailsHelper {
 		}
 		return thumb;
 	}
-
+	
 	public static String getETag(File file) {
 		Object eTag = OpensslHelper.getMd5Checksum(file);
 		return (String) eTag;
+	}
+	
+	public static void checkThumbnailLocation(MediaFile mediaFile, File thumb, File oldThumb) {
+		String checksum = ThumbnailsHelper.getETag(oldThumb);
+		String thumbPath = SystemHelper.getFolders(mediaFile.checksum) + File.separator + thumb.getName();
+		Thumbnail thumbnail = Thumbnail.Finder.where().eq("checksum", checksum).findUnique();
+		if(thumbnail != null) {
+			Logger.info("moving " + oldThumb.getAbsolutePath() + " to " + thumb.getAbsolutePath());
+			try {
+				FileUtils.moveFile(oldThumb, thumb);
+				thumbnail.filepath = thumbPath.trim();
+				thumbnail.update();
+				FileUtils.deleteQuietly(oldThumb);
+				FileUtils.deleteQuietly(oldThumb.getParentFile());
+			} catch (IOException ex) {
+				Logger.warn(ex.getLocalizedMessage(), ex);
+			}
+			Logger.info("deleting old Thumbnail " + oldThumb.getAbsolutePath());
+		}		
 	}
 	
 	public static void deleteThumbnails(MediaFile mediaFile) {
