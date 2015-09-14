@@ -72,9 +72,14 @@ public class MediaFile extends Model {
     public List<Property> getProperties() {
     	return Property.Finder.where().eq("mediaFile.id", this.id).orderBy("k ASC").findList();
     } 
-    
+ 
+    public List<Property> getProperties(String k) {
+    	return Property.Finder.where().eq("mediaFile.id", this.id).eq("k", k.trim()).findList();
+    } 
+       
     public Property getProperty(String k) {
-       	return Property.Finder.where().eq("mediaFile.id", this.id).eq("k", k.trim()).findUnique();      	
+    	List<Property> props = getProperties(k);
+    	return props.size() > 0 ? props.get(0) : null;
     }
     
     public Thumbnail getThumbnail() {

@@ -51,6 +51,8 @@ public class CheckJob extends AbstractJob {
 					BasicFileAttributes attr = Files.readAttributes(file.toPath(), BasicFileAttributes.class);
 					mediaFile.created = MediaFileHelper.fileTimeToDate(attr.creationTime());
 					ThumbnailsHelper.createThumbnail(mediaFile, "800x600");
+					MediaFileHelper.addDuration(mediaFile);
+					MediaFileHelper.addDimensions(mediaFile);
 					mediaFile.checked();
 				} catch (IOException ex) {
 					logger.warn(ex.getLocalizedMessage(), ex);

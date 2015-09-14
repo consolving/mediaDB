@@ -256,6 +256,53 @@ public class MediaFileHelper {
 		return name != null ? name.length() > length ? name.substring(0, length) + "…" : name : name;
 	}
 	
+	public static void addDuration(MediaFile mediaFile) {
+		if (mediaFile.mimeType.startsWith("video")) {
+			Long duration = aggregateDuration(mediaFile);
+			Logger.debug("raw duration is: "+duration);
+			addProperty(mediaFile, "mediaDB/duration", String.valueOf(duration));
+			addProperty(mediaFile, "mediaDB/durationString", getDurationString(duration));
+		}
+	}
+	
+	public static void addDimensions(MediaFile mediaFile) {
+		if (mediaFile.mimeType.startsWith("video") || mediaFile.mimeType.startsWith("image")) {
+			Property p = mediaFile.getProperty("width");
+			if(p != null) {
+				addProperty(mediaFile, "mediaDB/width", p.v);				
+			}
+			p = mediaFile.getProperty("height");
+			if(p != null) {
+				addProperty(mediaFile, "mediaDB/height", p.v);			
+			}
+		}
+	}
+	
+	private static String getDurationString(Long duration) {
+		int seconds = (int)(duration%60);
+		int rest2 = (int)((duration - seconds)/60);
+		int minutes = (int)(rest2%60);
+		int hours = (int)(rest2/60);	
+		Logger.debug("got: " + duration + " => " + String.format("%02d:%02d:%02d", hours, minutes, seconds));
+		return String.format("%02d:%02d:%02d", hours, minutes, seconds);
+	}
+	
+	private static long aggregateDuration(MediaFile mediaFile) {
+		Long duration = 0L;
+		int count = 0;
+		float durationFloat;
+		for(Property p : mediaFile.getProperties("duration")) {
+			try {
+				durationFloat = Float.parseFloat(p.v);
+				duration += (long)Math.ceil(durationFloat);
+				count++;
+			} catch(NumberFormatException ex) {
+				Logger.warn(ex.getLocalizedMessage(), ex);
+			}
+		}
+		return duration/count;
+	}
+	
 	public static void deleteFile(MediaFile mediaFile) {
 		File file = new File(STORAGE_FOLDER+File.separator+SystemHelper.getFolders(mediaFile.checksum));
 		if(file.exists()) {
