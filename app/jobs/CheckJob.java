@@ -37,11 +37,12 @@ public class CheckJob extends AbstractJob {
 	}
 	
 	private void checkNext() {
-		File file;
+		File file, oldFile;
 		List<MediaFile> files = MediaFile.nextChecks(20);
 		for (MediaFile mediaFile : files) {
 			file = new File(STORAGE_FILE_TEMPLATE.replace("%file%", SystemHelper.getFoldersForName(mediaFile.checksum)));
-			if(file.exists()) {
+			oldFile = new File(STORAGE_FILE_TEMPLATE.replace("%file%", mediaFile.checksum));
+			if(file.exists() || oldFile.exists()) {
 				try {
 					Property p = mediaFile.getProperty("size");
 					mediaFile.filesize = p != null ? p.getLongValue() : MediaFileHelper.getSize(file);
