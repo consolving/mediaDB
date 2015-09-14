@@ -33,7 +33,7 @@
 			    		<dd>@mf.created</dd>
 			    		}
 			    		<dt>Mime-Type</dt>
-			    		<dd>@mf.mimeType</dd>
+			    		<dd><a href="@routes.MediaFiles.index(mf.mimeType)">@mf.mimeType</a></dd>
 			    		@if(mf.lastCheck != null) {
 			    		<dt>last checked</dt>
 			    		<dd>@mf.lastCheck</dd>
@@ -50,7 +50,7 @@
     	</div>    
     	<div class="col-md-1">
     	    @helper.form(action = routes.MediaFiles.delete(mf.checksum)) {
-    	    	<button type="submit" class="btn btn-danger">Delete</button>
+    	    	<button onClick="if (!confirm('Are you sure you want to delete this?\n')) return false;" type="submit" class="btn btn-danger">Delete</button>
     	    }
     	</div>
     </div>

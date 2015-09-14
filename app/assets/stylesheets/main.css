@@ -43,6 +43,16 @@ div.thumbnail {
 	margin-top: 30px;
 }
 
+.thumbnail .top {
+	position: absolute;
+	top: 1px;
+}
+
+.thumbnail .pull-right {
+	position: absolute;
+	right: 1px;
+}
+
 div.thumbcell {
 	max-height: 200px;
 	min-height: 200px;
