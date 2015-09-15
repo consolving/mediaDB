@@ -98,6 +98,7 @@ public class MediaFiles extends Application {
 		ObjectNode out = (ObjectNode) Cache.get("folderStats");
 		if (out == null) {
 			Logger.warn("still calculation first Folder Stats");
+			// TODO add Future for Response
 			return notFound();
 		}
 		return ok(out);
