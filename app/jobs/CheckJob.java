@@ -53,10 +53,10 @@ public class CheckJob extends AbstractJob {
 					ThumbnailsHelper.createThumbnail(mediaFile, "800x600");
 					MediaFileHelper.addDuration(mediaFile);
 					MediaFileHelper.addDimensions(mediaFile);
-					mediaFile.checked();
 				} catch (IOException ex) {
 					logger.warn(ex.getLocalizedMessage(), ex);
 				}
+				mediaFile.checked();
 			} else {
 				logger.info(mediaFile.toString() + ": file not found!");
 				mediaFile.deleteManyToManyAssociations("tags");
