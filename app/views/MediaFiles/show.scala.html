@@ -18,8 +18,8 @@
 			    		<dt>Cover</dt>
 			    	</dl>			    		
 			    	}		    	
-					<a href="@routes.MediaFiles.thumbnail(mf.checksum, 0)" target="_thumb_@mf.checksum" >
-			    		<img class="img-thumbnail" style="max-height: 200px" src="@routes.MediaFiles.thumbnail(mf.checksum, 0)"/>
+					<a href="@routes.MediaFiles.cover(mf.checksum, 0)" target="_thumb_@mf.checksum" >
+			    		<img class="img-thumbnail" style="max-height: 200px" src="@routes.MediaFiles.cover(mf.checksum, 0)"/>
 			    	</a>
 		    	</div>
 		    	<div class="col-md-8">
@@ -42,10 +42,23 @@
 			     		<dt>Filesize</dt>
 			    		<dd>@MediaFileHelper.humanReadableByteCount(mf.filesize, true)</dd>   		
 			    		}
+			    		@for(key <- mf.getMDBProperties().keySet()) {
+			    			<dt>@key</dt>
+			    			<dd>@mf.getMDBProperties().get(key)</dd>
+			    		}
 			    		<dt>Download</dt>
 			    		<dd><a target="_download" href="@routes.MediaFiles.download(mf.checksum)">@mf.filename</a></dd>    		
 			    	</dl>
 		    	</div>    		
+    		</div>
+    		<div class="row">
+    			@for(thumb <- mf.getThumbnails()) {
+    				<div class="col-md-3">
+						<a href="@routes.MediaFiles.thumbnail(thumb.id)" target="_thumb_@thumb.id" >
+				    		<img class="img-thumbnail" style="max-height: 200px" src="@routes.MediaFiles.thumbnail(thumb.id)"/>
+				    	</a>    				
+    				</div>
+    			}
     		</div>
     	</div>    
     	<div class="col-md-1">

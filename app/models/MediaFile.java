@@ -16,6 +16,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
+import javax.persistence.Transient;
 
 import com.avaje.ebean.Ebean;
 import com.avaje.ebean.SqlUpdate;
@@ -53,6 +54,9 @@ public class MediaFile extends Model {
 	@OneToMany(mappedBy="mediaFile")
 	@OrderBy("filename DESC")
 	private List<Thumbnail> thumbnails;
+	
+	@Transient
+	private Map<String, String> props = null;
 	
 	public static Finder<Long, MediaFile> Finder = new Finder<Long, MediaFile>(Long.class, MediaFile.class);
 
@@ -98,6 +102,16 @@ public class MediaFile extends Model {
         }
         tagsMap.put("tags", tagsValue);
         return tagsMap;
+    }
+    
+    public Map<String, String> getMDBProperties() {
+    	if(props == null) {
+	    	props = new HashMap<String, String>();
+	    	for(Property p : Property.Finder.where().eq("mediaFile", this).startsWith("k", "mediaDB").findList()) {
+	    		props.put(p.k.replace("mediaDB/", ""), p.v);
+	    	}
+    	}
+    	return props;
     }
     
     public void checked() {

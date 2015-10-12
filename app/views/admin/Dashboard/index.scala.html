@@ -64,7 +64,7 @@
 					<tr class="mf-small-row">
 						<th>
 						@if(mediaFile.getThumbnail() != null) {
-							<img style="max-width: 100px; height: 40px" src="@routes.MediaFiles.thumbnail(mediaFile.checksum, 0)" />
+							<img style="max-width: 100px; height: 40px" src="@routes.MediaFiles.cover(mediaFile.checksum, 0)" />
 						} else {
 							N/A
 						}						
@@ -84,7 +84,7 @@
 					<tr class="mf-small-row">
 						<th>
 						@if(mediaFile.getThumbnail() != null) {
-							<img style="max-width: 100px; height: 40px" src="@routes.MediaFiles.thumbnail(mediaFile.checksum, 0)" />
+							<img style="max-width: 100px; height: 40px" src="@routes.MediaFiles.cover(mediaFile.checksum, 0)" />
 						} else {
 							N/A
 						}						
@@ -104,7 +104,7 @@
 					@if(thumbnail.mediaFile != null) {
 					<tr class="mf-small-row">
 						<th>
-							<img style="max-width: 100px; height: 40px" src="@routes.MediaFiles.thumbnail(thumbnail.mediaFile.checksum, 0)" />					
+							<img style="max-width: 100px; height: 40px" src="@routes.MediaFiles.cover(thumbnail.mediaFile.checksum, 0)" />					
 						</th>
 						<td>
 							<a title="@thumbnail.mediaFile.filename" href="@routes.MediaFiles.show(thumbnail.mediaFile.checksum)">@MediaFileHelper.shortName(thumbnail.mediaFile.filename, 25)</a>

@@ -50,7 +50,7 @@ public class MediaFiles extends Application {
 		return redirect(routes.MediaFiles.index(type));
 	}
 	
-	public static Result thumbnail(String checksum, Integer index) {
+	public static Result cover(String checksum, Integer index) {
 		MediaFile mf = MediaFile.Finder.where().eq("checksum", checksum).findUnique();
 		Thumbnail thumb = mf != null && mf.getThumbnail() != null ? mf.getThumbnail() : null;
 		File media = thumb != null ? new File(THUMBNAILS_DIR + File.separator + thumb.filepath) : null;		
@@ -79,6 +79,19 @@ public class MediaFiles extends Application {
 		response().setHeader(ETAG, thumb.getChecksum(media));		
 		response().setHeader("Content-Disposition", "inline; filename=\"" + media.getName() + "\"");		
 		return ok(media);
+	}
+	
+	public static Result thumbnail(Long id) {
+		Thumbnail thumb = Thumbnail.Finder.byId(id);
+		File media = thumb != null ? new File(THUMBNAILS_DIR + File.separator + thumb.filepath) : null;		
+		if(thumb == null || media == null || !media.exists()) {
+			return notFound();
+		}
+		response().setContentType("image/png");
+		response().setHeader(CACHE_CONTROL, "max-age=3600");
+		response().setHeader(ETAG, thumb.getChecksum(media));		
+		response().setHeader("Content-Disposition", "inline; filename=\"" + media.getName() + "\"");		
+		return ok(media);		
 	}
 	
 	public static Result download(String checksum) {

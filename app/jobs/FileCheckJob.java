@@ -16,14 +16,14 @@ import models.Property;
 import play.Logger;
 import services.JobService;
 
-public class CheckJob extends AbstractJob {
+public class FileCheckJob extends AbstractJob {
 	final Logger.ALogger logger = Logger.of(this.getClass());
 	private final static String ROOT_DIR = ConfigFactory.load().getString("media.root.dir");
 	private final static String STORAGE_FILE_TEMPLATE = ROOT_DIR + File.separator + "storage" + File.separator + "%file%";
-	private final static Integer BATCH_SIZE = getValue("job.CheckJob.batchsize", 20);
+	private final static Integer BATCH_SIZE = getValue("job.FileCheckJob.batchsize", 20);
 	
-	public CheckJob() {
-		super("CheckJob");
+	public FileCheckJob() {
+		super("FileCheckJob");
 		this.cancellable = true;
 	}
 
