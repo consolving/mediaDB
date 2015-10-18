@@ -253,7 +253,8 @@ public class MediaFileHelper {
 	}
 	
 	public static String shortName(String name, int length) {
-		return name != null ? name.length() > length ? name.substring(0, length) + "…" : name : name;
+		name = name.replace("_", " ");
+		return name != null ? name.length() > length ? name.substring(0, length/2) + "…" + name.substring(name.length()-length/2): name : name;
 	}
 	
 	public static void addDuration(MediaFile mediaFile) {
