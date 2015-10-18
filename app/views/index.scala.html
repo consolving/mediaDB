@@ -4,7 +4,7 @@
 @import models.Thumbnail
 @import models.MediaFile
 
-@(mediaFileCount: Integer, thumbnailsCount:Integer, tagCount: Integer, propertyCount: Integer)
+@(mediaFileCount: Integer, thumbnailsCount:Integer, tagCount: Integer, propertyCount: Integer, perPage: Integer, page: Integer, prev: Integer, next: Integer)
 
 @main("Welcome to media DB") {
     <div class="row center">
@@ -42,7 +42,19 @@
 			<div class="col-md-12 center">
 				<h2>last Imports</h2>
 			</div>
-			@for(mediaFile <- MediaFile.getLast(72, 0)) {
+			<ul class="pager">
+			    <li class="previous">
+			        @if(prev != null) {
+			        <a href="@routes.Application.index()?page=@prev">&larr; Prev</a>
+			        }
+			    </li>
+			    <li class="next">
+			        @if(next != null) {
+			        <a href="@routes.Application.index()?page=@next">Next &rarr;</a>
+			        }
+			    </li>
+			</ul>			
+			@for(mediaFile <- MediaFile.getLast(perPage, page)) {
 			<div class="col-md-2 thumbnail">
 				<a title="@mediaFile.filename" href="@routes.MediaFiles.show(mediaFile.checksum)">
 				@if(mediaFile.getThumbnail() != null) {

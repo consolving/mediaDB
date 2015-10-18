@@ -1,6 +1,6 @@
 @import helpers.MediaFileHelper
 
-@(mediaFiles: java.util.List[models.MediaFile], mediaFilesCount: Integer)
+@(mediaFiles: java.util.List[models.MediaFile], mediaFilesCount: Integer, mediaType: String, prev: Integer, next: Integer)
 
 @main("Welcome to media DB") {
     <div class="row center">
@@ -11,6 +11,18 @@
 			<div class="col-md-12 center">
 				<h2>last Imports</h2>
 			</div>
+			<ul class="pager">
+			    <li class="previous">
+			        @if(prev != null) {
+			        <a href="@routes.MediaFiles.index(mediaType)?page=@prev">&larr; Prev</a>
+			        }
+			    </li>
+			    <li class="next">
+			        @if(next != null) {
+			        <a href="@routes.MediaFiles.index(mediaType)?page=@next">Next &rarr;</a>
+			        }
+			    </li>
+			</ul>			
 			@for(mediaFile <- mediaFiles) {
 			<div class="col-md-2 thumbnail">
 				<div class="pull-right top">

@@ -81,6 +81,7 @@ public class ThumbnailsHelper {
 
 	public static File createVideoThumbnail(MediaFile mediaFile, int frame, String size) {
 		checkDir(THUMBNAILS_DIR + File.separator + SystemHelper.getFoldersForName(mediaFile.checksum));
+		mediaFile.getStreams();
 		String thumbPath = SystemHelper.getFolders(mediaFile.checksum) + File.separator + "thumb_0_"+size+".png";
 		File thumb = new File(THUMBNAILS_DIR + File.separator + thumbPath);
 		if(!thumb.exists() || mediaFile.cover == null) {

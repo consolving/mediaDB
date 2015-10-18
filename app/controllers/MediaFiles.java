@@ -12,7 +12,6 @@ import models.MediaFile;
 import models.Thumbnail;
 import play.Logger;
 import play.cache.Cache;
-import play.libs.Json;
 import play.mvc.Result;
 import views.html.MediaFiles.index;
 import views.html.MediaFiles.show;
@@ -21,9 +20,13 @@ import views.html.MediaFiles.show;
 public class MediaFiles extends Application {
 
 	public static Result index(String type) {
-		List<MediaFile> mediaFiles = MediaFile.getMimeType(512, 0, type);
+		Integer page = getQuereparameterAsInteger("page", 1);
 		Integer mediaFilesCount = MediaFile.Finder.where().startsWith("mimeType", type).findRowCount();
-		return ok(index.render(mediaFiles, mediaFilesCount));		
+        Integer max = mediaFilesCount / PER_PAGE;
+        Integer prev = page > 1 ? page - 1 : null;
+        Integer next = page < max ? page + 1 : null;		
+		List<MediaFile> mediaFiles = MediaFile.getMimeType(PER_PAGE, page-1, type);
+		return ok(index.render(mediaFiles, mediaFilesCount, type, prev, next));		
 	}
 	
 	public static Result show(String checksum) {
@@ -116,4 +119,5 @@ public class MediaFiles extends Application {
 		}
 		return ok(out);
 	}
+	
 }
