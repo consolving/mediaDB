@@ -50,6 +50,11 @@ public class Application extends Controller {
 		Logger.debug(sb.toString());
 	}
 	
+	protected static Boolean getQuereparameterAsBoolean(String key, Boolean defaultValue) {
+		Boolean value = request().getQueryString(key) != null ? Boolean.parseBoolean(request().getQueryString(key)) : null;
+		return value != null ? value : defaultValue;
+	}
+	
 	protected static Integer getQuereparameterAsInteger(String key, Integer defaultValue) {
 		Integer value = null;
 		try {

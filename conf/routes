@@ -5,6 +5,7 @@
 # Home page
 GET     /                           		controllers.Application.index()
 GET     /files/:checksum      				controllers.MediaFiles.show(checksum)
+GET     /files/:checksum/view		      	controllers.MediaFiles.view(checksum)
 GET     /files/:checksum/properties      	controllers.MediaFiles.properties(checksum)
 GET     /files/:checksum/thumbnails      	controllers.MediaFiles.thumbnails(checksum)
 POST	/files/:checksum/delete      		controllers.MediaFiles.delete(checksum)

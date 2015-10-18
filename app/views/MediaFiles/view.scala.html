@@ -1,0 +1,32 @@
+@import helpers.MediaFileHelper
+
+@(mf: models.MediaFile)
+
+@scripts = {
+	<script type="text/javascript" src="@routes.Assets.versioned("lib/video-js/video.js")"></script>  
+}
+
+@main("File "+mf.filename, scripts) {
+    <div class="row">   
+    	<div class="col-md-12">
+			<ul class="nav nav-tabs">
+				<li role="presentation"><a href="@routes.MediaFiles.show(mf.checksum)">Info</a></li>
+				<li role="presentation" class="active"><a href="@routes.MediaFiles.view(mf.checksum)">View</a></li>				
+			  	<li role="presentation"><a href="@routes.MediaFiles.properties(mf.checksum)">Properties</a></li>
+			  	<li role="presentation"><a href="@routes.MediaFiles.thumbnails(mf.checksum)">Thumbnails</a></li>
+			</ul> 
+	        <h1>View @mf.filename</h1>
+        </div>
+    </div>
+	<div class="row center">
+		@if(mf.mimeType.startsWith("image")){
+			<img class="col-md-12" src="@routes.MediaFiles.download(mf.checksum)" />
+		}
+		@if(mf.mimeType.startsWith("video")){
+    		<video id="video1" class="video-js vjs-default-skin" width="1280" height="720" data-setup='{"controls" : true, "autoplay" : true, "preload" : "auto"}'>
+        		<source src="@routes.MediaFiles.download(mf.checksum)" type="@mf.mimeType" />
+    		</video>
+    		<p><a target="_download" href="@routes.MediaFiles.download(mf.checksum)">Download @mf.filename</a></p>
+		}
+	</div> 
+}

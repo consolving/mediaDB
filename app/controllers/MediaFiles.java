@@ -16,6 +16,7 @@ import play.mvc.Result;
 import views.html.MediaFiles.index;
 import views.html.MediaFiles.message;
 import views.html.MediaFiles.show;
+import views.html.MediaFiles.view;
 import views.html.MediaFiles.properties;
 import views.html.MediaFiles.thumbnails;
 
@@ -40,6 +41,14 @@ public class MediaFiles extends Application {
 		return notFound();
 	}
 
+	public static Result view(String checksum) {
+		MediaFile mf = MediaFile.Finder.where().eq("checksum", checksum).findUnique();
+		if (mf != null) {
+			return ok(view.render(mf));
+		}		
+		return notFound();			
+	}
+	
 	public static Result properties(String checksum) {
 		MediaFile mf = MediaFile.Finder.where().eq("checksum", checksum).findUnique();
 		if (mf != null) {
@@ -117,6 +126,7 @@ public class MediaFiles extends Application {
 	}
 	
 	public static Result download(String checksum) {
+		Boolean download = getQuereparameterAsBoolean("dl", true);
 		MediaFile mf = MediaFile.Finder.where().eq("checksum", checksum).findUnique();
 		File media = mf != null ? new File(STORAGE_FOLDER + File.separator + mf.getLocation()) : null;
 		Logger.debug("download " + (media != null ? media.getAbsolutePath() : null));
