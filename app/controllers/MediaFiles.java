@@ -14,6 +14,7 @@ import play.Logger;
 import play.cache.Cache;
 import play.mvc.Result;
 import views.html.MediaFiles.index;
+import views.html.MediaFiles.message;
 import views.html.MediaFiles.show;
 
 @BasicAuth
@@ -50,7 +51,7 @@ public class MediaFiles extends Application {
 		ThumbnailsHelper.deleteThumbnails(mf);
 		MediaFileHelper.deleteFile(mf);
 		mf.delete();
-		return redirect(routes.MediaFiles.index(type));
+		return ok(message.render(mf.filename+ " was deleted.", routes.MediaFiles.index(type).url()));
 	}
 	
 	public static Result cover(String checksum, Integer index) {

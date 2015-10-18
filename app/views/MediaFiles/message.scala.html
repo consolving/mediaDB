@@ -1,0 +1,12 @@
+@import helpers.MediaFileHelper
+
+@(message: String, url: String)
+
+@main("Welcome to media DB") {
+    <div class="row center">
+		<h1>@message</h1>
+		<a href="@url">
+			<button type="button" class="btn btn-default btn-lg">Continue</button>
+		</a>
+	</div>
+}
