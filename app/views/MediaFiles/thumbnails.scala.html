@@ -1,0 +1,23 @@
+@import helpers.MediaFileHelper
+
+@(mf: models.MediaFile)
+
+@main("File "+mf.filename) {
+    <div class="row">   
+    	<div class="col-md-12">
+			<ul class="nav nav-tabs">
+				<li role="presentation"><a href="@routes.MediaFiles.show(mf.checksum)">Info</a></li>
+			  	<li role="presentation"><a href="@routes.MediaFiles.properties(mf.checksum)">Properties</a></li>
+			  	<li role="presentation" class="active"><a href="@routes.MediaFiles.thumbnails(mf.checksum)">Thumbnails</a></li>
+			</ul> 
+	        <h1>Thumbnails of @mf.filename</h1>
+        </div>
+		@for(thumb <- mf.getThumbnails()) {
+			<div class="col-md-3">
+				<a href="@routes.MediaFiles.thumbnail(thumb.id)" target="_thumb_@thumb.id" >
+		    		<img class="img-thumbnail" style="max-height: 200px" src="@routes.MediaFiles.thumbnail(thumb.id)"/>
+		    	</a>    				
+			</div>
+		} 
+    </div>
+}

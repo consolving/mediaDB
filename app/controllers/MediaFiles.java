@@ -17,6 +17,7 @@ import views.html.MediaFiles.index;
 import views.html.MediaFiles.message;
 import views.html.MediaFiles.show;
 import views.html.MediaFiles.properties;
+import views.html.MediaFiles.thumbnails;
 
 @BasicAuth
 public class MediaFiles extends Application {
@@ -43,6 +44,14 @@ public class MediaFiles extends Application {
 		MediaFile mf = MediaFile.Finder.where().eq("checksum", checksum).findUnique();
 		if (mf != null) {
 			return ok(properties.render(mf));
+		}		
+		return notFound();		
+	}
+
+	public static Result thumbnails(String checksum) {
+		MediaFile mf = MediaFile.Finder.where().eq("checksum", checksum).findUnique();
+		if (mf != null) {
+			return ok(thumbnails.render(mf));
 		}		
 		return notFound();		
 	}
