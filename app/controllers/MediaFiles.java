@@ -16,6 +16,7 @@ import play.mvc.Result;
 import views.html.MediaFiles.index;
 import views.html.MediaFiles.message;
 import views.html.MediaFiles.show;
+import views.html.MediaFiles.properties;
 
 @BasicAuth
 public class MediaFiles extends Application {
@@ -38,6 +39,14 @@ public class MediaFiles extends Application {
 		return notFound();
 	}
 
+	public static Result properties(String checksum) {
+		MediaFile mf = MediaFile.Finder.where().eq("checksum", checksum).findUnique();
+		if (mf != null) {
+			return ok(properties.render(mf));
+		}		
+		return notFound();		
+	}
+	
 	public static Result delete(String checksum) {
 		MediaFile mf = MediaFile.Finder.where().eq("checksum", checksum).findUnique();
 		if(mf == null) {

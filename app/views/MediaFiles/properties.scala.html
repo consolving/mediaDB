@@ -1,0 +1,22 @@
+@import helpers.MediaFileHelper
+
+@(mf: models.MediaFile)
+
+@main("File "+mf.filename) {
+    <div class="row">   
+    	<div class="col-md-12">
+			<ul class="nav nav-tabs">
+				<li role="presentation"><a href="@routes.MediaFiles.show(mf.checksum)">Info</a></li>
+			  	<li role="presentation" class="active"><a href="@routes.MediaFiles.properties(mf.checksum)">Properties</a></li>
+			</ul> 
+	        <h1>Properties of @mf.filename</h1>
+        </div>
+    	<div class="col-md-12">
+			<dl class="dl-horizontal">
+			@for(property <- mf.getProperties()) {
+				<dt>@property.k</dt><dd>@property.v</dd>
+			}
+			</dl>
+    	</div>    
+    </div>
+}
