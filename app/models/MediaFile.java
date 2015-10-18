@@ -1,5 +1,6 @@
 package models;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -20,8 +21,11 @@ import javax.persistence.Transient;
 
 import com.avaje.ebean.Ebean;
 import com.avaje.ebean.SqlUpdate;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import helpers.MediaFileHelper;
+import play.Logger;
 import play.db.ebean.Model;
 
 @Entity
@@ -135,6 +139,24 @@ public class MediaFile extends Model {
     	return this.filepath;
     }
     
+	public JsonNode getStreams() {
+		Property prop = Property.Finder.where().eq("mediaFile", this).eq("k", "streams").findUnique();
+		JsonNode arrNode = null;
+		try {
+			if(prop != null) {
+				arrNode = new ObjectMapper().readTree(prop.v);
+				if(arrNode.isArray())
+				for (final JsonNode objNode : arrNode) {
+					Logger.debug("arrNode: "+objNode);  
+				}
+			}
+			return arrNode != null && arrNode.isArray() ? arrNode : new ObjectMapper().readTree("[]");
+		} catch (IOException ex) {
+			Logger.warn(ex.getLocalizedMessage(), ex);
+			return null;
+		}			
+	}
+	
     public static Integer getSize() {
 		return Finder.findRowCount();
 	}
