@@ -12,6 +12,7 @@ import helpers.MediaFileHelper;
 import helpers.SystemHelper;
 import helpers.ThumbnailsHelper;
 import models.MediaFile;
+import models.MediaFolder;
 import models.Property;
 import play.Logger;
 import services.JobService;
@@ -48,6 +49,8 @@ public class FileCheckJob extends AbstractJob {
 					file = new File(STORAGE_FILE_TEMPLATE.replace("%file%", mediaFile.getLocation()));
 					Property p = mediaFile.getProperty("size");
 					mediaFile.filesize = p != null ? p.getLongValue() : MediaFileHelper.getSize(file);
+					p = mediaFile.getProperty("filename");
+					mediaFile.folder = p != null ? MediaFolder.getOrCreate(getFolderFromFilename(p.v, mediaFile.filename)) : null;
 					BasicFileAttributes attr = Files.readAttributes(file.toPath(), BasicFileAttributes.class);
 					mediaFile.created = MediaFileHelper.fileTimeToDate(attr.creationTime());
 					ThumbnailsHelper.createThumbnail(mediaFile, "800x600");
@@ -67,5 +70,15 @@ public class FileCheckJob extends AbstractJob {
 				mediaFile.delete();
 			}
 		}		
+	}
+	
+	private final static String getFolderFromFilename(String path, String filename) {
+		if(path != null && filename != null) {
+			Logger.debug("path.length(): "+path.length());
+			Logger.debug("filename.length(): "+filename.length());
+			Logger.debug("path.substring(0, path.length()-filename.length()): "+path.substring(0, path.length()-filename.length()));
+			return path.substring(0, path.length()-filename.length());
+		}
+		return null;
 	}
 }

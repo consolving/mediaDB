@@ -14,6 +14,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
@@ -47,6 +48,9 @@ public class MediaFile extends Model {
 	
 	@OneToOne
 	public Thumbnail cover;
+	
+	@ManyToOne
+	public MediaFolder folder = null;
 	
 	@ManyToMany(cascade=CascadeType.ALL )
 	private Set<Tag> tags;

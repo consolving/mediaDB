@@ -9,6 +9,7 @@ import helpers.JobHandler;
 import jobs.FileCheckJob;
 import jobs.FolderSizesJob;
 import jobs.ImportJob;
+import models.MediaFolder;
 import play.Application;
 import play.GlobalSettings;
 import play.Logger;
@@ -19,6 +20,7 @@ public class Global extends GlobalSettings {
 	private List<JobHandler> jobHandlers = new ArrayList<JobHandler>();
 	
 	public void onStart(Application app) {
+		MediaFolder.getOrCreate(File.separator);
 		outputTools();
 		checkFolders();
 		JobService.addJob(new FileAuthScanJob());

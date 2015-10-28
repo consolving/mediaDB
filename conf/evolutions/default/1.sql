@@ -21,7 +21,16 @@ create table media_file (
   last_check                timestamp,
   created                   timestamp,
   cover_id                  bigint,
+  folder_id                 bigint,
   constraint pk_media_file primary key (id))
+;
+
+create table media_folder (
+  id                        bigint auto_increment not null,
+  path                      TEXT,
+  name                      varchar(255),
+  parent_id                 bigint,
+  constraint pk_media_folder primary key (id))
 ;
 
 create table property (
@@ -54,10 +63,14 @@ create table media_file_tag (
 ;
 alter table media_file add constraint fk_media_file_cover_1 foreign key (cover_id) references thumbnail (id) on delete restrict on update restrict;
 create index ix_media_file_cover_1 on media_file (cover_id);
-alter table property add constraint fk_property_mediaFile_2 foreign key (media_file_id) references media_file (id) on delete restrict on update restrict;
-create index ix_property_mediaFile_2 on property (media_file_id);
-alter table thumbnail add constraint fk_thumbnail_mediaFile_3 foreign key (media_file_id) references media_file (id) on delete restrict on update restrict;
-create index ix_thumbnail_mediaFile_3 on thumbnail (media_file_id);
+alter table media_file add constraint fk_media_file_folder_2 foreign key (folder_id) references media_folder (id) on delete restrict on update restrict;
+create index ix_media_file_folder_2 on media_file (folder_id);
+alter table media_folder add constraint fk_media_folder_parent_3 foreign key (parent_id) references media_folder (id) on delete restrict on update restrict;
+create index ix_media_folder_parent_3 on media_folder (parent_id);
+alter table property add constraint fk_property_mediaFile_4 foreign key (media_file_id) references media_file (id) on delete restrict on update restrict;
+create index ix_property_mediaFile_4 on property (media_file_id);
+alter table thumbnail add constraint fk_thumbnail_mediaFile_5 foreign key (media_file_id) references media_file (id) on delete restrict on update restrict;
+create index ix_thumbnail_mediaFile_5 on thumbnail (media_file_id);
 
 
 
@@ -74,6 +87,8 @@ drop table if exists configuration;
 drop table if exists media_file;
 
 drop table if exists media_file_tag;
+
+drop table if exists media_folder;
 
 drop table if exists property;
 
