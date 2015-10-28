@@ -301,7 +301,7 @@ public class MediaFileHelper {
 				Logger.warn(ex.getLocalizedMessage(), ex);
 			}
 		}
-		return duration/count;
+		return count != 0 ? duration/count : count;
 	}
 	
 	public static void deleteFile(MediaFile mediaFile) {
