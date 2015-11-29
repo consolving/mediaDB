@@ -21,6 +21,8 @@ import javax.persistence.OrderBy;
 import javax.persistence.Transient;
 
 import com.avaje.ebean.Ebean;
+import com.avaje.ebean.RawSql;
+import com.avaje.ebean.RawSqlBuilder;
 import com.avaje.ebean.SqlUpdate;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -123,7 +125,7 @@ public class MediaFile extends Model {
     }
     
     public void checked() {
-    	SqlUpdate update = Ebean. createSqlUpdate("UPDATE media_file SET last_check=:lastCheck, filesize=:filesize, created=:created WHERE checksum=:checksum")
+    	SqlUpdate update = Ebean.createSqlUpdate("UPDATE media_file SET last_check=:lastCheck, filesize=:filesize, created=:created WHERE checksum=:checksum")
 		.setParameter("lastCheck", new Date())
 		.setParameter("created", this.created)
 		.setParameter("filesize", this.filesize)
@@ -175,4 +177,12 @@ public class MediaFile extends Model {
 	public static List<MediaFile> getMimeType(int number, int page, String mimeType) {
 		return Finder.orderBy("id DESC").where().startsWith("mimeType", mimeType.trim()).findPagingList(number).getPage(page).getList();
 	}
+
+    public static List<MediaFile> getForTags(int number, int page, Set<Tag> tags) {
+    	return Finder.where().in("tags", tags).orderBy("id DESC").findPagingList(number).getPage(page).getList();
+    }
+    
+    public static Integer getCountForTags(Set<Tag> tags) {
+    	return Finder.where().in("tags", tags).findRowCount();
+    }    
 }

@@ -1,10 +1,12 @@
 @import helpers.MediaFileHelper
 
-@(tagName: String, mediaFiles: java.util.List[models.MediaFile], prev: Integer, next: Integer)
+@(query: String, mediaFileCount: Integer, mediaFiles: java.util.List[models.MediaFile], prev: Integer, next: Integer)
 
-@main("Tag "+tagName) {
+@scripts = {}
+
+@main("Results for "+query, scripts, query) {
     <div class="row center">
-		<h1><small>@mediaFiles.size()</small> Media Files for Tag @tagName</h1>
+		<h1><small>@mediaFileCount</small> Results for <em>@query</em></h1>
 	</div>
 </div>
 <div class="container-fluid">	
@@ -12,15 +14,15 @@
 		<ul class="pager">
 		    <li class="previous">
 		        @if(prev != null) {
-		        <a href="@routes.Application.index()?page=@prev">&larr; Prev</a>
+		        <a href="@routes.Searches.result()?page=@prev&query=@query">&larr; Prev</a>
 		        }
 		    </li>
 		    <li class="next">
 		        @if(next != null) {
-		        <a href="@routes.Application.index()?page=@next">Next &rarr;</a>
+		        <a href="@routes.Searches.result()?page=@next&query=@query">Next &rarr;</a>
 		        }
 		    </li>
-		</ul>      
+		</ul>    
 	@for(mediaFile <- mediaFiles) {
 		<div class="col-md-1 thumbcell">
 			<a title="@mediaFile.filename" href="@routes.MediaFiles.show(mediaFile.checksum)">

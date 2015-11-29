@@ -26,7 +26,7 @@ public class MediaFiles extends Application {
 	public static Result index(String type) {
 		Integer page = getQuereparameterAsInteger("page", 1);
 		Integer mediaFilesCount = MediaFile.Finder.where().startsWith("mimeType", type).findRowCount();
-        Integer max = mediaFilesCount / PER_PAGE;
+		Integer max = (int) Math.ceil((double) mediaFilesCount / PER_PAGE); 
         Integer prev = page > 1 ? page - 1 : null;
         Integer next = page < max ? page + 1 : null;		
 		List<MediaFile> mediaFiles = MediaFile.getMimeType(PER_PAGE, page-1, type);
@@ -126,7 +126,6 @@ public class MediaFiles extends Application {
 	}
 	
 	public static Result download(String checksum) {
-		Boolean download = getQuereparameterAsBoolean("dl", true);
 		MediaFile mf = MediaFile.Finder.where().eq("checksum", checksum).findUnique();
 		File media = mf != null ? new File(STORAGE_FOLDER + File.separator + mf.getLocation()) : null;
 		Logger.debug("download " + (media != null ? media.getAbsolutePath() : null));

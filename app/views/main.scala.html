@@ -1,6 +1,6 @@
 @import services.JobService
 
-@(title: String, scripts: Html = Html(""))(content: Html)
+@(title: String, scripts: Html = Html(""), queryValue: String = null)(content: Html)
 
 @activeLink(currentPath:String) = @{
     if(!play.api.Play.current.configuration.getString("application.context").isEmpty && request.path.startsWith(play.api.Play.current.configuration.getString("application.context").get+currentPath) || request.path.startsWith(currentPath)) "active"
@@ -33,7 +33,6 @@
                         <li class="@activeLink("/files/filter/image")"><a href="@routes.MediaFiles.index("image")">Images</a></li>
                         <li class="@activeLink("/files/filter/video")"><a href="@routes.MediaFiles.index("video")">Videos</a></li>
                     </ul>
-                    
                     <ul class="nav navbar-nav navbar-right">
                         <li class="@activeLink("/admin")"><a href="@controllers.admin.routes.Dashboard.index()">Administration</a></li>
                         <li class="dropdown">
@@ -50,7 +49,11 @@
                                 <li><form action="@routes.Jobs.toggleJobsActive()" method="POST"><button style="width:100%" class="btn @if(JobService.isJobsActive()){btn-danger">disable}else{btn-success">enable} all</button></form></li>
                             </ul>
                         </li>
-                    </ul>
+					</ul>
+                    <form action="@routes.Searches.result()" method="GET" id="nav-searchform">
+                    	<input class="col-md-4" name="query" id="query" type="text" value="@if(queryValue!=null){@queryValue}" />
+                    	<button type="submit" class="btn btn-primary btn-sm">Search</button>
+                    </form>
                 </div>
             </div>
         </nav>

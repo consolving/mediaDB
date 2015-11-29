@@ -68,7 +68,7 @@ div.thumbcell {
 
 .thumbcell img {
 	max-height: 150px;
-	max-width: 275px;
+	max-width: 200px;
 }
 
 .thumbcell div, .thumbnail div {
@@ -85,4 +85,9 @@ div.thumbcell {
 .mf-small-row th {
 	width: 102px;
 	text-align: right;	
+}
+
+#nav-searchform {
+	padding: 10px;
+	max-height: 20px;
 }
