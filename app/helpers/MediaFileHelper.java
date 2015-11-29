@@ -51,14 +51,10 @@ public class MediaFileHelper {
 	private final static boolean HAS_FILE_BIN = new File(FILE_BIN).exists();
 	private final static String DU_BIN = ConfigFactory.load().getString("system.du.bin");
 	private final static boolean HAS_DU_BIN = new File(DU_BIN).exists();
-	private final static String MV_BIN = ConfigFactory.load().getString("system.mv.bin");
-	private final static boolean HAS_MV_BIN = new File(MV_BIN).exists();
 	private final static String LS_BIN = ConfigFactory.load().getString("system.ls.bin");
 	private final static boolean HAS_LS_BIN = new File(LS_BIN).exists();
 	private final static String WC_BIN = ConfigFactory.load().getString("system.wc.bin");
 	private final static boolean HAS_WC_BIN = new File(WC_BIN).exists();
-	private final static String RM_BIN = ConfigFactory.load().getString("system.rm.bin");
-	private final static boolean HAS_RM_BIN = new File(RM_BIN).exists();
 	
 	private MediaFileHelper() {
 	}
@@ -128,29 +124,6 @@ public class MediaFileHelper {
 			}			
 		}
 		return null;
-	}
-	
-	public static boolean delete(File file) {
-		if (HAS_RM_BIN && file.exists()) {
-			String cmd = RM_BIN+" -Rf \"" + file.getAbsolutePath() + "/\"";
-			Logger.debug("running: " + cmd);
-			String part = SystemHelper.runCommand(cmd).trim();
-			Logger.debug(part);
-			return !file.exists();
-		}
-		return false;
-	}
-	
-	public static boolean delete(String filename) {
-		File file = new File(filename);
-		if (HAS_RM_BIN && file.exists()) {
-			String cmd = RM_BIN+" -Rf \"" + file.getAbsolutePath() + "/\"";
-			Logger.debug("running: " + cmd);
-			String part = SystemHelper.runCommand(cmd).trim();
-			Logger.debug(part);
-			return !file.exists();
-		}
-		return false;
 	}
 
 	public static String humanReadableCount(Long value) {

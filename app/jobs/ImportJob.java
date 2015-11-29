@@ -60,7 +60,7 @@ public class ImportJob extends AbstractJob {
 			count--;
 			logger.debug(f.getAbsolutePath()+"!="+MEDIA_FOLDER.getAbsolutePath()+": "+ MediaFileHelper.getCount(f));
 			if(f.isDirectory() && MediaFileHelper.getCount(f) == 0 && !f.getAbsolutePath().equals(MEDIA_FOLDER.getAbsolutePath())) {
-				MediaFileHelper.delete(f.getAbsolutePath().endsWith("/") ? f.getAbsolutePath().substring(0, f.getAbsolutePath().length()-1) : f.getAbsolutePath());
+				SystemHelper.delete(f.getAbsolutePath().endsWith("/") ? f.getAbsolutePath().substring(0, f.getAbsolutePath().length()-1) : f.getAbsolutePath());
 			}
 		}
 		return files;
