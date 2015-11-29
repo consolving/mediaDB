@@ -18,7 +18,6 @@ import services.JobService;
 public class Global extends GlobalSettings {
 	private final static String ROOT_DIR = ConfigFactory.load().getString("media.root.dir");
 	private List<JobHandler> jobHandlers = new ArrayList<JobHandler>();
-	
 	public void onStart(Application app) {
 		MediaFolder.getOrCreate(File.separator);
 		outputTools();

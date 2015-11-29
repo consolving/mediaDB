@@ -4,6 +4,7 @@ import java.io.FileFilter;
 import com.typesafe.config.ConfigFactory;
 
 import helpers.SystemHelper;
+import models.MediaFile;
 import play.Application;
 
 public class DevelopmentEnvironment {
@@ -16,7 +17,7 @@ public class DevelopmentEnvironment {
 	public void init() {
 		File testDir = new File(TEST_DATA_DIR);
 		File uploadsFolder = new File(DATA_DIR+File.separator+"upload");
-		if(testDir.exists()) {
+		if(MediaFile.getSize() == 0 && testDir.exists()) {
 			File folder;
 			for(String f : SUB_FOLDER) {
 				folder = new File(DATA_DIR+File.separator+f);
