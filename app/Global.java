@@ -23,6 +23,10 @@ public class Global extends GlobalSettings {
 		MediaFolder.getOrCreate(File.separator);
 		outputTools();
 		checkFolders();
+		if(app.isDev()) {
+			Logger.info("#### INIT DEV ENV ####");
+			new DevelopmentEnvironment(app).init();
+		}
 		JobService.addJob(new FileAuthScanJob());
 		JobService.addJob(new ImportJob());
 		JobService.addJob(new FileCheckJob());	
@@ -44,7 +48,9 @@ public class Global extends GlobalSettings {
 							"system.bash.bin",
 							"system.file.bin",
 							"system.du.bin",
-							"system.mv.bin"};
+							"system.mv.bin",
+							"system.rm.bin",
+							"system.cp.bin"};
 		for(String key : keys){
 			if(new File(ConfigFactory.load().getString(key)).exists()) {
 				Logger.info(key+" => "+ConfigFactory.load().getString(key)+" exists!");

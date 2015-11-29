@@ -13,7 +13,9 @@ public class SystemHelper {
 	private final static boolean HAS_MV_BIN = new File(MV_BIN).exists();
 	private final static String RM_BIN = ConfigFactory.load().getString("system.rm.bin");
 	private final static boolean HAS_RM_BIN = new File(RM_BIN).exists();
-
+	private final static String CP_BIN = ConfigFactory.load().getString("system.cp.bin");
+	private final static boolean HAS_CP_BIN = new File(CP_BIN).exists();
+	
 	private final static String SYSTEM_bash_BIN = ConfigFactory.load().getString("system.bash.bin");
 
 	private SystemHelper() {
@@ -47,6 +49,18 @@ public class SystemHelper {
 		return calcFolder(name, false);
 	}
 
+	public static boolean copy(File src, File dst) {
+		if (HAS_CP_BIN && src.exists() && (dst.isDirectory() && dst.exists() || dst.isFile())) {
+			String cmd = dst.isFile() ? CP_BIN + " -r \"" + src.getAbsolutePath() + "\" \"" + dst.getAbsolutePath() + "\"" : CP_BIN + " -r \"" + src.getAbsolutePath() + "\" \"" + dst.getAbsolutePath() + "/\"";
+			Logger.debug("running: " + cmd);
+			String part = SystemHelper.runCommand(cmd).trim();
+			Logger.debug(part);
+			File copy = new File(dst.getAbsolutePath()+File.separator+src.getName());
+			return copy.exists();
+		}
+		return false;
+	}
+	
 	public static boolean delete(File file) {
 		if (HAS_RM_BIN && file.exists()) {
 			String cmd = RM_BIN + " -Rf \"" + file.getAbsolutePath() + "/\"";
@@ -60,14 +74,7 @@ public class SystemHelper {
 
 	public static boolean delete(String filename) {
 		File file = new File(filename);
-		if (HAS_RM_BIN && file.exists()) {
-			String cmd = RM_BIN + " -Rf \"" + file.getAbsolutePath() + "/\"";
-			Logger.debug("running: " + cmd);
-			String part = SystemHelper.runCommand(cmd).trim();
-			Logger.debug(part);
-			return !file.exists();
-		}
-		return false;
+		return delete(file);
 	}
 
 	private static String calcFolder(String name, boolean file) {
