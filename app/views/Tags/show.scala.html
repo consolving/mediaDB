@@ -6,9 +6,11 @@
     <div class="row center">
 		<h1><small>@mediaFiles.size()</small> Media Files for Tag @tagName</h1>
 	</div>
+</div>
+<div class="container-fluid">	
     <div class="row">
 	@for(mediaFile <- mediaFiles) {
-		<div class="col-md-3 thumbcell">
+		<div class="col-md-1 thumbcell">
 			<a title="@mediaFile.filename" href="@routes.MediaFiles.show(mediaFile.checksum)">
 			@if(mediaFile.getThumbnail() != null) {
 				<img src="@routes.MediaFiles.cover(mediaFile.checksum, 0)"/>

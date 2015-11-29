@@ -4,9 +4,11 @@
 
 @main("Welcome to media DB") {
     <div class="row center">
-		<h1><small>@mediaFilesCount</small> Media Files</h1>
+		<h1><small>@mediaFilesCount</small> <em>@mediaType</em> Files</h1>
 	</div>
 @if(MediaFile.getSize() > 0) {
+</div>
+<div class="container-fluid">
 		<div class="row">
 			<div class="col-md-12 center">
 				<h2>last Imports</h2>
@@ -22,14 +24,9 @@
 			        <a href="@routes.MediaFiles.index(mediaType)?page=@next">Next &rarr;</a>
 			        }
 			    </li>
-			</ul>			
+			</ul>							
 			@for(mediaFile <- mediaFiles) {
-			<div class="col-md-2 thumbnail">
-				<div class="pull-right top">
-				@helper.form(action = routes.MediaFiles.delete(mediaFile.checksum)) {
-    	    		<button onClick="if (!confirm('Are you sure you want to delete this?\n')) return false;" type="submit" class="btn btn-danger btn-xs" aria-label="Delete"><span aria-hidden="true">&times;</span></button>
-    	    	}
-    	    	</div>
+			<div class="col-md-1 thumbnail">
 				<a title="@mediaFile.filename" href="@routes.MediaFiles.show(mediaFile.checksum)">
 				@if(mediaFile.getThumbnail() != null) {
 					<img src="@routes.MediaFiles.cover(mediaFile.checksum, 0)"/>

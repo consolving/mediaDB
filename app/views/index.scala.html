@@ -10,38 +10,10 @@
     <div class="row center">
     	<h2>Welcome to media DB</h2>
     </div>
-    <div class="row"> 
-		<div class="col-md-3 center">
-			<h2>
-				@mediaFileCount<br />
-				<small>Media Files</small>				
-			</h2>
-		</div>
-		<div class="col-md-3 center">
-			<h2>
-				@thumbnailsCount<br />
-				<small>Thumbnails</small>
-			</h2>
-		</div>
-		<div class="col-md-3 center">
-			<h2>
-				@tagCount<br />
-				<small>Tags</small>
-			</h2>
-		</div>
-		<div class="col-md-3 center">
-			<h2>
-				@propertyCount<br />
-				<small>Properties</small>
-			</h2>
-		</div>			
-	</div>	
-	
+</div>
+<div class="container-fluid">
 	@if(MediaFile.getSize() > 0) {
 		<div class="row">
-			<div class="col-md-12 center">
-				<h2>last Imports</h2>
-			</div>
 			<ul class="pager">
 			    <li class="previous">
 			        @if(prev != null) {
@@ -55,7 +27,7 @@
 			    </li>
 			</ul>			
 			@for(mediaFile <- MediaFile.getLast(perPage, page)) {
-			<div class="col-md-2 thumbnail">
+			<div class="col-md-1 thumbnail">
 				<a title="@mediaFile.filename" href="@routes.MediaFiles.show(mediaFile.checksum)">
 				@if(mediaFile.getThumbnail() != null) {
 					<img src="@routes.MediaFiles.cover(mediaFile.checksum, 0)" />
