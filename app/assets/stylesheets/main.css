@@ -4,90 +4,90 @@ body {
 }
 
 .center {
-	text-align: center;
+    text-align: center;
 }
 
 svg {
-	width: 95%;
-	height: 100%;
+    width: 95%;
+    height: 100%;
 }
 
 
 .front-graph table {
-	margin-left: 35px;
-	width: 50%;
+    margin-left: 35px;
+    width: 50%;
 }
 
 path.slice{
-	stroke-width:2px;
+    stroke-width:2px;
 }
 
 polyline{
-	opacity: .3;
-	stroke: black;
-	stroke-width: 2px;
-	fill: none;
+    opacity: .3;
+    stroke: black;
+    stroke-width: 2px;
+    fill: none;
 }
 
 .front-graph {
-	width: 500px;
-	height: 300px;
+    width: 500px;
+    height: 300px;
 }
 
 div.thumbnail {
-	max-height: 175px;
-	min-height: 175px;
-	text-align: center;
-	position: relative;
-	overflow:hidden;
-	margin-top: 30px;
+    max-height: 175px;
+    min-height: 175px;
+    text-align: center;
+    position: relative;
+    overflow:hidden;
+    margin-top: 30px;
 }
 
 .thumbnail .top {
-	position: absolute;
-	top: 1px;
+    position: absolute;
+    top: 1px;
 }
 
 .thumbnail .pull-right {
-	position: absolute;
-	right: 1px;
+    position: absolute;
+    right: 1px;
 }
 
 div.thumbcell {
-	max-height: 200px;
-	min-height: 200px;
-	text-align: center;
-	position: relative;
-	margin-top: 30px;
+    max-height: 200px;
+    min-height: 200px;
+    text-align: center;
+    position: relative;
+    margin-top: 30px;
 }
 
 .thumbnail img {
-	max-height: 120px;
-	max-width: 120px;
+    max-height: 120px;
+    max-width: 120px;
 }
 
 .thumbcell img {
-	max-height: 150px;
-	max-width: 200px;
+    max-height: 16%;
+    max-width: 8%;
 }
 
 .thumbcell div, .thumbnail div {
-	position: absolute;
-	bottom: 5px;
-	text-align: center;
-	margin: 0px;
+    position: absolute;
+    bottom: 5px;
+    text-align: center;
+    margin: 0px;
 }
 
 .mf-small-row {
-	min-height: 42px;
+    min-height: 42px;
 }
 
 .mf-small-row th {
-	width: 102px;
-	text-align: right;	
+    width: 102px;
+    text-align: right;	
 }
 
 #nav-searchform {
-	padding: 10px;
-	max-height: 20px;
+    padding: 10px;
+    max-height: 20px;
 }
