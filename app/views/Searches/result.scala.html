@@ -5,35 +5,35 @@
 @scripts = {}
 
 @main("Results for "+query, scripts, query) {
-    <div class="row center">
-		<h1><small>@mediaFileCount</small> Results for <em>@query</em></h1>
-	</div>
 </div>
-<div class="container-fluid">	
+<div class="container-fluid">
     <div class="row">
-		<ul class="pager">
-		    <li class="previous">
-		        @if(prev != null) {
-		        <a href="@routes.Searches.result()?page=@prev&query=@query">&larr; Prev</a>
-		        }
-		    </li>
-		    <li class="next">
-		        @if(next != null) {
-		        <a href="@routes.Searches.result()?page=@next&query=@query">Next &rarr;</a>
-		        }
-		    </li>
-		</ul>    
-	@for(mediaFile <- mediaFiles) {
-		<div class="col-md-1 thumbcell">
-			<a title="@mediaFile.filename" href="@routes.MediaFiles.show(mediaFile.checksum)">
-			@if(mediaFile.getThumbnail() != null) {
-				<img src="@routes.MediaFiles.cover(mediaFile.checksum, 0)"/>
-			} else {
-				N/A
-			}
-			</a>
-			<div>@if(mediaFile.filesize != null){@MediaFileHelper.humanReadableByteCount(mediaFile.filesize, true) | }@MediaFileHelper.shortName(mediaFile.filename, 25)</div>
-		</div>
-	}
-	</div>
+        <ul class="pager">
+            <li class="previous">
+                @if(prev != null) {
+                    <a href="@routes.Searches.result()?page=@prev&query=@query">&larr; Prev</a>
+                }
+            </li>
+            <li class="center">
+                <small>@mediaFileCount</small> Results for <em>@query</em>
+            </li>
+            <li class="next">
+                @if(next != null) {
+                    <a href="@routes.Searches.result()?page=@next&query=@query">Next &rarr;</a>
+                }
+            </li>
+        </ul>
+        @for(mediaFile <- mediaFiles) {
+            <div class="col-md-1 thumbnail">
+                <a title="@mediaFile.filename" href="@routes.MediaFiles.show(mediaFile.checksum)">
+                    @if(mediaFile.getThumbnail() != null) {
+                        <img src="@routes.MediaFiles.cover(mediaFile.checksum, 0)"/>
+                        } else {
+                        N/A
+                    }
+                </a>
+                <div>@if(mediaFile.filesize != null){@MediaFileHelper.humanReadableByteCount(mediaFile.filesize, true) | }@MediaFileHelper.shortName(mediaFile.filename, 25)</div>
+            </div>
+        }
+    </div>
 }

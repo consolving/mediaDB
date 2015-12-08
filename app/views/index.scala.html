@@ -7,37 +7,37 @@
 @(mediaFileCount: Integer, thumbnailsCount:Integer, tagCount: Integer, propertyCount: Integer, perPage: Integer, page: Integer, prev: Integer, next: Integer)
 
 @main("Welcome to media DB") {
-    <div class="row center">
-    	<h2>Welcome to media DB</h2>
-    </div>
 </div>
 <div class="container-fluid">
-	@if(MediaFile.getSize() > 0) {
-		<div class="row">
-			<ul class="pager">
-			    <li class="previous">
-			        @if(prev != null) {
-			        <a href="@routes.Application.index()?page=@prev">&larr; Prev</a>
-			        }
-			    </li>
-			    <li class="next">
-			        @if(next != null) {
-			        <a href="@routes.Application.index()?page=@next">Next &rarr;</a>
-			        }
-			    </li>
-			</ul>			
-			@for(mediaFile <- MediaFile.getLast(perPage, page)) {
-			<div class="col-md-1 thumbnail">
-				<a title="@mediaFile.filename" href="@routes.MediaFiles.show(mediaFile.checksum)">
-				@if(mediaFile.getThumbnail() != null) {
-					<img src="@routes.MediaFiles.cover(mediaFile.checksum, 0)" />
-				} else {
-					N/A
-				}
-				</a>
-				<div>@if(mediaFile.filesize != null){@MediaFileHelper.humanReadableByteCount(mediaFile.filesize, true) | }@MediaFileHelper.shortName(mediaFile.filename, 30)</div>
-			</div>
-			}
-		</div>
-	}	
+    @if(MediaFile.getSize() > 0) {
+        <div class="row">
+            <ul class="pager">
+                <li class="previous">
+                    @if(prev != null) {
+                        <a href="@routes.Application.index()?page=@prev">&larr; Prev</a>
+                    }
+                </li>
+                <li class="center">
+                    Welcome to media DB
+                </li>
+                <li class="next">
+                    @if(next != null) {
+                        <a href="@routes.Application.index()?page=@next">Next &rarr;</a>
+                    }
+                </li>
+            </ul>
+            @for(mediaFile <- MediaFile.getLast(perPage, page)) {
+                <div class="col-md-1 thumbnail">
+                    <a title="@mediaFile.filename" href="@routes.MediaFiles.show(mediaFile.checksum)">
+                        @if(mediaFile.getThumbnail() != null) {
+                            <img src="@routes.MediaFiles.cover(mediaFile.checksum, 0)" />
+                            } else {
+                            N/A
+                        }
+                    </a>
+                    <div>@if(mediaFile.filesize != null){@MediaFileHelper.humanReadableByteCount(mediaFile.filesize, true) | }@MediaFileHelper.shortName(mediaFile.filename, 30)</div>
+                </div>
+            }
+        </div>
+    }
 }

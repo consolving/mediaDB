@@ -1,6 +1,6 @@
 body {
     padding-top: 60px;
-    padding-bottom: 330px;
+    padding-bottom: 60px;
 }
 
 .center {
@@ -35,12 +35,12 @@ polyline{
 }
 
 div.thumbnail {
-    max-height: 175px;
-    min-height: 175px;
+    max-height: 200px;
+    min-height: 200px;
     text-align: center;
     position: relative;
     overflow:hidden;
-    margin-top: 30px;
+
 }
 
 .thumbnail .top {
@@ -53,25 +53,12 @@ div.thumbnail {
     right: 1px;
 }
 
-div.thumbcell {
-    max-height: 200px;
-    min-height: 200px;
-    text-align: center;
-    position: relative;
-    margin-top: 30px;
-}
-
 .thumbnail img {
-    max-height: 120px;
-    max-width: 120px;
-}
-
-.thumbcell img {
-    max-height: 16%;
+    max-height: 145px;
     max-width: 8%;
 }
 
-.thumbcell div, .thumbnail div {
+.thumbnail div {
     position: absolute;
     bottom: 5px;
     text-align: center;

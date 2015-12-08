@@ -3,40 +3,38 @@
 @(mediaFiles: java.util.List[models.MediaFile], mediaFilesCount: Integer, mediaType: String, prev: Integer, next: Integer)
 
 @main("Welcome to media DB") {
-    <div class="row center">
-		<h1><small>@mediaFilesCount</small> <em>@mediaType</em> Files</h1>
-	</div>
-@if(MediaFile.getSize() > 0) {
-</div>
-<div class="container-fluid">
-		<div class="row">
-			<div class="col-md-12 center">
-				<h2>last Imports</h2>
-			</div>
-			<ul class="pager">
-			    <li class="previous">
-			        @if(prev != null) {
-			        <a href="@routes.MediaFiles.index(mediaType)?page=@prev">&larr; Prev</a>
-			        }
-			    </li>
-			    <li class="next">
-			        @if(next != null) {
-			        <a href="@routes.MediaFiles.index(mediaType)?page=@next">Next &rarr;</a>
-			        }
-			    </li>
-			</ul>							
-			@for(mediaFile <- mediaFiles) {
-			<div class="col-md-1 thumbnail">
-				<a title="@mediaFile.filename" href="@routes.MediaFiles.show(mediaFile.checksum)">
-				@if(mediaFile.getThumbnail() != null) {
-					<img src="@routes.MediaFiles.cover(mediaFile.checksum, 0)"/>
-				} else {
-					N/A
-				}
-				</a>
-				<div>@if(mediaFile.filesize != null){@MediaFileHelper.humanReadableByteCount(mediaFile.filesize, true) | }@MediaFileHelper.shortName(mediaFile.filename, 30)</div>
-			</div>
-			}
-		</div>
-	}	
+    
+    @if(MediaFile.getSize() > 0) {
+    </div>
+    <div class="container-fluid">
+        <div class="row">
+            <ul class="pager">
+                <li class="previous">
+                    @if(prev != null) {
+                        <a href="@routes.MediaFiles.index(mediaType)?page=@prev">&larr; Prev</a>
+                    }
+                </li>
+                <li class="center">
+                    <small>@mediaFilesCount</small> <em>@mediaType</em> Files
+                </li>
+                <li class="next">
+                    @if(next != null) {
+                        <a href="@routes.MediaFiles.index(mediaType)?page=@next">Next &rarr;</a>
+                    }
+                </li>
+            </ul>
+            @for(mediaFile <- mediaFiles) {
+                <div class="col-md-1 thumbnail">
+                    <a title="@mediaFile.filename" href="@routes.MediaFiles.show(mediaFile.checksum)">
+                        @if(mediaFile.getThumbnail() != null) {
+                            <img src="@routes.MediaFiles.cover(mediaFile.checksum, 0)"/>
+                            } else {
+                            N/A
+                        }
+                    </a>
+                    <div>@if(mediaFile.filesize != null){@MediaFileHelper.humanReadableByteCount(mediaFile.filesize, true) | }@MediaFileHelper.shortName(mediaFile.filename, 30)</div>
+                </div>
+            }
+        </div>
+    }
 }

@@ -3,35 +3,35 @@
 @(tagName: String, mediaFiles: java.util.List[models.MediaFile], prev: Integer, next: Integer)
 
 @main("Tag "+tagName) {
-    <div class="row center">
-		<h1><small>@mediaFiles.size()</small> Media Files for Tag @tagName</h1>
-	</div>
 </div>
-<div class="container-fluid">	
+<div class="container-fluid">
     <div class="row">
-		<ul class="pager">
-		    <li class="previous">
-		        @if(prev != null) {
-		        <a href="@routes.Application.index()?page=@prev">&larr; Prev</a>
-		        }
-		    </li>
-		    <li class="next">
-		        @if(next != null) {
-		        <a href="@routes.Application.index()?page=@next">Next &rarr;</a>
-		        }
-		    </li>
-		</ul>      
-	@for(mediaFile <- mediaFiles) {
-		<div class="col-md-1 thumbcell">
-			<a title="@mediaFile.filename" href="@routes.MediaFiles.show(mediaFile.checksum)">
-			@if(mediaFile.getThumbnail() != null) {
-				<img src="@routes.MediaFiles.cover(mediaFile.checksum, 0)"/>
-			} else {
-				N/A
-			}
-			</a>
-			<div>@if(mediaFile.filesize != null){@MediaFileHelper.humanReadableByteCount(mediaFile.filesize, true) | }@MediaFileHelper.shortName(mediaFile.filename, 25)</div>
-		</div>
-	}
-	</div>
+        <ul class="pager">
+            <li class="previous">
+                @if(prev != null) {
+                    <a href="@routes.Application.index()?page=@prev">&larr; Prev</a>
+                }
+            </li>
+            <li class="center">
+                <small>@mediaFiles.size()</small> Media Files for Tag @tagName
+            </li>
+            <li class="next">
+                @if(next != null) {
+                    <a href="@routes.Application.index()?page=@next">Next &rarr;</a>
+                }
+            </li>
+        </ul>
+        @for(mediaFile <- mediaFiles) {
+            <div class="col-md-1 thumbnail">
+                <a title="@mediaFile.filename" href="@routes.MediaFiles.show(mediaFile.checksum)">
+                    @if(mediaFile.getThumbnail() != null) {
+                        <img src="@routes.MediaFiles.cover(mediaFile.checksum, 0)"/>
+                        } else {
+                        N/A
+                    }
+                </a>
+                <div>@if(mediaFile.filesize != null){@MediaFileHelper.humanReadableByteCount(mediaFile.filesize, true) | }@MediaFileHelper.shortName(mediaFile.filename, 25)</div>
+            </div>
+        }
+    </div>
 }
