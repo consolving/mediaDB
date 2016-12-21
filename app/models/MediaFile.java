@@ -21,8 +21,6 @@ import javax.persistence.OrderBy;
 import javax.persistence.Transient;
 
 import com.avaje.ebean.Ebean;
-import com.avaje.ebean.RawSql;
-import com.avaje.ebean.RawSqlBuilder;
 import com.avaje.ebean.SqlUpdate;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -168,11 +166,15 @@ public class MediaFile extends Model {
 	}
 	
     public static List<MediaFile> nextChecks(int number) {
-    	return Finder.setMaxRows(number).order("lastCheck ASC").findList();
+    	return Finder.setMaxRows(number).where().isNull("lastCheck").order("created ASC").findList();
     }
 	public static List<MediaFile> getLast(int number, int page) {
 		return Finder.orderBy("id DESC").findPagingList(number).getPage(page).getList();
 	}    
+	
+	public static List<MediaFile> getPageSortedBy(int number, int page, String sortedBy, String sortOrder) {
+		return Finder.orderBy(sortedBy+" "+sortOrder.toUpperCase()).findPagingList(number).getPage(page).getList(); 
+	}
 	
 	public static List<MediaFile> getMimeType(int number, int page, String mimeType) {
 		return Finder.orderBy("id DESC").where().startsWith("mimeType", mimeType.trim()).findPagingList(number).getPage(page).getList();

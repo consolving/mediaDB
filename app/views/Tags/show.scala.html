@@ -9,7 +9,7 @@
         <ul class="pager">
             <li class="previous">
                 @if(prev != null) {
-                    <a href="@routes.Application.index()?page=@prev">&larr; Prev</a>
+                    <a href="@routes.Tags.show(tagName)?page=@prev">&larr; Prev</a>
                 }
             </li>
             <li class="center">
@@ -17,7 +17,7 @@
             </li>
             <li class="next">
                 @if(next != null) {
-                    <a href="@routes.Application.index()?page=@next">Next &rarr;</a>
+                    <a href="@routes.Tags.show(tagName)?page=@next">Next &rarr;</a>
                 }
             </li>
         </ul>
