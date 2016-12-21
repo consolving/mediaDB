@@ -1,0 +1,66 @@
+@import views.addons._
+@import models.Thumbnail
+@import models.MediaFile
+@import helpers.MediaFileHelper
+
+@(mediaFiles: java.util.List[models.MediaFile], prev: Integer, next: Integer, sortedBy: String, sortOrder: String)
+
+@scripts = {
+    <script type="text/javascript" src="@routes.Assets.versioned("javascripts/admin.js")"></script>
+}
+
+@main("Welcome to media DB", scripts) {
+    <div class="row center">
+    	<h2>Storage sorted by <em>@sortedBy @sortOrder</em></h2>
+    </div>
+    <div class="row">
+        <ul class="pager">
+            <li class="previous">
+                @if(prev != null) {
+                    <a href="@controllers.admin.routes.Storage.index()?sortedBy=@sortedBy&sortOrder=@sortOrder&page=@prev">&larr; Prev</a>
+                }
+            </li>
+            <li class="center">
+            </li>
+            <li class="next">
+                @if(next != null) {
+                    <a href="@controllers.admin.routes.Storage.index()?sortedBy=@sortedBy&sortOrder=@sortOrder&page=@next">Next &rarr;</a>
+                }
+            </li>
+        </ul>
+        <table class="table table-striped">
+        	<tr>
+        		<th></th>
+        		<th><a href="@controllers.admin.routes.Storage.index()?sortedBy=filename&sortOrder=@if("DESC".equals(sortOrder)){ASC}else{DESC}&page=@prev">Filename</a></th>
+				<th><a href="@controllers.admin.routes.Storage.index()?sortedBy=mimeType&sortOrder=@if("DESC".equals(sortOrder)){ASC}else{DESC}&page=@prev">Type</a></th>
+        		<th class="col-md-2"><a href="@controllers.admin.routes.Storage.index()?sortedBy=filesize&sortOrder=@if("DESC".equals(sortOrder)){ASC}else{DESC}&page=@prev">Filesize</a></th>
+        		<th></th>
+        	</tr>
+		@for(mediaFile <- mediaFiles) {
+			<tr>
+				<td>
+					<div>
+					<a title="@mediaFile.filename" href="@routes.MediaFiles.show(mediaFile.checksum)">
+					@if(mediaFile.getThumbnail() != null) {
+	                    <img class="img-thumbnail" src="@routes.MediaFiles.cover(mediaFile.checksum, 0)"/>
+	                }	
+	                </a>
+                	</div>			
+				</td>
+				<td>@mediaFile.filename</td>				
+				<td>@mediaFile.mimeType</td>
+				<td>
+				@if(mediaFile.filesize != null) {	
+				@MediaFileHelper.humanReadableByteCount(mediaFile.filesize, true)
+				}
+				</td>
+				<td>
+	    	    @helper.form(action = routes.MediaFiles.delete(mediaFile.checksum)) {
+	    	    	<button onClick="if (!confirm('Are you sure you want to delete this?\n')) return false;" type="submit" class="btn btn-danger">Delete</button>
+	    	    }
+				</td>
+			</tr>
+		}        
+        </table>
+    </div>            
+}
