@@ -192,8 +192,6 @@ public class MediaFileHelper {
 		File rootFolder = new File(ROOT_DIR);
 		ArrayNode dirSizes = out.arrayNode();
 		if (rootFolder.exists()) {
-			Long sum = MediaFileHelper.getSize(rootFolder);
-			Long size = 0L;
 			ObjectNode dir;
 			Map<String, Long> sizes = MediaFile. getFileSizes();
 			for(String key : sizes.keySet()) {
