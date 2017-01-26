@@ -7,6 +7,7 @@ import java.nio.file.attribute.FileTime;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.NavigableMap;
 import java.util.TreeMap;
@@ -194,16 +195,12 @@ public class MediaFileHelper {
 			Long sum = MediaFileHelper.getSize(rootFolder);
 			Long size = 0L;
 			ObjectNode dir;
-			for (File folder : rootFolder.listFiles(FOLDER_FILTER)) {
-				size = MediaFileHelper.getSize(folder);
-				if (size != null && sum != null) {
-					if(MediaFileHelper.getCount(folder) > 0) {					
-						dir = Json.newObject();
-						dir.put("label", folder.getName() + "\n" + MediaFileHelper.humanReadableByteCount(size * 1000, true));
-						dir.put("value", (sum==0 ? 0 : 100 * size / sum));
-						dirSizes.add(dir);
-					}
-				}
+			Map<String, Long> sizes = MediaFile. getFileSizes();
+			for(String key : sizes.keySet()) {
+				dir = Json.newObject();
+				dir.put("label", key+ "\n" + MediaFileHelper.humanReadableByteCount(sizes.get(key), true));
+				dir.put("value", sizes.get(key));
+				dirSizes.add(dir);				
 			}
 		}
 		out.put("dirsSizes", dirSizes);

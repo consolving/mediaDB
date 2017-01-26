@@ -7,7 +7,6 @@ import com.typesafe.config.ConfigFactory;
 import fileauth.FileAuthScanJob;
 import helpers.JobHandler;
 import jobs.FileCheckJob;
-import jobs.FolderSizesJob;
 import jobs.ImportJob;
 import models.MediaFolder;
 import play.Application;
@@ -28,8 +27,7 @@ public class Global extends GlobalSettings {
 		}
 		JobService.addJob(new FileAuthScanJob());
 		JobService.addJob(new ImportJob());
-		JobService.addJob(new FileCheckJob());	
-		JobService.addJob(new FolderSizesJob());	
+		JobService.addJob(new FileCheckJob());
 		Logger.info("#### APPLICATION STARTED ####");
 	}
 

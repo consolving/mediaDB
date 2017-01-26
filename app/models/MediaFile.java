@@ -21,6 +21,8 @@ import javax.persistence.OrderBy;
 import javax.persistence.Transient;
 
 import com.avaje.ebean.Ebean;
+import com.avaje.ebean.SqlQuery;
+import com.avaje.ebean.SqlRow;
 import com.avaje.ebean.SqlUpdate;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -186,5 +188,16 @@ public class MediaFile extends Model {
     
     public static Integer getCountForTags(Set<Tag> tags) {
     	return Finder.where().in("tags", tags).findRowCount();
-    }    
+    }  
+    
+	public static Map<String, Long> getFileSizes() {
+		Map<String, Long> sizes = new HashMap<>();
+		SqlQuery query = Ebean.createSqlQuery(
+				"SELECT sum(filesize) as size, mime_type FROM media_file group by mime_type order by size DESC");
+		List<SqlRow> rows = query.findList();
+		for (SqlRow sqlRow : rows) {
+			sizes.put(sqlRow.getString("mime_type"), sqlRow.getLong("size"));
+		}
+		return sizes;
+	}
 }

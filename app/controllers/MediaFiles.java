@@ -11,6 +11,7 @@ import helpers.ThumbnailsHelper;
 import models.MediaFile;
 import models.Thumbnail;
 import play.Logger;
+import play.libs.Json;
 import play.cache.Cache;
 import play.mvc.Result;
 import views.html.MediaFiles.index;
@@ -139,13 +140,14 @@ public class MediaFiles extends Application {
 	}
 
 	public static Result folderStats() {
-		ObjectNode out = (ObjectNode) Cache.get("folderStats");
-		if (out == null) {
-			Logger.warn("still calculation first Folder Stats");
-			// TODO add Future for Response
-			return notFound();
-		}
+		ObjectNode out = collectFolderSizes();
 		return ok(out);
 	}
 	
+	private static ObjectNode collectFolderSizes() {
+		ObjectNode out = MediaFileHelper.addFolderSizes(Json.newObject());
+		out = MediaFileHelper.addCounts(out);
+		out = MediaFileHelper.addTypeCounts(out);
+		return out;
+	}	
 }
