@@ -196,7 +196,9 @@ public class MediaFile extends Model {
 				"SELECT sum(filesize) as size, mime_type FROM media_file group by mime_type order by size DESC");
 		List<SqlRow> rows = query.findList();
 		for (SqlRow sqlRow : rows) {
-			sizes.put(sqlRow.getString("mime_type"), sqlRow.getLong("size"));
+			if(sqlRow.getString("mime_type") != null && sqlRow.getLong("size") != null) {
+				sizes.put(sqlRow.getString("mime_type"), sqlRow.getLong("size"));				
+			}
 		}
 		return sizes;
 	}
