@@ -45,6 +45,8 @@ public class MediaFiles extends Application {
 	public static Result view(String checksum) {
 		MediaFile mf = MediaFile.Finder.where().eq("checksum", checksum).findUnique();
 		if (mf != null) {
+			mf.views += 1;
+			mf.save();
 			return ok(view.render(mf));
 		}		
 		return notFound();			

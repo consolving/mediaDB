@@ -34,6 +34,7 @@
         		<th><a href="@controllers.admin.routes.Storage.index()?sortedBy=filename&sortOrder=@if("DESC".equals(sortOrder)){ASC}else{DESC}&page=@prev">Filename</a></th>
 				<th><a href="@controllers.admin.routes.Storage.index()?sortedBy=mimeType&sortOrder=@if("DESC".equals(sortOrder)){ASC}else{DESC}&page=@prev">Type</a></th>
         		<th class="col-md-2"><a href="@controllers.admin.routes.Storage.index()?sortedBy=filesize&sortOrder=@if("DESC".equals(sortOrder)){ASC}else{DESC}&page=@prev">Filesize</a></th>
+        		<th class="col-md-2"><a href="@controllers.admin.routes.Storage.index()?sortedBy=views&sortOrder=@if("DESC".equals(sortOrder)){ASC}else{DESC}&page=@prev">Views</a></th>
         		<th></th>
         	</tr>
 		@for(mediaFile <- mediaFiles) {

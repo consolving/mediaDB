@@ -16,6 +16,7 @@ create table media_file (
   filepath                  varchar(255),
   checksum                  varchar(255),
   filename                  varchar(255),
+  views                     integer,
   filesize                  bigint,
   mime_type                 varchar(255),
   last_check                timestamp,

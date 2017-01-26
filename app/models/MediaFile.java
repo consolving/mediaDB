@@ -42,6 +42,8 @@ public class MediaFile extends Model {
 	public String checksum;
 	public String filename;
 	
+	public Integer views = 0;
+	
 	public Long filesize;
 	public String mimeType;
 	
