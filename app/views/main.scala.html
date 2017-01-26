@@ -34,8 +34,13 @@
                         <li class="@activeLink("/files/filter/video")"><a href="@routes.MediaFiles.index("video")">Videos</a></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
-                        <li class="@activeLink("/admin")"><a href="@controllers.admin.routes.Dashboard.index()">Administration</a></li>
-                        <li class="@activeLink("/storage")"><a href="@controllers.admin.routes.Storage.index()">Storage</a></li>
+ 						<li class="dropdown">
+          					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Administration <span class="caret"></span></a>
+          					<ul class="dropdown-menu">
+								<li class="@activeLink("/admin")"><a href="@controllers.admin.routes.Dashboard.index()">Dashboard</a></li>
+                        		<li class="@activeLink("/storage")"><a href="@controllers.admin.routes.Storage.index()">Storage</a></li>
+          					</ul>
+        				</li>
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">Jobs (@JobService.getJobsStats() running)<span class="caret"></span></a>
                             <ul class="dropdown-menu" role="menu">
