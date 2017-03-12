@@ -19,3 +19,9 @@ data
 /bin/
 conf/htgroups
 conf/htusers
+/nbproject/private/
+/build/
+/nbdist/
+.classpath_nb
+nbproject
+build.xml
