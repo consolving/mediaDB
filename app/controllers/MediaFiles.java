@@ -94,7 +94,7 @@ public class MediaFiles extends Application {
 			ThumbnailsHelper.checkThumbnailLocation(mf, media, oldThumb);
 		}
 		
-		if(media == null || thumb.checksum == null) {
+		if(media == null || thumb == null || !media.exists() || thumb.checksum == null) {
 			media = ThumbnailsHelper.createThumbnail(mf, "800x600");
 		}
 
@@ -104,7 +104,7 @@ public class MediaFiles extends Application {
 		}
 		
 		if (media == null || !media.exists()) {
-			Logger.warn("cannot find " + media.getAbsolutePath());
+			Logger.warn("cannot find thumb for " + checksum);
 			return notFound();
 		}
 		
