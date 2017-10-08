@@ -165,6 +165,14 @@ public class MediaFile extends Model {
 		}			
 	}
 	
+	public static MediaFile findUnique(String checksum) {
+		List<MediaFile> mfs = MediaFile.Finder.where().eq("checksum", checksum).findList();
+		if(mfs.size() > 1) {
+			Logger.error("there are "+mfs.size()+" elements for checksum "+checksum);
+		}
+		return mfs.size() > 0 ? mfs.get(0) : null;
+	}
+	
     public static Integer getSize() {
 		return Finder.findRowCount();
 	}

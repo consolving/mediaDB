@@ -35,7 +35,7 @@ public class MediaFiles extends Application {
 	}
 	
 	public static Result show(String checksum) {
-		MediaFile mf = MediaFile.Finder.where().eq("checksum", checksum).findUnique();
+		MediaFile mf = MediaFile.findUnique(checksum);
 		if (mf != null) {
 			return ok(show.render(mf));
 		}
@@ -43,7 +43,7 @@ public class MediaFiles extends Application {
 	}
 
 	public static Result view(String checksum) {
-		MediaFile mf = MediaFile.Finder.where().eq("checksum", checksum).findUnique();
+		MediaFile mf = MediaFile.findUnique(checksum);
 		if (mf != null) {
 			mf.views += 1;
 			mf.save();
@@ -53,7 +53,7 @@ public class MediaFiles extends Application {
 	}
 	
 	public static Result properties(String checksum) {
-		MediaFile mf = MediaFile.Finder.where().eq("checksum", checksum).findUnique();
+		MediaFile mf = MediaFile.findUnique(checksum);
 		if (mf != null) {
 			return ok(properties.render(mf));
 		}		
@@ -61,7 +61,7 @@ public class MediaFiles extends Application {
 	}
 
 	public static Result thumbnails(String checksum) {
-		MediaFile mf = MediaFile.Finder.where().eq("checksum", checksum).findUnique();
+		MediaFile mf = MediaFile.findUnique(checksum);
 		if (mf != null) {
 			return ok(thumbnails.render(mf));
 		}		
@@ -69,7 +69,7 @@ public class MediaFiles extends Application {
 	}
 	
 	public static Result delete(String checksum) {
-		MediaFile mf = MediaFile.Finder.where().eq("checksum", checksum).findUnique();
+		MediaFile mf = MediaFile.findUnique(checksum);
 		if(mf == null) {
 			return redirect(routes.Application.index());
 		}
@@ -85,7 +85,7 @@ public class MediaFiles extends Application {
 	}
 	
 	public static Result cover(String checksum, Integer index) {
-		MediaFile mf = MediaFile.Finder.where().eq("checksum", checksum).findUnique();
+		MediaFile mf = MediaFile.findUnique(checksum);
 		Thumbnail thumb = mf != null && mf.getThumbnail() != null ? mf.getThumbnail() : null;
 		File media = thumb != null ? new File(THUMBNAILS_DIR + File.separator + thumb.filepath) : null;		
 		
@@ -141,9 +141,20 @@ public class MediaFiles extends Application {
 		return ok(media);
 	}
 
+	public static Result staticDownload(String path) {
+		String checksum = extractChecksum(path);
+		Logger.info("checksum is "+checksum);
+		return download(checksum);
+	}
+	
 	public static Result folderStats() {
 		ObjectNode out = collectFolderSizes();
 		return ok(out);
+	}
+	
+	private static String extractChecksum(String path) {
+		String parts[] = path.split("\\/");
+		return parts.length == 9 ? parts[8] : path;
 	}
 	
 	private static ObjectNode collectFolderSizes() {
