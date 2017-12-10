@@ -27,8 +27,8 @@
 			    		<dt>Cover</dt>
 			    	</dl>			    		
 			    	}		    	
-					<a href="@routes.MediaFiles.cover(mf.checksum, 0)" target="_thumb_@mf.checksum" >
-			    		<img class="img-thumbnail" style="max-height: 200px" src="@routes.MediaFiles.cover(mf.checksum, 0)"/>
+					<a href="@routes.MediaFiles.staticCover(mf.getLocation())" target="_thumb_@mf.checksum" >
+			    		<img class="img-thumbnail" style="max-height: 200px" src="@routes.MediaFiles.staticCover(mf.getLocation())"/>
 			    	</a>
 		    	</div>
 		    	<div class="col-md-8">
@@ -58,7 +58,7 @@
 			    			<dd>@mf.getMDBProperties().get(key)</dd>
 			    		}
 			    		<dt>Download</dt>
-			    		<dd><a target="_download" href="@routes.MediaFiles.download(mf.checksum)">@mf.filename</a></dd>    		
+			    		<dd><a target="_download" href="@routes.MediaFiles.staticDownload(mf.getLocation())">@mf.filename</a></dd>    		
 			    	</dl>
 		    	</div>    		
     		</div>

@@ -27,7 +27,7 @@
             <div class="col-md-1 thumbnail">
                 <a title="@mediaFile.filename" href="@routes.MediaFiles.show(mediaFile.checksum)">
                     @if(mediaFile.getThumbnail() != null) {
-                        <img src="@routes.MediaFiles.cover(mediaFile.checksum, 0)"/>
+                        <img src="@routes.MediaFiles.staticCover(mediaFile.getLocation())"/>
                         } else {
                         N/A
                     }

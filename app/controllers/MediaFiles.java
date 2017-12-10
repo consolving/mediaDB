@@ -84,7 +84,29 @@ public class MediaFiles extends Application {
 		return ok(message.render(mf.filename+ " was deleted.", routes.MediaFiles.index(type).url()));
 	}
 	
-	public static Result cover(String checksum, Integer index) {
+	public static Result cover(String checksum) {
+		return getCover(checksum);
+	}
+	
+	public static Result thumbnail(Long id) {
+		Thumbnail thumb = Thumbnail.Finder.byId(id);
+		File media = thumb != null ? new File(THUMBNAILS_DIR + File.separator + thumb.filepath) : null;		
+		if(thumb == null || media == null || !media.exists()) {
+			return notFound();
+		}
+		response().setContentType("image/png");
+		response().setHeader(CACHE_CONTROL, "max-age=3600");
+		response().setHeader(ETAG, thumb.getChecksum(media));		
+		response().setHeader("Content-Disposition", "inline; filename=\"" + media.getName() + "\"");		
+		return ok(media);		
+	}
+	
+	public static Result staticCover(String path) {
+		String checksum = extractChecksum(path);		
+		return getCover(checksum);
+	}
+	
+	private static Result getCover(String checksum) {
 		MediaFile mf = MediaFile.findUnique(checksum);
 		Thumbnail thumb = mf != null && mf.getThumbnail() != null ? mf.getThumbnail() : null;
 		File media = thumb != null ? new File(THUMBNAILS_DIR + File.separator + thumb.filepath) : null;		
@@ -112,20 +134,7 @@ public class MediaFiles extends Application {
 		response().setHeader(CACHE_CONTROL, "max-age=3600");
 		response().setHeader(ETAG, thumb.getChecksum(media));		
 		response().setHeader("Content-Disposition", "inline; filename=\"" + media.getName() + "\"");		
-		return ok(media);
-	}
-	
-	public static Result thumbnail(Long id) {
-		Thumbnail thumb = Thumbnail.Finder.byId(id);
-		File media = thumb != null ? new File(THUMBNAILS_DIR + File.separator + thumb.filepath) : null;		
-		if(thumb == null || media == null || !media.exists()) {
-			return notFound();
-		}
-		response().setContentType("image/png");
-		response().setHeader(CACHE_CONTROL, "max-age=3600");
-		response().setHeader(ETAG, thumb.getChecksum(media));		
-		response().setHeader("Content-Disposition", "inline; filename=\"" + media.getName() + "\"");		
-		return ok(media);		
+		return ok(media);	
 	}
 	
 	public static Result download(String checksum) {
@@ -143,7 +152,6 @@ public class MediaFiles extends Application {
 
 	public static Result staticDownload(String path) {
 		String checksum = extractChecksum(path);
-		Logger.info("checksum is "+checksum);
 		return download(checksum);
 	}
 	
