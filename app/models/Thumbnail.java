@@ -41,7 +41,8 @@ public class Thumbnail extends Model {
 	}
 	
 	public static Thumbnail getOrCreate(MediaFile mediaFile, String filepath, String checksum) {
-		Thumbnail t = Thumbnail.Finder.where().eq("mediaFile", mediaFile).eq("filepath", filepath.trim()).findUnique();
+		List<Thumbnail> thumbnails = Thumbnail.Finder.where().eq("mediaFile", mediaFile).eq("filepath", filepath.trim()).findList();
+		Thumbnail t = thumbnails.size() > 1 ? thumbnails.get(0) : null;
 		if(t == null) {
 			t = new Thumbnail(filepath);
 			t.mediaFile = mediaFile;

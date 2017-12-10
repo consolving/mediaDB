@@ -34,6 +34,12 @@ public class JobHandler {
 		}
 	}
 
+	public void run() {
+		if(job != null && job.getName() != null) {
+			job.run();
+		}
+	}
+	
 	public void stop() {
 		if(jobCancellable != null) {
 			Logger.info(job.getName()+" not active. Stopping.");	

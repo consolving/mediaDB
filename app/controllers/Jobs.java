@@ -17,4 +17,9 @@ public class Jobs extends Controller {
 		JobService.toggleJobsActive();
 		return redirect(controllers.admin.routes.Dashboard.index());
 	}
+	
+	public static Result forceJob(String jobname) {
+		JobService.forceRun(jobname);
+		return redirect(controllers.admin.routes.Dashboard.index());		
+	}
 }

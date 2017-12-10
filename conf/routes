@@ -18,8 +18,10 @@ GET     /static/downloads/*path  			controllers.MediaFiles.staticDownload(path)
 GET		/searches/result					controllers.Searches.result()
 GET		/tags								controllers.Tags.index()
 GET		/tags/:tagName						controllers.Tags.show(tagName)
+POST	/jobs/:jobname/force						controllers.Jobs.forceJob(jobname)
 POST	/jobs/:jobname						controllers.Jobs.toggleJobActive(jobname)
 POST	/jobs								controllers.Jobs.toggleJobsActive()
+
 
 GET 	/admin								controllers.admin.Dashboard.index()
 GET 	/storage							controllers.admin.Storage.index()

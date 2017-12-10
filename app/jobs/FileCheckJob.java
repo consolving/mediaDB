@@ -18,7 +18,7 @@ import play.Logger;
 import services.JobService;
 
 public class FileCheckJob extends AbstractJob {
-	final Logger.ALogger logger = Logger.of(this.getClass());
+
 	private final static String ROOT_DIR = ConfigFactory.load().getString("media.root.dir");
 	private final static String STORAGE_FILE_TEMPLATE = ROOT_DIR + File.separator + "storage" + File.separator + "%file%";
 	private final static Integer BATCH_SIZE = getValue("job.FileCheckJob.batchsize", 20);
@@ -57,11 +57,15 @@ public class FileCheckJob extends AbstractJob {
 					MediaFileHelper.addDuration(mediaFile);
 					MediaFileHelper.addDimensions(mediaFile);
 				} catch (IOException ex) {
-					logger.warn(ex.getLocalizedMessage(), ex);
+					Logger.error(ex.getLocalizedMessage(), ex);
 				}
-				mediaFile.checked();
+				try {
+					mediaFile.checked();				
+				} catch (Exception ex) {
+					Logger.error(ex.getLocalizedMessage(), ex);
+				}
 			} else {
-				logger.info(mediaFile.toString() + ": file not found!");
+				Logger.info(mediaFile.toString() + ": file not found!");
 				mediaFile.deleteManyToManyAssociations("tags");
 				for(models.Property prop : mediaFile.getProperties()) {
 					prop.delete();

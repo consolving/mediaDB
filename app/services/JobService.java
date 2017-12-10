@@ -27,6 +27,7 @@ public class JobService {
 	private final static AbstractJob NOP_JOB = new NopJob();
 	private final static JobHandler NOP_HANDLER = new JobHandler(NOP_JOB);
 	private static Map<String, JobHandler> jobHandlers = new HashMap<>();
+	
 	public static enum Status {
 		STARTED("started"),
 		RUNNING("running"), 
@@ -42,6 +43,7 @@ public class JobService {
 			return statusValue;
 		}
 	};
+	
 	public static void addJob(AbstractJob job) {
 		JobHandler handler = new JobHandler(job);
 		handler.schedule();
@@ -117,6 +119,15 @@ public class JobService {
 			Logger.error(ex.getLocalizedMessage(), ex);
 			return new Date();
 		}		
+	}
+	
+	public static void forceRun(String jobname) {
+		String key1 = "job." + jobname + ".active";
+		String key2 = "jobs.active";		
+		Configuration.set(key1, "true");
+		Configuration.set(key2, "true");	
+		JobService.getHandler(jobname).run();
+		Configuration.set("jobs.stats", null);	
 	}
 	
 	public static void toggleJobActive(String jobname) {

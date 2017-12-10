@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
+import javax.persistence.OptimisticLockException;
 
 import org.apache.commons.io.FileUtils;
 
@@ -70,6 +71,8 @@ public class ThumbnailsHelper {
 					Logger.warn(ex.getLocalizedMessage(), ex);
 				} catch (java.lang.ArrayIndexOutOfBoundsException ex) {
 					Logger.warn(ex.getLocalizedMessage(), ex);
+				} catch( OptimisticLockException ex ) {
+					Logger.warn(ex.getLocalizedMessage(), ex);					
 				}
 
 			} else {

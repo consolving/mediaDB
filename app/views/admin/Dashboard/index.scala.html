@@ -126,7 +126,7 @@
 					<th>Runs every</th>
 					<th>last Run</th>
 					<th>next Run</th>			
-					<th></th>
+					<th colspan="2"></th>
 				</tr>
 			@for(job <- JobService.getJobNames()) {
 				<tr>
@@ -136,6 +136,11 @@
 					<td>@JobService.getLastRun(job).since()</td>
 					<td>@JobService.getNextRun(job).since()</td>
 					<td>
+                	@if(JobService.isCancellable(job)) {
+                		<form action="@routes.Jobs.forceJob(job)" method="POST"><button class="btn btn-primary">run</button></form>
+                	}
+                		</td>
+                		<td>
                 	@if(JobService.isCancellable(job)) {
                 		<form action="@routes.Jobs.toggleJobActive(job)" method="POST"><button class="btn @if(JobService.isJobActive(job)){btn-danger">disable}else{btn-success">enable}</button></form>
                 	}
