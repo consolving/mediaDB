@@ -3,70 +3,72 @@
 @(mf: models.MediaFile)
 
 @main("File "+mf.filename) {
-    <div class="row">     
+    <div class="row">
         <div class="col-md-12">
-			<ul class="nav nav-tabs">
-				<li role="presentation" class="active"><a href="@routes.MediaFiles.show(mf.checksum)">Info</a></li>
-				<li role="presentation"><a href="@routes.MediaFiles.view(mf.checksum)">View</a></li>					
-			  	<li role="presentation"><a href="@routes.MediaFiles.properties(mf.checksum)">Properties</a></li>
-			  	<li role="presentation"><a href="@routes.MediaFiles.thumbnails(mf.checksum)">Thumbnails</a></li>
-			</ul>        
-    		<h1>Details of @mf.filename</h1>
-    	</div>
-    	<div class="col-md-2">
-    		<h1>Tags</h1>
-			@for(tag <- mf.getTags()){
-				<a href="@routes.Tags.show(tag.name)"><span class="badge">@tag</span></a>
-			}
-    	</div>
-    	<div class="col-md-9">
-    		<div class="row">
-		    	<div class="col-md-4">
-			    	@if(mf.cover != null) {
-			    	<dl>
-			    		<dt>Cover</dt>
-			    	</dl>			    		
-			    	}		    	
-					<a href="@routes.MediaFiles.staticCover(mf.getLocation())" target="_thumb_@mf.checksum" >
-			    		<img class="img-thumbnail" style="max-height: 200px" src="@routes.MediaFiles.staticCover(mf.getLocation())"/>
-			    	</a>
-		    	</div>
-		    	<div class="col-md-8">
-			    	<dl>
-			    		<dt>Filename</dt>
-			    		<dd>@mf.filename</dd>
-			    		<dt>Views</dt>
-			    		<dd>@mf.views</dd>			    		
-			    		<dt>SHA-256</dt>
-			    		<dd>@mf.checksum</dd>
-			    		@if(mf.created != null) {
-			    		<dt>created</dt>
-			    		<dd>@mf.created</dd>
-			    		}
-			    		<dt>Mime-Type</dt>
-			    		<dd><a href="@routes.MediaFiles.index(mf.mimeType)">@mf.mimeType</a></dd>
-			    		@if(mf.lastCheck != null) {
-			    		<dt>last checked</dt>
-			    		<dd>@mf.lastCheck</dd>
-			    		}
-			    		@if(mf.filesize != null) {
-			     		<dt>Filesize</dt>
-			    		<dd>@MediaFileHelper.humanReadableByteCount(mf.filesize, true)</dd>   		
-			    		}
-			    		@for(key <- mf.getMDBProperties().keySet()) {
-			    			<dt>@key</dt>
-			    			<dd>@mf.getMDBProperties().get(key)</dd>
-			    		}
-			    		<dt>Download</dt>
-			    		<dd><a target="_download" href="@routes.MediaFiles.staticDownload(mf.getLocation())">@mf.filename</a></dd>    		
-			    	</dl>
-		    	</div>    		
-    		</div>
-    	</div>    
-    	<div class="col-md-1">
-    	    @helper.form(action = routes.MediaFiles.delete(mf.checksum)) {
-    	    	<button onClick="if (!confirm('Are you sure you want to delete this?\n')) return false;" type="submit" class="btn btn-danger">Delete</button>
-    	    }
-    	</div>
+            <ul class="nav nav-tabs">
+                <li role="presentation" class="active"><a href="@routes.MediaFiles.show(mf.checksum)">Info</a></li>
+                <li role="presentation"><a href="@routes.MediaFiles.view(mf.checksum)">View</a></li>
+                  <li role="presentation"><a href="@routes.MediaFiles.properties(mf.checksum)">Properties</a></li>
+                  <li role="presentation"><a href="@routes.MediaFiles.thumbnails(mf.checksum)">Thumbnails</a></li>
+            </ul>        
+            <h1>Details of @mf.filename</h1>
+        </div>
+        <div class="col-md-2">
+            <h1>Tags</h1>
+            @for(tag <- mf.getTags()){
+                <a href="@routes.Tags.show(tag.name)"><span class="badge">@tag</span></a>
+            }
+        </div>
+        <div class="col-md-9">
+            <div class="row">
+                <div class="col-md-4">
+                    @if(mf.cover != null) {
+                    <dl>
+                        <dt>Cover</dt>
+                    </dl>
+                    }
+                    <a href="@routes.MediaFiles.staticCover(mf.getLocation())" target="_thumb_@mf.checksum" >
+                        <img class="img-thumbnail" style="max-height: 200px" src="@routes.MediaFiles.staticCover(mf.getLocation())"/>
+                    </a>
+                </div>
+                <div class="col-md-8">
+                    <dl>
+                        <dt>Filename</dt>
+                        <dd>@mf.filename</dd>
+                        <dt>Folder</dt>
+                        <dd>@mf.folder</dd>
+                        <dt>Views</dt>
+                        <dd>@mf.views</dd>
+                        <dt>SHA-256</dt>
+                        <dd>@mf.checksum</dd>
+                        @if(mf.created != null) {
+                        <dt>created</dt>
+                        <dd>@mf.created</dd>
+                        }
+                        <dt>Mime-Type</dt>
+                        <dd><a href="@routes.MediaFiles.index(mf.mimeType)">@mf.mimeType</a></dd>
+                        @if(mf.lastCheck != null) {
+                        <dt>last checked</dt>
+                        <dd>@mf.lastCheck</dd>
+                        }
+                        @if(mf.filesize != null) {
+                         <dt>Filesize</dt>
+                        <dd>@MediaFileHelper.humanReadableByteCount(mf.filesize, true)</dd>
+                        }
+                        @for(key <- mf.getMDBProperties().keySet()) {
+                            <dt>@key</dt>
+                            <dd>@mf.getMDBProperties().get(key)</dd>
+                        }
+                        <dt>Download</dt>
+                        <dd><a target="_download" href="@routes.MediaFiles.staticDownload(mf.getLocation())">@mf.filename</a></dd>            
+                    </dl>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-1">
+            @helper.form(action = routes.MediaFiles.delete(mf.checksum)) {
+                <button onClick="if (!confirm('Are you sure you want to delete this?\n')) return false;" type="submit" class="btn btn-danger">Delete</button>
+            }
+        </div>
     </div>
 }

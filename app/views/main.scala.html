@@ -34,13 +34,13 @@
                         <li class="@activeLink("/files/filter/video")"><a href="@routes.MediaFiles.index("video")">Videos</a></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
- 						<li class="dropdown">
-          					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Administration <span class="caret"></span></a>
-          					<ul class="dropdown-menu">
-								<li class="@activeLink("/admin")"><a href="@controllers.admin.routes.Dashboard.index()">Dashboard</a></li>
-                        		<li class="@activeLink("/storage")"><a href="@controllers.admin.routes.Storage.index()">Storage</a></li>
-          					</ul>
-        				</li>
+                         <li class="dropdown">
+                              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Administration <span class="caret"></span></a>
+                              <ul class="dropdown-menu">
+                                <li class="@activeLink("/admin")"><a href="@controllers.admin.routes.Dashboard.index()">Dashboard</a></li>
+                                <li class="@activeLink("/storage")"><a href="@controllers.admin.routes.Storage.index()">Storage</a></li>
+                              </ul>
+                        </li>
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">Jobs (@JobService.getJobsStats() running)<span class="caret"></span></a>
                             <ul class="dropdown-menu" role="menu">
@@ -55,10 +55,10 @@
                                 <li><form action="@routes.Jobs.toggleJobsActive()" method="POST"><button style="width:100%" class="btn @if(JobService.isJobsActive()){btn-danger">disable}else{btn-success">enable} all</button></form></li>
                             </ul>
                         </li>
-					</ul>
+                    </ul>
                     <form action="@routes.Searches.result()" method="GET" id="nav-searchform">
-                    	<input class="col-md-4" name="query" id="query" type="text" value="@if(queryValue!=null){@queryValue}" />
-                    	<button type="submit" class="btn btn-primary btn-sm">Search</button>
+                        <input class="col-md-4" name="query" id="query" type="text" value="@if(queryValue!=null){@queryValue}" />
+                        <button type="submit" class="btn btn-primary btn-sm">Search</button>
                     </form>
                 </div>
             </div>

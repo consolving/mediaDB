@@ -27,7 +27,7 @@ public class Tags extends Application {
 		Integer prev = page > 1 ? page - 1 : null;
 		Integer next = page < max ? page + 1 : null;
 		List<MediaFile> mediaFiles = MediaFile.getForTags(PER_PAGE, page - 1, tags);
-		return ok(show.render(queryTags, mediaFiles, prev, next));
+		return ok(show.render(queryTags, mediaFiles, mediaFilesCount, prev, next));
 	}
 
 }

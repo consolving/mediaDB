@@ -9,145 +9,150 @@
 @scripts = {
     <script type="text/javascript" src="@routes.Assets.versioned("javascripts/admin.js")"></script>
     <script type="text/javascript">
-		$.get('@routes.MediaFiles.folderStats()', function( data ) {
-			drawPie(data.dirsSizes, '#folder-sizes');
-			drawPie(data.dirsCounts, '#file-counts');
-		});								
+        $.get('@routes.MediaFiles.folderStats()', function( data ) {
+            drawPie(data.dirsSizes, '#folder-sizes');
+            drawPie(data.dirsCounts, '#file-counts');
+        });
     </script>
 }
 
 @main("Welcome to media DB", scripts) {
     <div class="row center">
-    	<h2>Administration Dashboard</h2>
+        <h2>Administration Dashboard</h2>
+        <small>
+        @helper.form(action = controllers.admin.routes.Export.start()) {
+            <button onClick="if (!confirm('Are you sure you want to start an Export??\n')) return false;" type="submit" class="btn btn-primary">Export</button>
+        }
+        </small>
     </div>
-	<div class="row">
-		<div class="col-md-6 center">
-			<h2>File Size</h2>
-			<div class="front-graph" id="folder-sizes"></div>
-		</div>
-		<div class="col-md-6 center">
-			<h2>File Counts</h2>
-			<div class="front-graph" id="file-counts"></div>
-		</div>		
-	</div>
+    <div class="row">
+        <div class="col-md-6 center">
+            <h2>File Size</h2>
+            <div class="front-graph" id="folder-sizes"></div>
+        </div>
+        <div class="col-md-6 center">
+            <h2>File Counts</h2>
+            <div class="front-graph" id="file-counts"></div>
+        </div>        
+    </div>
     <div class="row"> 
-		<div class="col-md-3 center">
-			<h2>
-				@mediaFileCount<br />
-				<small>Media Files</small>				
-			</h2>
-		</div>
-		<div class="col-md-3 center">
-			<h2>
-				@thumbnailsCount<br />
-				<small>Thumbnails</small>
-			</h2>
-		</div>
-		<div class="col-md-3 center">
-			<h2>
-				@tagCount<br />
-				<small>Tags</small>
-			</h2>
-		</div>
-		<div class="col-md-3 center">
-			<h2>
-				@propertyCount<br />
-				<small>Properties</small>
-			</h2>
-		</div>			
-	</div>	
-	<div class="row"> 
-		<div class="col-md-4">
-			<h2>last Imports</h2>
-			<table class="table">
-				@for(mediaFile <- MediaFile.getLast(10, 0)) {
-					<tr class="mf-small-row">
-						<th>
-						@if(mediaFile.getThumbnail() != null) {
-							<img style="max-width: 100px; height: 40px" src="@routes.MediaFiles.staticCover(mediaFile.getLocation())" />
-						} else {
-							N/A
-						}						
-						</th>
-						<td>
-							<a title="@mediaFile.filename" href="@routes.MediaFiles.show(mediaFile.checksum)">@MediaFileHelper.shortName(mediaFile.filename, 25)</a>
-							@if(mediaFile.filesize != null){<br />@MediaFileHelper.humanReadableByteCount(mediaFile.filesize, true)}	
-						</td>
-					</tr>
-				}
-			</table>
-		</div>
-		<div class="col-md-4">
-			<h2>next Checks</h2>
-			<table class="table">
-				@for(mediaFile <- MediaFile.nextChecks(10)) {
-					<tr class="mf-small-row">
-						<th>
-						@if(mediaFile.getThumbnail() != null) {
-							<img style="max-width: 100px; height: 40px" src="@routes.MediaFiles.staticCover(mediaFile.getLocation())" />
-						} else {
-							N/A
-						}						
-						</th>					
-						<td>
-							<a title="@mediaFile.filename" href="@routes.MediaFiles.show(mediaFile.checksum)">@MediaFileHelper.shortName(mediaFile.filename, 25)</a>
-							@if(mediaFile.filesize != null){<br />@MediaFileHelper.humanReadableByteCount(mediaFile.filesize, true)}	
-						</td>
-					</tr>
-				}
-			</table>			
-		</div>
-		<div class="col-md-4">
-			<h2>last Thumbnails</h2>
-			<table class="table">
-				@for(thumbnail <- Thumbnail.getLast(10)) {
-					@if(thumbnail.mediaFile != null) {
-					<tr class="mf-small-row">
-						<th>
-							<img style="max-width: 100px; height: 40px" src="@routes.MediaFiles.staticCover(thumbnail.mediaFile.getLocation())" />					
-						</th>
-						<td>
-							<a title="@thumbnail.mediaFile.filename" href="@routes.MediaFiles.show(thumbnail.mediaFile.checksum)">@MediaFileHelper.shortName(thumbnail.mediaFile.filename, 25)</a>
-							@if(thumbnail.mediaFile.filesize != null){<br />@MediaFileHelper.humanReadableByteCount(thumbnail.mediaFile.filesize, true)}	
-						</td>
-					</tr>
-					}
-				}
-			</table>			
-		</div>
-	</div>
-	<div class="row"> 
-		<div class="col-md-12 center">
-			<h2>Jobs</h2>
-			<table class="table table-condensed">
-				<tr>
-					<th>Name</th>	
-					<th>Status</th>
-					<th>Runs every</th>
-					<th>last Run</th>
-					<th>next Run</th>			
-					<th colspan="2"></th>
-				</tr>
-			@for(job <- JobService.getJobNames()) {
-				<tr>
-					<td>@job</td>
-					<td>@JobService.getStatus(job)</td>
-					<td>@JobService.getJob(job).getRunEvery() minutes</td>
-					<td>@JobService.getLastRun(job).since()</td>
-					<td>@JobService.getNextRun(job).since()</td>
-					<td>
-                	@if(JobService.isCancellable(job)) {
-                		<form action="@routes.Jobs.forceJob(job)" method="POST"><button class="btn btn-primary">run</button></form>
-                	}
-                		</td>
-                		<td>
-                	@if(JobService.isCancellable(job)) {
-                		<form action="@routes.Jobs.toggleJobActive(job)" method="POST"><button class="btn @if(JobService.isJobActive(job)){btn-danger">disable}else{btn-success">enable}</button></form>
-                	}
-                    </td>					
-				</tr>
-			}
-			</table>
-		</div>   				
+        <div class="col-md-3 center">
+            <h2>
+                @mediaFileCount<br />
+                <small>Media Files</small>
+            </h2>
+        </div>
+        <div class="col-md-3 center">
+            <h2>
+                @thumbnailsCount<br />
+                <small>Thumbnails</small>
+            </h2>
+        </div>
+        <div class="col-md-3 center">
+            <h2>
+                @tagCount<br />
+                <small>Tags</small>
+            </h2>
+        </div>
+        <div class="col-md-3 center">
+            <h2>
+                @propertyCount<br />
+                <small>Properties</small>
+            </h2>
+        </div>            
+    </div>    
+    <div class="row"> 
+        <div class="col-md-4">
+            <h2>last Imports</h2>
+            <table class="table">
+                @for(mediaFile <- MediaFile.getLast(10, 0)) {
+                    <tr class="mf-small-row">
+                        <th>
+                        @if(mediaFile.getThumbnail() != null) {
+                            <img style="max-width: 100px; height: 40px" src="@routes.MediaFiles.staticCover(mediaFile.getLocation())" />
+                        } else {
+                            N/A
+                        }
+                        </th>
+                        <td>
+                            <a title="@mediaFile.filename" href="@routes.MediaFiles.show(mediaFile.checksum)">@MediaFileHelper.shortName(mediaFile.filename, 25)</a>
+                            @if(mediaFile.filesize != null){<br />@MediaFileHelper.humanReadableByteCount(mediaFile.filesize, true)}
+                        </td>
+                    </tr>
+                }
+            </table>
+        </div>
+        <div class="col-md-4">
+            <h2>next Checks</h2>
+            <table class="table">
+                @for(mediaFile <- MediaFile.nextChecks(10)) {
+                    <tr class="mf-small-row">
+                        <th>
+                        @if(mediaFile.getThumbnail() != null) {
+                            <img style="max-width: 100px; height: 40px" src="@routes.MediaFiles.staticCover(mediaFile.getLocation())" />
+                        } else {
+                            N/A
+                        }
+                        </th>
+                        <td>
+                            <a title="@mediaFile.filename" href="@routes.MediaFiles.show(mediaFile.checksum)">@MediaFileHelper.shortName(mediaFile.filename, 25)</a>
+                            @if(mediaFile.filesize != null){<br />@MediaFileHelper.humanReadableByteCount(mediaFile.filesize, true)}
+                        </td>
+                    </tr>
+                }
+            </table>
+        </div>
+        <div class="col-md-4">
+            <h2>last Thumbnails</h2>
+            <table class="table">
+                @for(thumbnail <- Thumbnail.getLast(10)) {
+                    @if(thumbnail.mediaFile != null) {
+                    <tr class="mf-small-row">
+                        <th>
+                            <img style="max-width: 100px; height: 40px" src="@routes.MediaFiles.staticCover(thumbnail.mediaFile.getLocation())" />
+                        </th>
+                        <td>
+                            <a title="@thumbnail.mediaFile.filename" href="@routes.MediaFiles.show(thumbnail.mediaFile.checksum)">@MediaFileHelper.shortName(thumbnail.mediaFile.filename, 25)</a>
+                            @if(thumbnail.mediaFile.filesize != null){<br />@MediaFileHelper.humanReadableByteCount(thumbnail.mediaFile.filesize, true)}
+                        </td>
+                    </tr>
+                    }
+                }
+            </table>
+        </div>
+    </div>
+    <div class="row"> 
+        <div class="col-md-12 center">
+            <h2>Jobs</h2>
+            <table class="table table-condensed">
+                <tr>
+                    <th>Name</th>
+                    <th>Status</th>
+                    <th>Runs every</th>
+                    <th>last Run</th>
+                    <th>next Run</th>
+                    <th colspan="2"></th>
+                </tr>
+            @for(job <- JobService.getJobNames()) {
+                <tr>
+                    <td>@job</td>
+                    <td>@JobService.getStatus(job)</td>
+                    <td>@JobService.getJob(job).getRunEvery() minutes</td>
+                    <td>@JobService.getLastRun(job).since()</td>
+                    <td>@JobService.getNextRun(job).since()</td>
+                    <td>
+                    @if(JobService.isCancellable(job)) {
+                        <form action="@routes.Jobs.forceJob(job)" method="POST"><button class="btn btn-primary">run</button></form>
+                    }
+                        </td>
+                        <td>
+                    @if(JobService.isCancellable(job)) {
+                        <form action="@routes.Jobs.toggleJobActive(job)" method="POST"><button class="btn @if(JobService.isJobActive(job)){btn-danger">disable}else{btn-success">enable}</button></form>
+                    }
+                    </td>
+                </tr>
+            }
+            </table>
+        </div>
     </div>
 }

@@ -11,11 +11,11 @@ import views.html.admin.Dashboard.index;
 
 @BasicAuth
 public class Dashboard extends Controller {
-	public static Result index() {
-		int mediaFileCount = MediaFile.Finder.findRowCount();
-		int tagCount = Tag.Finder.findRowCount();
-		int propertyCount = Property.Finder.findRowCount();
-		int thumbnailsCount = Thumbnail.Finder.findRowCount();
-		return ok(index.render(mediaFileCount, thumbnailsCount, tagCount, propertyCount));		
-	}
+    public static Result index() {
+        int mediaFileCount = MediaFile.Finder.findRowCount();
+        int tagCount = Tag.Finder.findRowCount();
+        int propertyCount = Property.Finder.findRowCount();
+        int thumbnailsCount = Thumbnail.Finder.findRowCount();
+        return ok(index.render(mediaFileCount, thumbnailsCount, tagCount, propertyCount));
+    }
 }

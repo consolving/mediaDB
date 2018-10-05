@@ -1,6 +1,6 @@
 @import helpers.MediaFileHelper
 
-@(tagName: String, mediaFiles: java.util.List[models.MediaFile], prev: Integer, next: Integer)
+@(tagName: String, mediaFiles: java.util.List[models.MediaFile], mediaFilesCount: Integer, prev: Integer, next: Integer)
 
 @main("Tag "+tagName) {
 </div>
@@ -13,7 +13,7 @@
                 }
             </li>
             <li class="center">
-                <small>@mediaFiles.size()</small> Media Files for Tag @tagName
+                <small>@mediaFilesCount</small> Media Files for Tag @tagName
             </li>
             <li class="next">
                 @if(next != null) {
