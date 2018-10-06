@@ -7,7 +7,7 @@ import play.mvc.Result;
 
 @BasicAuth
 public class Export extends Controller {
-    private final static Integer BATCH_SIZE = 500;
+    private final static Integer BATCH_SIZE = 2500;
 
     public static Result start() {
         ExportJob ej = new ExportJob(BATCH_SIZE);

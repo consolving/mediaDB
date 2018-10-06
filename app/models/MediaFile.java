@@ -41,18 +41,18 @@ public class MediaFile extends Model {
     public String filepath;
     public String checksum;
     public String filename;
-    
+
     public Integer views = 0;
-    
+
     public Long filesize;
     public String mimeType;
-    
+
     public Date lastCheck;
     public Date created;
-    
+
     @OneToOne
     public Thumbnail cover;
-    
+
     @ManyToOne
     public MediaFolder folder = null;
     
@@ -66,10 +66,10 @@ public class MediaFile extends Model {
     @OneToMany(mappedBy="mediaFile")
     @OrderBy("filename DESC")
     private List<Thumbnail> thumbnails;
-    
+
     @Transient
     private Map<String, String> props = null;
-    
+
     public static Finder<Long, MediaFile> Finder = new Finder<Long, MediaFile>(Long.class, MediaFile.class);
 
     public void setTags(Set<Tag> tags) {
@@ -84,10 +84,10 @@ public class MediaFile extends Model {
     public List<Tag> getTags() {
         return Tag.Finder.where().eq("mediaFiles.id", this.id).orderBy("name ASC").findList();
     }
-    
+
     public List<Property> getProperties() {
         return Property.Finder.where().eq("mediaFile.id", this.id).orderBy("k ASC").findList();
-    } 
+    }
  
     public List<Property> getProperties(String k) {
         return Property.Finder.where().eq("mediaFile.id", this.id).eq("k", k.trim()).findList();
@@ -153,22 +153,27 @@ public class MediaFile extends Model {
 
     public JsonNode getStreams() {
         Property prop = Property.Finder.where().eq("mediaFile", this).eq("k", "streams").findUnique();
-        JsonNode arrNode = null;
-        try {
-            if(prop != null) {
-                arrNode = new ObjectMapper().readTree(prop.v);
-                if(arrNode.isArray())
-                for (final JsonNode objNode : arrNode) {
-                    Logger.debug("arrNode: "+objNode);  
-                }
+        if(prop != null && prop.v != null) {
+            JsonNode arrNode = null;
+            try {
+                    arrNode = new ObjectMapper().readTree(prop.v);
+                    if(arrNode.isArray())
+                    for (final JsonNode objNode : arrNode) {
+                        Logger.debug("arrNode: "+objNode);  
+                    }
+                return arrNode != null && arrNode.isArray() ? arrNode : new ObjectMapper().readTree("[]");
+            } catch (IOException ex) {
+                Logger.warn(ex.getLocalizedMessage(), ex);
             }
-            return arrNode != null && arrNode.isArray() ? arrNode : new ObjectMapper().readTree("[]");
-        } catch (IOException ex) {
-            Logger.warn(ex.getLocalizedMessage(), ex);
-            return null;
-        }            
+        }
+        return null;
     }
-    
+
+    public void markExported() {
+        this.filepath = "exported";
+        update();
+    }
+
     public static MediaFile findUnique(String checksum) {
         List<MediaFile> mfs = MediaFile.Finder.where().eq("checksum", checksum).findList();
         if(mfs.size() > 1) {
@@ -220,7 +225,7 @@ public class MediaFile extends Model {
         List<SqlRow> rows = query.findList();
         for (SqlRow sqlRow : rows) {
             if(sqlRow.getString("mime_type") != null && sqlRow.getLong("size") != null) {
-                sizes.put(sqlRow.getString("mime_type"), sqlRow.getLong("size"));                
+                sizes.put(sqlRow.getString("mime_type"), sqlRow.getLong("size"));
             }
         }
         return sizes;

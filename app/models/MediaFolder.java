@@ -77,6 +77,7 @@ public class MediaFolder extends Model {
     }
 
     public String toString() {
+        if(path == null) return null;
         return path.replace(UPLOAD_DIR_HANDLE.getAbsolutePath(), "").trim();
     }
 }

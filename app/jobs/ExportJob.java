@@ -29,17 +29,23 @@ public class ExportJob extends AbstractJob {
         int count = 1;
         for(MediaFile mediaFile : files) {
             final File oldPath = new File(STORAGE_FOLDER + File.separator + mediaFile.getLocation());
-            final String newFolder = EXPORT_FOLDER + mediaFile.getFolderName();
-            checkFolder(newFolder);
-            final File newPath = new File(newFolder + mediaFile.filename);
-            final boolean flag = SystemHelper.move(oldPath, newPath);
-            if(flag) {
-                mediaFile.filepath = "exported";
-                mediaFile.update();
-                Logger.info("{} {} was successfully exported to {}", 
-                        count,
-                        mediaFile.checksum, 
-                        newPath.getAbsolutePath());
+            if(!oldPath.exists()) {
+                mediaFile.markExported();
+                Logger.info("File {} already gone, assume it was already exported!", oldPath.getAbsolutePath());
+            } else {
+                final String newFolder = EXPORT_FOLDER + File.separator + mediaFile.getFolderName();
+                checkFolder(newFolder);
+                final File newPath = new File(newFolder + mediaFile.filename);
+                final boolean flag = SystemHelper.move(oldPath, newPath);
+                if(flag) {
+                    mediaFile.markExported();
+                    Logger.info("{} {} was successfully exported to {}", 
+                            count,
+                            mediaFile.checksum, 
+                            newPath.getAbsolutePath());
+                } else {
+                    Logger.warn("There was an error exporting file {} to {}", mediaFile.checksum, newPath.getAbsolutePath());
+                }
             }
             count++;
         }
